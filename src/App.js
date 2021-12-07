@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
+
+import { googleMapsApiKey } from './config.js';
 import './App.css';
+
+const containerStyle = {
+  width: '100vw',
+  height: '800px',
+  display: 'absolute',
+};
+
+const center = {
+  lat: 37.945447,
+  lng: -39.955620,
+};
+const MyMapComponent = ({children}) => (
+  <LoadScript googleMapsApiKey={googleMapsApiKey}>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={4}
+      options={{maxZoom: 9}}
+    >
+      { children }
+    </GoogleMap>
+  </LoadScript>
+)
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <div className="page">
+        <MyMapComponent/>
+      </div>
     </div>
   );
 }
