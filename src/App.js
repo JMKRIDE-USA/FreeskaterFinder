@@ -1,8 +1,8 @@
+import { useQuery } from 'react-query';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 
 import './App.css';
-
-const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+import { useGetBackendURL, QueryLoader } from '@jeffdude/frontend-helpers';
 
 const containerStyle = {
   width: '100vw',
@@ -14,12 +14,12 @@ const center = {
   lat: 37.945447,
   lng: -39.955620,
 };
-const MyMapComponent = ({children}) => (
+const MyMapComponent = ({googleMapsApiKey, children}) => (
   <LoadScript googleMapsApiKey={googleMapsApiKey}>
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={4}
+      zoom={3}
       options={{maxZoom: 9}}
     >
       { children }
@@ -28,6 +28,10 @@ const MyMapComponent = ({children}) => (
 )
 
 function App() {
+  const backendURL = useGetBackendURL()
+  const gMapsKeyQuery = useQuery('gMapsKey',
+    () => fetch(backendURL.v1 + "location/googleMapsKey", { method: "GET"}).then(res => res.json()),
+  )
   return (
     <div className="App">
       <header className="App-header">
@@ -35,9 +39,9 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
       </header>
-      <div className="page">
+      <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">
         <MyMapComponent/>
-      </div>
+      </QueryLoader>
     </div>
   );
 }
