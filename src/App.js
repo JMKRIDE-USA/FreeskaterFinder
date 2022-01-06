@@ -1,9 +1,25 @@
 import { useQuery } from 'react-query';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 
-import './App.css';
 import { useGetBackendURL, QueryLoader } from '@jeffdude/frontend-helpers';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import Header from './components/mui-header';
+
+import './App.css';
+
+const theme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#0277bd',
+    },
+    secondary: {
+      main: '#ff1744',
+    },
+  },
+});
 const containerStyle = {
   width: '100vw',
   height: '800px',
@@ -34,14 +50,12 @@ function App() {
   )
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-      </header>
-      <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">
-        <MyMapComponent/>
-      </QueryLoader>
+      <ThemeProvider theme={theme}>
+        <Header/>
+        <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">
+          <MyMapComponent/>
+        </QueryLoader>
+      </ThemeProvider>
     </div>
   );
 }
