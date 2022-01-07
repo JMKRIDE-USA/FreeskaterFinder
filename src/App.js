@@ -1,60 +1,37 @@
-import { useQuery } from 'react-query';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-
-import { useGetBackendURL, QueryLoader } from '@jeffdude/frontend-helpers';
-
+import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Header from './components/mui-header';
+import MapComponent from './components/map';
 
 import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PageNotFound from './pages/404';
 
 const theme = createTheme({
   palette: {
-    type: 'light',
+    type: 'dark',
     primary: {
-      main: '#0277bd',
+      main: '#080808',
     },
     secondary: {
       main: '#ff1744',
     },
   },
 });
-const containerStyle = {
-  width: '100vw',
-  height: '800px',
-  display: 'absolute',
-};
-
-const center = {
-  lat: 37.945447,
-  lng: -39.955620,
-};
-const MyMapComponent = ({googleMapsApiKey, children}) => (
-  <LoadScript googleMapsApiKey={googleMapsApiKey}>
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={3}
-      options={{maxZoom: 9}}
-    >
-      { children }
-    </GoogleMap>
-  </LoadScript>
-)
 
 function App() {
-  const backendURL = useGetBackendURL()
-  const gMapsKeyQuery = useQuery('gMapsKey',
-    () => fetch(backendURL.v1 + "location/googleMapsKey", { method: "GET"}).then(res => res.json()),
-  )
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Header/>
-        <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">
-          <MyMapComponent/>
-        </QueryLoader>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Header/>}>
+              <Route index element={<MapComponent/>}/>
+              <Route path="*" element={<PageNotFound/>}/>
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </ThemeProvider>
     </div>
   );
