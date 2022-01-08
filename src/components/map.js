@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
+import { Container } from '@mui/material';
 
 import blurredMap from '../assets/GMapBlurred.png'
+import { SignInDialog } from './log-in';
 
 const containerStyle = {
   width: '100vw',
@@ -36,12 +38,18 @@ const KeyLoader = ({children}) => {
 
 const MapComponent = () => {
   const authState = useGetAuthState();
+  const [open, setOpen] = useState(!authState)
   if(authState) return <KeyLoader><MyMapComponent/></KeyLoader>
   return (
-    <img
-      src={blurredMap} alt="Freeskater Finder Map Preview"
-      style={{ objectFit: 'cover', width: '100vw', minHeight: '50vh'}}
-    />
+    <Container disableGutters
+      sx={{p: 0, m:0, spacing: 0, minHeight: '50vh', maxHeight: '75vh', minWidth: '100vw'}}
+    >
+      <img
+        src={blurredMap} alt="Freeskater Finder Map Preview"
+        style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}
+      />
+      <SignInDialog open={open}/>
+    </Container>
   )
 }
 
