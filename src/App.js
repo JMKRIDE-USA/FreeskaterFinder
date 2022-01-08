@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import Header from './components/mui-header';
+import Header from './components/header';
 import MapComponent from './components/map';
 
 import './App.css';
