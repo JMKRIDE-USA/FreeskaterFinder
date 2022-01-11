@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
-import { Container } from '@mui/material';
+import { Box } from '@mui/material';
 
+import Page from '../components/page'
 import blurredMap from '../assets/GMapBlurred.png'
-import { SignInDialog } from './log-in';
+import { SignInDialog } from '../components/log-in';
 
 const containerStyle = {
   width: '100vw',
@@ -32,25 +33,25 @@ const MyMapComponent = ({googleMapsApiKey, children}) => (
 )
 
 const KeyLoader = ({children}) => {
-  const gMapsKeyQuery = useGetQuery({endpoint: "location/googleMapsKey", method: "GET"});
-  return <QueryLoader query={gMapsKeyQuery}>{children}</QueryLoader>
+  const gMapsKeyQuery = useGetQuery("location/googleMapsKey", "GET", {refetchOnWindowFocus: false, refetchOnMount: false, refetchOnReconnect: false});
+  return <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">{children}</QueryLoader>
 }
 
-const MapComponent = () => {
+const MapPage = () => {
   const authState = useGetAuthState();
   const [open, setOpen] = useState(!authState)
   if(authState) return <KeyLoader><MyMapComponent/></KeyLoader>
   return (
-    <Container disableGutters
-      sx={{p: 0, m:0, spacing: 0, minHeight: '50vh', maxHeight: '75vh', minWidth: '100vw'}}
-    >
-      <img
-        src={blurredMap} alt="Freeskater Finder Map Preview"
-        style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}
-      />
+    <Page>
+      <Box sx={{p: 0, m:0, minHeight: '50vh', maxHeight: '75vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
+        <img
+          src={blurredMap} alt="Freeskater Finder Map Preview"
+          style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}
+        />
+      </Box>
       <SignInDialog open={open}/>
-    </Container>
+    </Page>
   )
 }
 
-export default MapComponent;
+export default MapPage;

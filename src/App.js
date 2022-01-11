@@ -2,8 +2,10 @@ import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Header from './components/header';
-import MapComponent from './components/map';
+import MapPage from './pages/map';
+import CreateAccountPage from './pages/create-account.js';
 
+import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PageNotFound from './pages/404';
@@ -17,6 +19,7 @@ const theme = createTheme({
     secondary: {
       main: '#ff1744',
     },
+    background: {default: '#c8c8c8', paper: '#f3f3f3'},
   },
 });
 
@@ -24,10 +27,12 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
+        <CssBaseline/>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Header/>}>
-              <Route index element={<MapComponent/>}/>
+              <Route index element={<MapPage/>}/>
+              <Route path="create-account" element={<CreateAccountPage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>
