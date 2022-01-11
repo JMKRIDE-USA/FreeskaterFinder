@@ -129,7 +129,7 @@ const ResponsiveAppBar = () => {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Account">
-                  R
+                  {userInfo?.user_firstName?.charAt(0)}
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -158,7 +158,7 @@ const ResponsiveAppBar = () => {
           </Box>
         </Container>
       </AppBar>
-      <Box disableGutters sx={{mt: headerHeight}}><Outlet/></Box>
+      <Box disableGutters sx={{mt: headerHeight }/*mt: {xs: '95px', md: '110px'}}*/}><Outlet/></Box>
     </div>
   );
 };
