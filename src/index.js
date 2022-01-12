@@ -7,7 +7,7 @@ import { JFHApp } from '@jeffdude/frontend-helpers';
 
 ReactDOM.render(
   <React.StrictMode>
-    <JFHApp config={{backendURL: "http://192.168.1.8:3600"}}>
+    <JFHApp config={{backendURL: "http://192.168.0.88:3600"}}>
       <App />
     </JFHApp>
   </React.StrictMode>,
