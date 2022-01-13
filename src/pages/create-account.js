@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 
 import Page from '../components/page';
 import TitleCard from '../components/title-card'
-import { LoadingButton } from '@mui/lab';
-import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
+import useMakeLoadingButton from '../components/loading-button'
+import { useGetAuthState, useCreateAccount } from '@jeffdude/frontend-helpers';
 
 const LinearProgressWithLabel = ({step, ...props}) => (
   <Paper elevation={4} sx={{p:2, width: {xs: '95vw', md: '500px'}, mb: {xs: 2, md: 2}}}>
@@ -21,16 +21,21 @@ const LinearProgressWithLabel = ({step, ...props}) => (
   </Paper>
 )
 
-const StepOne = ({progressBar}) => {
+const StepOne = () => {
   const { register, handleSubmit, formState: {errors}, watch}  = useForm();
-  const onSubmit = (data) => console.log(data);
+  const createAccount = useCreateAccount();
+  const { onClick, render : renderButton } = useMakeLoadingButton({
+    doAction: createAccount,
+    buttonText: "Submit",
+    preProcessData: ({password2, tos, ...rest}) => rest,
+  });
   const tos = useRef({})
   tos.current = watch("tos", "")
   const password = useRef({})
   password.current = watch("password", "")
   return (
     <Paper elevation={4} sx={{p:2, width: {xs: '95vw', md: '500px'}}}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onClick)}>
         <Grid container direction="column">
           <Grid item container direction="row">
             <TextField label="First Name" margin="normal" sx={{mr:1}} inputProps={
@@ -62,9 +67,7 @@ const StepOne = ({progressBar}) => {
             <Checkbox {...register("tos", {required: true})}/>
           } label={<>I agree to the <Link to="/terms-of-service">Terms of Service.</Link></>}
           />
-          <LoadingButton type="submit" disabled={!tos.current} margin="normal" loading={false} variant="contained" sx={{mt: 1}}>
-            Submit
-          </LoadingButton>
+          {renderButton({disabled: !tos.current})}
         </Grid>
       </form>
     </Paper>

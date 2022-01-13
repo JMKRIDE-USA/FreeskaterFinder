@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
@@ -7,7 +7,6 @@ import { Box } from '@mui/material';
 
 import Page from '../components/page'
 import blurredMap from '../assets/GMapBlurred.png'
-import { SignInDialog } from '../components/log-in';
 
 const containerStyle = {
   width: '100vw',
@@ -39,7 +38,6 @@ const KeyLoader = ({children}) => {
 
 const MapPage = () => {
   const authState = useGetAuthState();
-  const [open, setOpen] = useState(!authState)
   if(authState) return <KeyLoader><MyMapComponent/></KeyLoader>
   return (
     <Page>
@@ -49,7 +47,6 @@ const MapPage = () => {
           style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}
         />
       </Box>
-      <SignInDialog open={open}/>
     </Page>
   )
 }

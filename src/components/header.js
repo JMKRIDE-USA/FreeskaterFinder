@@ -14,10 +14,13 @@ import MenuItem from '@mui/material/MenuItem';
 
 import { useGetAuthState } from '@jeffdude/frontend-helpers';
 import { useGetUserInfo } from '@jeffdude/frontend-helpers';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+
+import { SignInDialog } from './log-in'
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
 import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
+import { useGetDispatch, ACTIONS } from '@jeffdude/frontend-helpers';
 
 const pages = ['Home', 'Friends'];
 const settings = ['Profile', 'Settings', 'Logout'];
@@ -36,22 +39,34 @@ const ResponsiveAppBar = () => {
   const ButtonNameToPage = {
     Home: '/',
     Friends: '/friends',
-    'Sign In': '/sign-in',
   }
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useGetDispatch();
 
   const handleCloseNavMenu = (page) => () => {
     setAnchorElNav(null);
-    navigate(ButtonNameToPage[authState ? page : 'Home']);
+    if(page) switch(page) {
+      default: 
+        return navigate(ButtonNameToPage[authState ? page : 'Home']);
+    }
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (page) => () => {
     setAnchorElUser(null);
+    if(page) switch(page) {
+      case 'Logout':
+        dispatch({type: ACTIONS.resetAuth})
+        return navigate('/');
+      default: 
+        return navigate(ButtonNameToPage[authState ? page : 'Home']);
+    }
   };
 
   const handleSignIn = () => {
-    console.log('.')
+    setAnchorElNav(null);
+    return navigate('/');
   }
 
   const authState = useGetAuthState();
@@ -147,10 +162,10 @@ const ResponsiveAppBar = () => {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={handleCloseUserMenu()}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu(setting)}>
+                <MenuItem key={setting} onClick={handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -158,7 +173,10 @@ const ResponsiveAppBar = () => {
           </Box>
         </Container>
       </AppBar>
-      <Box disableGutters sx={{mt: headerHeight }/*mt: {xs: '95px', md: '110px'}}*/}><Outlet/></Box>
+      <Box disableGutters sx={{mt: headerHeight }}>
+        <Outlet/>
+        {!authState && !(location.pathname === '/create-account') && <SignInDialog open={true}/>}
+      </Box>
     </div>
   );
 };
