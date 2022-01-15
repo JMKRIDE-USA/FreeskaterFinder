@@ -1,9 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { Box, Grid, Paper, TextField, Typography, LinearProgress, Checkbox, FormControlLabel, InputLabel, Select, MenuItem, FormControl } from '@mui/material'
-import { useForm, Controller } from 'react-hook-form';
+import { 
+  Box,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+  LinearProgress,
+  Checkbox,
+  FormControlLabel,
+  Dialog, DialogTitle, DialogContent,
+} from '@mui/material'
+import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
 
-import { useGetAuthState, useCreateAccount, useGetSelf, usePatchUser} from '@jeffdude/frontend-helpers';
+import { QueryLoader, useGetAuthState, useCreateAccount, useGetSelf, usePatchUser, useGetUserId} from '@jeffdude/frontend-helpers';
 import { socialLinkTypes } from '../constants';
 import Page from '../components/page';
 import TitleCard from '../components/title-card'
@@ -23,70 +33,53 @@ const LinearProgressWithLabel = ({step, ...props}) => (
   </PageCard>
 )
 
-const SocialForm = ({numSocials, register, errors}) => {
-  for(let i = 0; i < numSocials; i++) {
-    const rowname = "socialrow" + i
-    const typename = rowname + "type"
-    const linkname = rowname + "link"
-    return (
-      <Grid item container direction="row" key={linkname}>
-        <Box sx={{flexGrow:1}}>
-          <FormControl fullWidth>
-            <InputLabel id={typename+"label"}>Social Media Site</InputLabel>
-            <Select labelId={typename+"label"} label={"Social Media Site"} {...register(typename, {required: 'This field is required'})}>
-              {socialLinkTypes.map((linktype, index) => (<MenuItem key={linktype + index} value={linktype}>{linktype}</MenuItem>))}
-            </Select>
-          </FormControl>
-        </Box>
-        <TextField label="Link" inputProps={register(linkname, {
-          required: 'This field is required',
-          pattern: {
-            value: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-            message: 'Invalid URL.'
-          },
-        })} error={!!errors[linkname]} helperText={errors[linkname]?.message}/>
-      </Grid>
-    )
-  }
-}
-
-const SocialLink = ({key, socialType, control}) => {
+const SocialLink = ({socialType, register, errors}) => {
   return (
-    <Controller control={control} name={socialType.name}
-      render={({field, fieldState, formState : {errors, ...restFormState}}) => {
-        console.log({field, errors, fieldState, restFormState})
-        // field.value: undefined.
-        // for some reason onChange is not working here
-        return (
-        <TextField margin="normal" label={socialType.label + " Link"}
-          error={!!errors[socialType.name]} helperText={errors[socialType.name]?.message}
-          {...field}
-        />
-        )}
-      } 
-      rules={{required: 'required', pattern: {value: socialType.validationRegex, message: 'Invalid URL.'}}}
+    <TextField label={socialType.label} margin="normal" inputProps={
+        register(socialType.name, {
+          pattern: {value: socialType.validationRegex, message: 'Invalid URL.'}
+        })
+      } error={!!errors[socialType.name]} helperText={errors[socialType.name]?.message}
     />
   )
 }
 
 const StepTwo = () => {
-  const { handleSubmit, formState: {errors}, control } = useForm({defaultValues: () => ''});
-  const patchUser = usePatchUser();
+  const { handleSubmit, formState: {errors}, register } = useForm();
+  const userId = useGetUserId();
+  const patchUser = usePatchUser(userId);
+  const [showError, setShowError] = useState(false);
   const { onClick , render: renderButton } = useMakeLoadingButton({
-    doAction: (data) => {console.log(data); return ({result: false})},
+    doAction: (data) => {
+      if(!data.length) {
+        setShowError(true);
+        return {result: false};
+      }
+      return patchUser({socialLinks: data})
+    },
+    preProcessData: (data) => Object.entries(data).map(([type, link]) => (
+      link.length ? {type, link} : undefined
+    )).filter(o => o !== undefined),
     buttonText: "Save",
   });
-  console.log(errors)
   return (
-    <PageCard>
-      <form onSubmit={handleSubmit(onClick)}>
-        <Grid container direction="column" sx={{p: 1}}>
-          <Typography variant="h6">Please add at least one social media account.</Typography>
-          {socialLinkTypes.map((socialType, key) => <SocialLink {...{key, socialType, control}}/>)}
-        </Grid>
-        {renderButton()}
-      </form>
-    </PageCard>
+    <>
+      <PageCard>
+        <form onSubmit={handleSubmit(onClick)}>
+          <Grid container direction="column" sx={{p: 1}}>
+            <Typography variant="h6">Please add at least one social media account.</Typography>
+            {socialLinkTypes.map((socialType, key) => <SocialLink {...{key, socialType, register, errors}}/>)}
+          </Grid>
+          {renderButton()}
+        </form>
+      </PageCard>
+      <Dialog open={showError} onClose={() => setShowError(false)}>
+        <DialogTitle>Error!</DialogTitle>
+        <DialogContent>
+          Please add at least one social media account. 
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 const StepThree = () => {
@@ -146,9 +139,8 @@ const StepOne = () => {
   )
 }
 
-function CreateAccountPage() {
+function LoadedCreateAccountPage({userInfo}) {
   const authState = useGetAuthState();
-  const userInfo = useGetSelf();
   const creationStage = (() => {
     if(!authState) return 1;
     if(!userInfo.socialLinks) return 2;
@@ -182,5 +174,15 @@ function CreateAccountPage() {
     </Page>
   )
 }
+
+function CreateAccountPage() {
+  const userInfoQuery = useGetSelf();
+  return (
+    <QueryLoader propName="userInfo" query={userInfoQuery}>
+      <LoadedCreateAccountPage/>
+    </QueryLoader>
+  )
+}
+
 
 export default CreateAccountPage;
