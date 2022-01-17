@@ -32,7 +32,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Header/>}>
               <Route index element={<MapPage/>}/>
-              <Route path="create-account" element={<CreateAccountPage/>}/>
+              <Route path="create-account" element={<CreateAccountPage firstTimeSetup={true}/>}/>
+              <Route path="setup-account" element={<CreateAccountPage firstTimeSetup={false}/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>
