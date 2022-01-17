@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Box,
   Grid,
@@ -8,10 +8,12 @@ import {
   LinearProgress,
   Checkbox,
   FormControlLabel,
-  Dialog, DialogTitle, DialogContent,
+  Dialog, DialogTitle, DialogContent, IconButton,
 } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { QueryLoader, useGetAuthState, useCreateAccount, useGetSelf, usePatchUser, useGetUserId} from '@jeffdude/frontend-helpers';
 import { socialLinkTypes } from '../constants';
@@ -19,19 +21,33 @@ import Page from '../components/page';
 import TitleCard from '../components/title-card'
 import PageCard from '../components/page-card';
 import useMakeLoadingButton from '../components/loading-button'
+import { useGetFFUserInfo } from '../modules/user-context';
 
-const LinearProgressWithLabel = ({step, ...props}) => (
-  <PageCard sx={{mb: {xs: 2, md: 2}}}>
-    <Box sx={{ display: 'flex', alignItems: 'center'}}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" value={Math.round(100 * (step/3))} {...props} />
+const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
+  const [step, setStep] = stepState;
+  return (
+    <PageCard sx={{mb: {xs: 2, md: 2}}}>
+      <Box sx={{ display: 'flex', alignItems: 'center'}}>
+        {step > 2 && 
+          <IconButton aria-label="Go back" fontSize="small" sx={{mr:1}} onClick={() => setStep(step-1)}>
+            <ArrowBackIosNewIcon color="primary" fontSize="small"/>
+          </IconButton>
+        }
+        <Box sx={{ width: '100%', mr: 1, mt: 2, mb: 2 }}>
+          <LinearProgress variant="determinate" value={Math.round(100 * (step/3))} {...props} />
+        </Box>
+        <Box sx={{ minWidth: 85 }}>
+          <Typography variant="body2" color="text.secondary">Step {step} of 3</Typography>
+        </Box>
+        {step < 3 && 
+          <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
+            <ArrowForwardIosIcon color="primary" fontSize="small"/>
+          </IconButton>
+        }
       </Box>
-      <Box sx={{ minWidth: 85 }}>
-        <Typography variant="body2" color="text.secondary">Step {step} of 3</Typography>
-      </Box>
-    </Box>
-  </PageCard>
-)
+    </PageCard>
+  )
+}
 
 const SocialLink = ({socialType, register, errors}) => {
   return (
@@ -44,8 +60,14 @@ const SocialLink = ({socialType, register, errors}) => {
   )
 }
 
-const StepTwo = () => {
-  const { handleSubmit, formState: {errors}, register } = useForm();
+const StepTwo = ({socialLinkData, incrementStep}) => {
+  const socialLinkObject = {}
+  socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
+  socialLinkTypes.forEach(({name}) => { // fill in the rest
+    if(!socialLinkObject[name]) socialLinkObject[name] = '';
+  });
+
+  const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: socialLinkObject });
   const userId = useGetUserId();
   const patchUser = usePatchUser(userId);
   const [showError, setShowError] = useState(false);
@@ -55,12 +77,14 @@ const StepTwo = () => {
         setShowError(true);
         return {result: false};
       }
-      return patchUser({socialLinks: data})
+      if(isDirty) return patchUser({socialLinks: data})
+      return {result: true}
     },
     preProcessData: (data) => Object.entries(data).map(([type, link]) => (
       link.length ? {type, link} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
+    thenFn: (result) => {if(result) incrementStep()}
   });
   return (
     <>
@@ -74,7 +98,7 @@ const StepTwo = () => {
         </form>
       </PageCard>
       <Dialog open={showError} onClose={() => setShowError(false)}>
-        <DialogTitle>Error!</DialogTitle>
+        <DialogTitle>Error</DialogTitle>
         <DialogContent>
           Please add at least one social media account. 
         </DialogContent>
@@ -139,48 +163,56 @@ const StepOne = () => {
   )
 }
 
-function LoadedCreateAccountPage({userInfo}) {
+function CreateAccountPage({firstTimeSetup}) {
   const authState = useGetAuthState();
-  const creationStage = (() => {
+  const FFUserInfo = useGetFFUserInfo();
+  const [step, setStep] = useState(1);
+  const incrementStep = () => setStep(step + 1);
+
+  console.log({FFUserInfo})
+
+  useEffect(() => setStep((() => {
     if(!authState) return 1;
-    if(!userInfo.socialLinks) return 2;
-    if(!userInfo.location) return 3;
+    if(!FFUserInfo?.socialLinks.length) return 2;
+    if(!FFUserInfo?.location) return 3;
     return 4;
-  })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  })()), []);
+  
+  const redirect = <Navigate to="/"/>;
+
   const createComponent = (() => {
-    switch(creationStage) {
+    switch(step) {
       case 1:
         return <StepOne/>
       case 2:
-        return <StepTwo/>
+        return <StepTwo {...{socialLinkData: FFUserInfo.socialLinks, incrementStep}}/>
       case 3:
         return <StepThree/>
       default:
-        return <Navigate to="/"/>
+        return <>default</>
     }
   })();
 
   return (
     <Page>
-      <TitleCard title="Create An Account" sx={{mb: 2}}>
-        <Typography variant="subtitle1">You need to create an account to access the Freeskater Finder.</Typography>
+      <TitleCard title={
+        firstTimeSetup ? "Create An Account" : "Finish Setting Up Your Account"
+      } sx={{mb: 2}}>
+        <Typography variant="subtitle1">
+          {firstTimeSetup
+            ? "You need to create an account to access the Freeskater Finder."
+            : "Please finish setting up your Freeskater Finder account."
+          }
+        </Typography>
         <Typography variant="caption">
           Note: You need at least one social media account to participate.
           <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
         </Typography>
       </TitleCard>
-      {<LinearProgressWithLabel step={creationStage}/>}
-      {createComponent}
+      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} stepState={[step, setStep]}/>}
+      { createComponent }
     </Page>
-  )
-}
-
-function CreateAccountPage() {
-  const userInfoQuery = useGetSelf();
-  return (
-    <QueryLoader propName="userInfo" query={userInfoQuery}>
-      <LoadedCreateAccountPage/>
-    </QueryLoader>
   )
 }
 

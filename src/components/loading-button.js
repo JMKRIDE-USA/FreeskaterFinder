@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { LoadingButton } from '@mui/lab';
 
-function useMakeLoadingButton({buttonText, doAction, isFormButton = true, preProcessData = data => data}) {
+function useMakeLoadingButton({buttonText, doAction, isFormButton = true, preProcessData = data => data, thenFn = () => null}) {
 
   const [submitted, setSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(undefined);
@@ -27,8 +27,9 @@ function useMakeLoadingButton({buttonText, doAction, isFormButton = true, prePro
     const newData = preProcessData(data);
     console.log("Submitting:", newData);
     setSubmitted(true)
-    const { result } = await doAction(newData)
-    setSubmissionResult(result);
+    const { result } = await doAction(newData);
+    setSubmissionResult(!!result);
+    thenFn(result);
   }
   return {
     onClick,
