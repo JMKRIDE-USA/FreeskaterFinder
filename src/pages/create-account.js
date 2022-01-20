@@ -15,13 +15,13 @@ import { Link, Navigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import { QueryLoader, useGetAuthState, useCreateAccount, useGetSelf, usePatchUser, useGetUserId} from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, useGetAuthState, useCreateAccount, usePatchUser, useGetUserId} from '@jeffdude/frontend-helpers';
 import { socialLinkTypes } from '../constants';
 import Page from '../components/page';
 import TitleCard from '../components/title-card'
 import PageCard from '../components/page-card';
 import useMakeLoadingButton from '../components/loading-button'
-import { useGetFFUserInfo } from '../modules/user-context';
+import LocationPickerCard from '../components/location-picker'
 
 const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
   const [step, setStep] = stepState;
@@ -62,7 +62,9 @@ const SocialLink = ({socialType, register, errors}) => {
 
 const StepTwo = ({socialLinkData, incrementStep}) => {
   const socialLinkObject = {}
-  socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
+  if(socialLinkData) {
+    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
+  }
   socialLinkTypes.forEach(({name}) => { // fill in the rest
     if(!socialLinkObject[name]) socialLinkObject[name] = '';
   });
@@ -107,16 +109,17 @@ const StepTwo = ({socialLinkData, incrementStep}) => {
   )
 }
 const StepThree = () => {
-  return (<p>Step Three</p>)
+  return <LocationPickerCard/>
 }
 
-const StepOne = () => {
+const StepOne = ({incrementStep}) => {
   const { register, handleSubmit, formState: {errors}, watch}  = useForm();
   const createAccount = useCreateAccount();
   const { onClick, render : renderButton } = useMakeLoadingButton({
     doAction: createAccount,
     buttonText: "Submit",
     preProcessData: ({password2, tos, ...rest}) => rest,
+    thenFn: (result) => {if(!!result) incrementStep()},
   });
   const tos = useRef({})
   tos.current = watch("tos", "")
@@ -165,16 +168,16 @@ const StepOne = () => {
 
 function CreateAccountPage({firstTimeSetup}) {
   const authState = useGetAuthState();
-  const FFUserInfo = useGetFFUserInfo();
+  const userInfo = useGetUserInfo();
   const [step, setStep] = useState(1);
   const incrementStep = () => setStep(step + 1);
 
-  console.log({FFUserInfo})
+  console.log({userInfo})
 
   useEffect(() => setStep((() => {
     if(!authState) return 1;
-    if(!FFUserInfo?.socialLinks.length) return 2;
-    if(!FFUserInfo?.location) return 3;
+    if(!userInfo?.socialLinks.length) return 2;
+    if(!userInfo?.location) return 3;
     return 4;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   })()), []);
@@ -184,9 +187,9 @@ function CreateAccountPage({firstTimeSetup}) {
   const createComponent = (() => {
     switch(step) {
       case 1:
-        return <StepOne/>
+        return <StepOne incrementStep={incrementStep}/>
       case 2:
-        return <StepTwo {...{socialLinkData: FFUserInfo.socialLinks, incrementStep}}/>
+        return <StepTwo {...{socialLinkData: userInfo.socialLinks, incrementStep}}/>
       case 3:
         return <StepThree/>
       default:

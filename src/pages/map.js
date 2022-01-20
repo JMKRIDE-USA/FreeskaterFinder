@@ -1,44 +1,15 @@
 import React from 'react';
 
-import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
 import { Box } from '@mui/material';
 
 import Page from '../components/page'
+import Map from '../components/map';
 import blurredMap from '../assets/GMapBlurred.png'
-
-const containerStyle = {
-  width: '100vw',
-  height: '800px',
-  display: 'absolute',
-};
-
-const center = {
-  lat: 37.945447,
-  lng: -39.955620,
-};
-const MyMapComponent = ({googleMapsApiKey, children}) => (
-  <LoadScript googleMapsApiKey={googleMapsApiKey}>
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={3}
-      options={{maxZoom: 9}}
-    >
-      { children }
-    </GoogleMap>
-  </LoadScript>
-)
-
-const KeyLoader = ({children}) => {
-  const gMapsKeyQuery = useGetQuery("location/googleMapsKey", "GET", {refetchOnWindowFocus: false, refetchOnMount: false, refetchOnReconnect: false});
-  return <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">{children}</QueryLoader>
-}
 
 const MapPage = () => {
   const authState = useGetAuthState();
-  if(authState) return <KeyLoader><MyMapComponent/></KeyLoader>
+  if(authState) return <Map fullscreen/>
   return (
     <Page>
       <Box sx={{p: 0, m:0, minHeight: '50vh', maxHeight: '75vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
