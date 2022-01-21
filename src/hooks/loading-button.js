@@ -33,8 +33,12 @@ function useMakeLoadingButton({buttonText, doAction, isFormButton = true, prePro
   }
   return {
     onClick,
-    render: (props) => (
-      <LoadingButton margin="normal" loading={loading} color={color} variant="contained" {...isFormButton ? {type: "submit"} : {onClick}} {...props}>
+    render: ({sx, ...props} = {}) => (
+      <LoadingButton
+        sx={{...{maxWidth: "150px", minWidth: "135px"}, ...(sx ? sx : {})}}
+        margin="normal" loading={loading} color={color} variant="contained"
+        {...isFormButton ? {type: "submit"} : {onClick}} {...props}
+      >
         {submissionResult === undefined && buttonText}
         {submissionResult === true && <><CheckCircleIcon fontSize="medium" sx={{mr:1}}/>Success!</>}
         {submissionResult === false && <><ErrorIcon fontSize="medium" sx={{mr:1}}/>Error</>}

@@ -20,20 +20,20 @@ import { socialLinkTypes } from '../constants';
 import Page from '../components/page';
 import TitleCard from '../components/title-card'
 import PageCard from '../components/page-card';
-import useMakeLoadingButton from '../components/loading-button'
+import useMakeLoadingButton from '../hooks/loading-button'
 import LocationPickerCard from '../components/location-picker'
 
 const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
   const [step, setStep] = stepState;
   return (
-    <PageCard sx={{mb: {xs: 2, md: 2}}}>
-      <Box sx={{ display: 'flex', alignItems: 'center'}}>
+    <PageCard sx={{mb: 2}}>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%'}}>
         {step > 2 && 
           <IconButton aria-label="Go back" fontSize="small" sx={{mr:1}} onClick={() => setStep(step-1)}>
             <ArrowBackIosNewIcon color="primary" fontSize="small"/>
           </IconButton>
         }
-        <Box sx={{ width: '100%', mr: 1, mt: 2, mb: 2 }}>
+        <Box sx={{ flexGrow: 1, mr: 1, mt: 2, mb: 2 }}>
           <LinearProgress variant="determinate" value={Math.round(100 * (step/3))} {...props} />
         </Box>
         <Box sx={{ minWidth: 85 }}>
@@ -70,8 +70,7 @@ const StepTwo = ({socialLinkData, incrementStep}) => {
   });
 
   const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: socialLinkObject });
-  const userId = useGetUserId();
-  const patchUser = usePatchUser(userId);
+  const patchUser = usePatchUser();
   const [showError, setShowError] = useState(false);
   const { onClick , render: renderButton } = useMakeLoadingButton({
     doAction: (data) => {
