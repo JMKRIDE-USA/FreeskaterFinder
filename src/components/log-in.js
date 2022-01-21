@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useLogin } from '@jeffdude/frontend-helpers';
 
-import useMakeLoadingButton from './loading-button';
+import useMakeLoadingButton from '../hooks/loading-button';
 
 export function SignInDialog({open}) {
   const { register, handleSubmit, formState: {errors}}  = useForm();

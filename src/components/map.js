@@ -2,6 +2,7 @@ import React from 'react';
 
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
+import useGetGMapsKey from '../modules/map-context';
 
 const fullscreenContainerStyle = {
   width: '100vw',
@@ -24,33 +25,32 @@ const defaultCenter = {
 
 const defaultZoom = 3;
 
-const LoadedMapComponent = ({googleMapsApiKey, fullscreen = false, center, zoom, children}) => (
-  <LoadScript googleMapsApiKey={googleMapsApiKey}>
-    <GoogleMap
-      mapContainerStyle={fullscreen ? fullscreenContainerStyle : CardContainerStyle}
-      center={center ? center : defaultCenter}
-      zoom={zoom ? zoom : defaultZoom}
-      options={{
-        maxZoom: 9,
-        minZoom: 2,
-        streetViewControl: false,
-        mapTypeControl: false,
-        mapTypeId: 'terrain',
-        fullscreenControl: false,
-      }}
-    >
-      { children }
-    </GoogleMap>
-  </LoadScript>
-)
+const MapComponent = ({fullscreen = false, center = defaultCenter, zoom = defaultZoom, children}) => {
+  const googleMapsApiKey = useGetGMapsKey();
+  return (
+    <LoadScript googleMapsApiKey={googleMapsApiKey}>
+      <GoogleMap
+        mapContainerStyle={fullscreen ? fullscreenContainerStyle : CardContainerStyle}
+        center={center}
+        zoom={zoom}
+        options={{
+          maxZoom: 9,
+          minZoom: 2,
+          streetViewControl: false,
+          mapTypeControl: false,
+          mapTypeId: 'terrain',
+          fullscreenControl: false,
+        }}
+      >
+        { children }
+      </GoogleMap>
+    </LoadScript>
+  )
+}
 
 const KeyLoader = ({children}) => {
   const gMapsKeyQuery = useGetQuery("location/googleMapsKey", "GET", {refetchOnWindowFocus: false, refetchOnMount: false, refetchOnReconnect: false});
   return <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">{children}</QueryLoader>
 }
 
-const MapComponent = ({children, ...props}) => (
-  <KeyLoader><LoadedMapComponent {...props}>{children}</LoadedMapComponent></KeyLoader>
-)
-
-export default MapComponent;
+export default React.memo(MapComponent);
