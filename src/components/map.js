@@ -48,9 +48,4 @@ const MapComponent = ({fullscreen = false, center = defaultCenter, zoom = defaul
   )
 }
 
-const KeyLoader = ({children}) => {
-  const gMapsKeyQuery = useGetQuery("location/googleMapsKey", "GET", {refetchOnWindowFocus: false, refetchOnMount: false, refetchOnReconnect: false});
-  return <QueryLoader query={gMapsKeyQuery} propName="googleMapsApiKey">{children}</QueryLoader>
-}
-
 export default React.memo(MapComponent);

@@ -158,7 +158,7 @@ const StepOne = ({incrementStep}) => {
             <Checkbox {...register("tos", {required: true})}/>
           } label={<>I agree to the <Link to="/terms-of-service">Terms of Service.</Link></>}
           />
-          {renderButton({disabled: !tos.current})}
+          {renderButton({disabled: !tos.current, sx: {alignSelf: "center"}})}
         </Grid>
       </form>
     </Paper>
@@ -170,8 +170,6 @@ function CreateAccountPage({firstTimeSetup}) {
   const userInfo = useGetUserInfo();
   const [step, setStep] = useState(1);
   const incrementStep = () => setStep(step + 1);
-
-  console.log({userInfo})
 
   useEffect(() => setStep((() => {
     if(!authState) return 1;
