@@ -2,8 +2,9 @@ import React, { useState, useRef } from 'react';
 
 import { Divider, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { QueryLoader, useGetQuery, usePatchUser } from '@jeffdude/frontend-helpers'
+import { useNavigate } from 'react-router-dom'
 import { Circle } from '@react-google-maps/api';
+import ErrorIcon from '@mui/icons-material/Error';
 
 import useMakeLoadingButton from '../hooks/loading-button';
 import PageCard from './page-card';
@@ -33,9 +34,12 @@ const ResultCircle = ({location}) => {
 
 const LocationPickerCard = ({allCountries}) => {
   const [location, setLocation] = useState();
+  const [ error, setError ] = useState('');
 
   const lookupLocation = useLookupLocation();
   const saveLocation = useSaveLocation();
+
+  const navigate = useNavigate();
 
   const { handleSubmit, formState: {isDirty, errors}, register, watch } = useForm({ defaultValues: {
     country: location ? location.country : '',
@@ -51,7 +55,11 @@ const LocationPickerCard = ({allCountries}) => {
       return {result: false}
     },
     buttonText: "Lookup",
-    thenFn: ({ result }) => {if(result.length) setLocation(result[0])}
+    thenFn: ({ result }) => {
+      console.log({result});
+      if(result?.error) return setError(result.error);
+      if(result?.length) return setLocation(result[0]);
+    },
   });
   const { render: renderSaveButton } = useMakeLoadingButton({
     doAction: ({bounds, ...locationData}) => {
@@ -64,7 +72,7 @@ const LocationPickerCard = ({allCountries}) => {
     preProcessData: () => location,
     isFormButton: false,
     buttonText: "Save",
-    thenFn: (result) => {if(result) console.log("redirect")}
+    thenFn: (result) => {if(result) navigate("/", {replace: true})}
   });
   const country = useRef({})
   country.current = watch("country", "")
@@ -76,6 +84,12 @@ const LocationPickerCard = ({allCountries}) => {
       <Typography variant="h6">Select your location.</Typography>
       <Typography variant="subheader">For reasons of safety, you can only go as specific as your zip code.</Typography>
       <Divider variant="fullWidth" sx={{width: '80%', mt: 1, mb: 2}}/>
+      {error &&
+        <Grid container direction="row" sx={{mb: 1, justifyContent: "center"}}>
+          <ErrorIcon sx={{color: "red", mr: 1}}/>
+          <Typography variant="button" sx={{color: "red"}}>{error}</Typography>
+        </Grid>
+      }
       {location && 
         <Grid container direction="row" sx={{justifyContent: "center", alignItems: "center"}}>
           <Typography variant="body1">Does this look correct?</Typography>

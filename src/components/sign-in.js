@@ -32,7 +32,7 @@ export function SignInDialog({open}) {
               }), type: "password"}}
               error={!!errors.password} helperText={errors?.password?.message}
             />
-            { render({type: "submit"}) }
+            { render({type: "submit", sx: {maxWidth: '100%'}}) }
             <Button component={Link} to="/create-account">Create An Account</Button>
           </Grid>
         </form>

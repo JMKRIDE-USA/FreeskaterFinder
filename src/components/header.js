@@ -14,9 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 
 import { useGetAuthState } from '@jeffdude/frontend-helpers';
 import { useGetUserInfo } from '@jeffdude/frontend-helpers';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { SignInDialog } from './log-in'
+import Outlet from './outlet';
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
 import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
@@ -42,7 +42,6 @@ const ResponsiveAppBar = () => {
   }
 
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useGetDispatch();
 
   const handleCloseNavMenu = (page) => () => {
@@ -175,7 +174,6 @@ const ResponsiveAppBar = () => {
       </AppBar>
       <Box disableGutters sx={{mt: headerHeight }}>
         <Outlet/>
-        {!authState && !(location.pathname === '/create-account') && <SignInDialog open={true}/>}
       </Box>
     </div>
   );
