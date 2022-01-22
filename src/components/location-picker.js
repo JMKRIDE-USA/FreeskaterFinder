@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
+import { invalidateCache } from '@jeffdude/frontend-helpers';
 import useMakeLoadingButton from '../hooks/loading-button';
 import PageCard from './page-card';
 import Map from './map';
@@ -72,7 +73,10 @@ const LocationPickerCard = ({allCountries}) => {
     preProcessData: () => location,
     isFormButton: false,
     buttonText: "Save",
-    thenFn: (result) => {if(result) navigate("/", {replace: true})}
+    thenFn: (result) => { if(result){
+      invalidateCache();
+      navigate("/", {replace: true})
+    }}
   });
   const country = useRef({})
   country.current = watch("country", "")

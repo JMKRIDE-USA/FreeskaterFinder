@@ -5,13 +5,27 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useGetAuthState, useGetUserInfo } from '@jeffdude/frontend-helpers';
 import { SignInDialog } from './sign-in'
 
-const MyOutlet = () => {
+export const useIsAccountComplete = () => { 
   const authState = useGetAuthState();
   const userInfo = useGetUserInfo();
+  const { socialLinks, location} = userInfo;
+  return (authState && socialLinks && location)
+}
+
+
+const MyOutlet = () => {
+  const authState = useGetAuthState();
+  const accountComplete = useIsAccountComplete();
   const location = useLocation();
   const navigate = useNavigate();
-  if(authState && (!userInfo.socialLinks || !userInfo.location) && (location.pathname !== '/setup-account')){
-    navigate("/setup-account", {replace: true})
+
+  React.useEffect(() =>{
+    if(authState && (!accountComplete && location.pathname !== '/setup-account')){
+      navigate("/setup-account", {replace: true})
+    }
+  }, [authState, accountComplete, location, navigate])
+
+  if(authState && (!accountComplete && location.pathname !== '/setup-account')){
     return <></>
   } else {
     return (
