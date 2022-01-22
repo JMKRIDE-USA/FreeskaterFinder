@@ -1,24 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
-import { Box } from '@mui/material';
+import { QueryLoader } from '@jeffdude/frontend-helpers';
+import { Box, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, Divider } from '@mui/material';
+import { Marker } from '@react-google-maps/api';
 
 import Page from '../components/page';
+import PageCard from '../components/page-card';
 import Map from '../components/map';
+import { useIsAccountComplete } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
 
-const LoadedMapPage = ({locations}) => {
-  <Map fullscreen/>
+const LoadedMapPage = ({locations, setSelected}) => {
+
+  return (
+    <Map fullscreen>
+      {locations.map(({users, location}, index) => 
+        <Marker position={location} key={index} onClick={() => setSelected({users, location})}/>
+      )}
+    </Map>
+  )
+}
+const LocationLoader = ({children}) => {
+  const locationsQuery = useGetAllLocations();
+  return <QueryLoader query={locationsQuery} propName="locations">
+    {children}
+  </QueryLoader>
 }
 
-const LocationLoader = ({children}) => {
-  const locations = useGetAllLocations();
+const UserDisplayItem = ({user}) => (
+  <ListItem>
+    <ListItemAvatar>
+      <Avatar alt={user.firstName + user.lastName}/>
+    </ListItemAvatar>
+    <ListItemText
+      primary={user.firstName + " " + user.lastName}
+      secondary="test"
+    />
+  </ListItem>
+)
+
+const SelectedUsersDisplay = ({selected}) => {
+  const {users, location } = selected;
+  if(!location) return <></>
+  return (
+    <PageCard>
+      <Typography variant="h6">Zip Code: {location.zip}</Typography>
+      <List sx={{width: '100%'}}>
+        {users.map((user, index) => <><UserDisplayItem user={user}/>{index + 1 !== users.length && <Divider variant="inset" component="li"/>}</>)}
+      </List>
+    </PageCard>
+  )
 }
 
 const MapPage = () => {
-  const authState = useGetAuthState();
-  if(authState) return  <></>
+  const accountComplete = useIsAccountComplete();
+  const [selected, setSelected] = useState({})
+  if(accountComplete) {
+    return (
+      <Page>
+        <LocationLoader><LoadedMapPage setSelected={setSelected}/></LocationLoader>
+        <SelectedUsersDisplay selected={selected}/>
+      </Page>
+    )
+  }
   return (
     <Page>
       <Box sx={{p: 0, m:0, minHeight: '50vh', maxHeight: '75vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
