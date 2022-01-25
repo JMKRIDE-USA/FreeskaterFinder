@@ -11,10 +11,9 @@ import { useIsAccountComplete } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
 
-const LoadedMapPage = ({locations, setSelected}) => {
-
+const LoadedMapPage = ({locations, selected, setSelected}) => {
   return (
-    <Map fullscreen>
+    <Map fullscreen selected={selected}>
       {locations.map(({users, location}, index) => 
         <Marker position={location} key={index} onClick={() => setSelected({users, location})}/>
       )}
@@ -44,7 +43,7 @@ const SelectedUsersDisplay = ({selected}) => {
   const {users, location } = selected;
   if(!location) return <></>
   return (
-    <PageCard>
+    <PageCard sx={{backgroundColor: "white", zIndex: 1}}>
       <Typography variant="h6">Zip Code: {location.zip}</Typography>
       <List sx={{width: '100%'}}>
         {users.map((user, index) => <><UserDisplayItem user={user}/>{index + 1 !== users.length && <Divider variant="inset" component="li"/>}</>)}
@@ -58,8 +57,8 @@ const MapPage = () => {
   const [selected, setSelected] = useState({})
   if(accountComplete) {
     return (
-      <Page>
-        <LocationLoader><LoadedMapPage setSelected={setSelected}/></LocationLoader>
+      <Page fullscreen sx={{justifyContent: 'flex-end'}}>
+        <LocationLoader><LoadedMapPage selected={selected} setSelected={setSelected}/></LocationLoader>
         <SelectedUsersDisplay selected={selected}/>
       </Page>
     )

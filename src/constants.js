@@ -1,3 +1,5 @@
+export const headerHeight = {xs: '55px', md: '70px'}
+export const bodyHeight = {md: 'calc(100vh - ' + headerHeight.md + ')', xs: 'calc(100vh -' + headerHeight.xs + ')'}
 export const socialLinkTypes = [
   {
     name: "facebook",

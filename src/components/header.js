@@ -12,15 +12,14 @@ import ButtonBase from '@mui/material/ButtonBase'
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import { useGetAuthState } from '@jeffdude/frontend-helpers';
-import { useGetUserInfo } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, useGetDispatch, ACTIONS, useGetAuthState } from '@jeffdude/frontend-helpers';
 import { useNavigate } from 'react-router-dom';
 
 import Outlet from './outlet';
+import { headerHeight } from '../constants';
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
 import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
-import { useGetDispatch, ACTIONS } from '@jeffdude/frontend-helpers';
 
 const pages = ['Home', 'Friends'];
 const settings = ['Profile', 'Settings', 'Logout'];
@@ -70,7 +69,6 @@ const ResponsiveAppBar = () => {
 
   const authState = useGetAuthState();
   const userInfo = useGetUserInfo();
-  const headerHeight = {xs: '55px', md: '70px'}
 
   return (
     <div>
