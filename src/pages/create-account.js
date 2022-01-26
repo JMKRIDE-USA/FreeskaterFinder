@@ -1,27 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Box,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-  LinearProgress,
-  Checkbox,
-  FormControlLabel,
-  Dialog, DialogTitle, DialogContent, IconButton,
+  Box, Grid, Paper, TextField, Typography, LinearProgress,
+  Checkbox, FormControlLabel, IconButton,
 } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import { useGetUserInfo, useGetAuthState, useCreateAccount, usePatchUser, useGetUserId} from '@jeffdude/frontend-helpers';
-import { socialLinkTypes } from '../constants';
+import { useGetUserInfo, useGetAuthState, useCreateAccount } from '@jeffdude/frontend-helpers';
 import Page from '../components/page';
 import TitleCard from '../components/title-card'
 import PageCard from '../components/page-card';
 import useMakeLoadingButton from '../hooks/loading-button'
-import LocationPickerCard from '../components/location-picker'
+
+import LocationPickerCard from '../components/forms/location-picker'
+import SocialsPickerCard from '../components/forms/socials-picker';
+import EditProfileCard from '../components/forms/edit-profile';
+
 
 const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
   const [step, setStep] = stepState;
@@ -34,12 +30,12 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
           </IconButton>
         }
         <Box sx={{ flexGrow: 1, mr: 1, mt: 2, mb: 2 }}>
-          <LinearProgress variant="determinate" value={Math.round(100 * (step/3))} {...props} />
+          <LinearProgress variant="determinate" value={Math.round(100 * (step/4))} {...props} />
         </Box>
         <Box sx={{ minWidth: 85 }}>
-          <Typography variant="body2" color="text.secondary">Step {step} of 3</Typography>
+          <Typography variant="body2" color="text.secondary">Step {step} of 4</Typography>
         </Box>
-        {step < 3 && 
+        {step < 4 && 
           <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
             <ArrowForwardIosIcon color="primary" fontSize="small"/>
           </IconButton>
@@ -49,69 +45,7 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
   )
 }
 
-const SocialLink = ({socialType, register, errors}) => {
-  return (
-    <TextField label={socialType.label} margin="normal" inputProps={
-        register(socialType.name, {
-          pattern: {value: socialType.validationRegex, message: 'Invalid URL.'}
-        })
-      } error={!!errors[socialType.name]} helperText={errors[socialType.name]?.message}
-    />
-  )
-}
-
-const StepTwo = ({socialLinkData, incrementStep}) => {
-  const socialLinkObject = {}
-  if(socialLinkData) {
-    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
-  }
-  socialLinkTypes.forEach(({name}) => { // fill in the rest
-    if(!socialLinkObject[name]) socialLinkObject[name] = '';
-  });
-
-  const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: socialLinkObject });
-  const patchUser = usePatchUser();
-  const [showError, setShowError] = useState(false);
-  const { onClick , render: renderButton } = useMakeLoadingButton({
-    doAction: (data) => {
-      if(!data.length) {
-        setShowError(true);
-        return {result: false};
-      }
-      if(isDirty) return patchUser({socialLinks: data})
-      return {result: true}
-    },
-    preProcessData: (data) => Object.entries(data).map(([type, link]) => (
-      link.length ? {type, link} : undefined
-    )).filter(o => o !== undefined),
-    buttonText: "Save",
-    thenFn: (result) => {if(result) incrementStep()}
-  });
-  return (
-    <>
-      <PageCard>
-        <form onSubmit={handleSubmit(onClick)}>
-          <Grid container direction="column" sx={{p: 1}}>
-            <Typography variant="h6">Please add at least one social media account.</Typography>
-            {socialLinkTypes.map((socialType, key) => <SocialLink {...{key, socialType, register, errors}}/>)}
-          </Grid>
-          {renderButton()}
-        </form>
-      </PageCard>
-      <Dialog open={showError} onClose={() => setShowError(false)}>
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          Please add at least one social media account. 
-        </DialogContent>
-      </Dialog>
-    </>
-  )
-}
-const StepThree = () => {
-  return <LocationPickerCard/>
-}
-
-const StepOne = ({incrementStep}) => {
+const CreateAccountCard = ({incrementStep}) => {
   const { register, handleSubmit, formState: {errors}, watch}  = useForm();
   const createAccount = useCreateAccount();
   const { onClick, render : renderButton } = useMakeLoadingButton({
@@ -174,23 +108,26 @@ function CreateAccountPage({firstTimeSetup}) {
   useEffect(() => setStep((() => {
     if(!authState) return 1;
     if(!userInfo?.socialLinks.length) return 2;
-    if(!userInfo?.location) return 3;
+    if(!userInfo?.bio) return 3;
+    if(!userInfo?.location) return 4;
     return 4;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   })()), []);
   
-  const redirect = <Navigate to="/"/>;
+  const Redirect = <Navigate to="/"/>;
 
   const createComponent = (() => {
     switch(step) {
       case 1:
-        return <StepOne incrementStep={incrementStep}/>
+        return <CreateAccountCard incrementStep={incrementStep}/>
       case 2:
-        return <StepTwo {...{socialLinkData: userInfo.socialLinks, incrementStep}}/>
+        return <SocialsPickerCard socialLinkData={userInfo.socialLinks} onSuccess={incrementStep}/>
       case 3:
-        return <StepThree/>
+        return <EditProfileCard onSuccess={incrementStep}/>
+      case 4:
+        return <LocationPickerCard onSuccess={incrementStep}/>
       default:
-        return <>default</>
+        return <Redirect/>
     }
   })();
 
