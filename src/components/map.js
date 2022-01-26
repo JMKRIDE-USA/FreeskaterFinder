@@ -2,22 +2,15 @@ import React from 'react';
 
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Box } from '@mui/material';
-import { QueryLoader, useGetQuery } from '@jeffdude/frontend-helpers/dist/data';
 
 import useGetGMapsKey from '../modules/map-context';
 import { bodyHeight } from '../constants';
 
-const fullscreenContainerStyle = {
-  width: '100vw',
-  minHeight: '100%',
-  display: 'absolute',
-};
+const fullscreenContainerStyle = {width: '100vw', position: 'absolute', height: bodyHeight};
 
 const CardContainerStyle = {
-  maxWidth: '100vw',
-  minWidth: '100%',
-  maxHeight: '80vh',
-  minHeight: '500px',
+  width: '500px',
+  height: '500px',
   flexGrow: 1,
 };
 
@@ -28,32 +21,25 @@ const defaultCenter = {
 
 const defaultZoom = 3;
 
-const MapComponent = ({selected = undefined, fullscreen = false, center = defaultCenter, zoom = defaultZoom, children}) => {
+const MapComponent = ({selected = undefined, fullscreen = false, center = defaultCenter, zoom = defaultZoom, containerStyle = {}, interactive = true, children}) => {
   const googleMapsApiKey = useGetGMapsKey();
+  const myContainerStyle = {...(fullscreen ?  fullscreenContainerStyle : CardContainerStyle), ...containerStyle}
   return (
-    <Box sx={{width: '100vw', position: 'absolute', height: bodyHeight}}>
+    <Box sx={myContainerStyle}>
       <LoadScript googleMapsApiKey={googleMapsApiKey}>
         <GoogleMap
-          mapContainerStyle={fullscreen ? fullscreenContainerStyle : CardContainerStyle}
+          mapContainerStyle={{width: '100%', height: '100%'}}
           center={center}
           zoom={zoom}
-          options={{
+          options={{...{
             maxZoom: 9,
             minZoom: 3,
             streetViewControl: false,
             mapTypeControl: false,
             mapTypeId: 'terrain',
             fullscreenControl: false,
-            restriction: {
-              latLngBounds: {
-                north: 85,
-                south: -85,
-                east: -180,
-                west: 180,
-              }
-            }
-          }}
-        >
+          }, ...(interactive ? {} : {gestureHandling: 'none', zoomControl: false})
+        }}>
           { children }
         </GoogleMap>
       </LoadScript>

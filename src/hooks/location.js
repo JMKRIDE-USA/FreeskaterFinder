@@ -17,6 +17,6 @@ export const useSaveLocation = () => {
   })
 }
 
-export const useGetAllLocations = () => {
-  return useGetQuery("location/all")
+export const useGetAllLocations = (options = {}) => {
+  return useGetQuery("location/all", options)
 }

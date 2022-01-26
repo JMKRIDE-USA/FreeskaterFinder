@@ -3,12 +3,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Header from './components/header';
 import MapPage from './pages/map';
-import CreateAccountPage from './pages/create-account.js';
+import CreateAccountPage from './pages/create-account';
+import ProfilePage from './pages/profile';
+import PageNotFound from './pages/404';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PageNotFound from './pages/404';
 
 const theme = createTheme({
   palette: {
@@ -17,7 +18,11 @@ const theme = createTheme({
       main: '#080808',
     },
     secondary: {
-      main: '#ff1744',
+      main: '#00b0ff',
+    },
+    neutral: {
+      main: '#dadada',
+      contrastText: '#000'
     },
     background: {default: '#c8c8c8', paper: '#f3f3f3'},
   },
@@ -34,6 +39,7 @@ function App() {
               <Route index element={<MapPage/>}/>
               <Route path="create-account" element={<CreateAccountPage firstTimeSetup={true}/>}/>
               <Route path="setup-account" element={<CreateAccountPage firstTimeSetup={false}/>}/>
+              <Route path="my-account" element={<ProfilePage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

@@ -7,11 +7,12 @@ import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
 import { invalidateCache } from '@jeffdude/frontend-helpers';
-import useMakeLoadingButton from '../hooks/loading-button';
-import PageCard from './page-card';
-import Map from './map';
-import { useSaveLocation, useLookupLocation } from '../hooks/location';
-import { distanceBetween } from '../modules/geocode';
+
+import useMakeLoadingButton from '../../hooks/loading-button';
+import PageCard from '../page-card';
+import Map from '../map';
+import { useSaveLocation, useLookupLocation } from '../../hooks/location';
+import { distanceBetween } from '../../modules/geocode';
 
 const ResultCircle = ({location}) => {
   let radius = 8000;
@@ -33,7 +34,7 @@ const ResultCircle = ({location}) => {
   return (<Circle center={location} options={options}/>)
 }
 
-const LocationPickerCard = ({allCountries}) => {
+const LocationPickerCard = ({allCountries, onSuccess}) => {
   const [location, setLocation] = useState();
   const [ error, setError ] = useState('');
 
@@ -75,7 +76,7 @@ const LocationPickerCard = ({allCountries}) => {
     buttonText: "Save",
     thenFn: (result) => { if(result){
       invalidateCache();
-      navigate("/", {replace: true})
+      onSuccess(result);
     }}
   });
   const country = useRef({})
@@ -84,10 +85,11 @@ const LocationPickerCard = ({allCountries}) => {
   zip.current = watch("zip", "")
 
   return (
-    <PageCard>
+    <PageCard header={
+    <>
       <Typography variant="h6">Select your location.</Typography>
       <Typography variant="subheader">For reasons of safety, you can only go as specific as your zip code.</Typography>
-      <Divider variant="fullWidth" sx={{width: '80%', mt: 1, mb: 2}}/>
+    </>}>
       {error &&
         <Grid container direction="row" sx={{mb: 1, justifyContent: "center"}}>
           <ErrorIcon sx={{color: "red", mr: 1}}/>
