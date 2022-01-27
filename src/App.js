@@ -6,6 +6,7 @@ import MapPage from './pages/map';
 import CreateAccountPage from './pages/create-account';
 import ProfilePage from './pages/profile';
 import PageNotFound from './pages/404';
+import EditProfilePage from './pages/edit-profile';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -40,6 +41,7 @@ function App() {
               <Route path="create-account" element={<CreateAccountPage firstTimeSetup={true}/>}/>
               <Route path="setup-account" element={<CreateAccountPage firstTimeSetup={false}/>}/>
               <Route path="my-account" element={<ProfilePage/>}/>
+              <Route path="edit-profile" element={<EditProfilePage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

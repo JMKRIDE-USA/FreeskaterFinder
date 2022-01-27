@@ -8,7 +8,7 @@ function UserAvatar() {
   const userInfo = useGetUserInfo();
   return (
     <Avatar alt={userInfo?.firstName}>
-      {userInfo?.firstName.charAt(0)}
+      {userInfo?.firstName?.charAt(0)}
     </Avatar>
   )
 }

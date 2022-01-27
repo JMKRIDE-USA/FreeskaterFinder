@@ -32,7 +32,7 @@ export const GMapsAPIKeyProvider = ({children}) => {
   if(!authState){
     return <div>{children}</div>
   }
-  return (<KeyLoader> {children} </KeyLoader>);
+  return <KeyLoader> {children} </KeyLoader>;
 }
 
 const useGetGMapsKey = () => React.useContext(GMapsAPIKeyContext);
