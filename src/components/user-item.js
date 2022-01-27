@@ -6,9 +6,8 @@ import UserAvatar from './user-avatar';
 import { maxBlurbLength } from '../constants';
 
 const UserItem = ({user}) => {
-  user.blurb = "Hey! What's up home-skizzles? This is a long blurb blah blah blah"
-  let blurb = user.blurb.substring(0, maxBlurbLength)
-  if(user.blurb.length > maxBlurbLength) {
+  let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
+  if(blurb.length > maxBlurbLength) {
     blurb += "..."
   }
   return (
