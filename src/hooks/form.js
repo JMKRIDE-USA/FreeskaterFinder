@@ -4,15 +4,19 @@ import { useForm } from 'react-hook-form';
 import { Grid, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
 
 import useMakeLoadingButton from './loading-button';
-import PageCard from '../components/page-card';
 
-function useMakeFormCard(
-  {actionFn, onSuccess = () => null, stateList, validateData = () => ([]), cardHeader}
-){
+function useMakeForm({
+  actionFn,
+  onSuccess = () => null,
+  stateList,
+  validateData = () => ([]),
+  cardHeader,
+  backButton = () => null,
+}){
   let initialState = {}
   stateList.forEach(item => initialState[item.key] = item.initialState)
 
-  const { handleSubmit, formState: {isDirty, errors}, register } = useForm(
+  const { handleSubmit, formState: {isDirty, errors}, register, reset } = useForm(
     { defaultValues: initialState }
   );
   const [showError, setShowError] = useState(false);
@@ -44,7 +48,7 @@ function useMakeFormCard(
       return result;
     },
     buttonText: "Save",
-    thenFn: (result) => {if(result) onSuccess(result)},
+    thenFn: (result) => {reset(); if(result) onSuccess(result)},
   });
   return () => (
     <>
@@ -52,7 +56,10 @@ function useMakeFormCard(
         <Grid container direction="column" sx={{p: 1}}>
           {stateList.map(({component}) => component({register, errors}))}
         </Grid>
-        {renderButton()}
+        <Grid container direction="row" sx={{alignItems: 'center', justifyContent: 'center', '& > *': {ml: 1, mr: 1}}}>
+          {renderButton({disabled: !isDirty})}
+          {backButton()}
+        </Grid>
       </form>
       <Dialog open={showError} onClose={closeError}>
         <DialogTitle>Error</DialogTitle>
@@ -66,4 +73,4 @@ function useMakeFormCard(
   )
 }
 
-export default useMakeFormCard;
+export default useMakeForm;

@@ -16,7 +16,7 @@ import { distanceBetween } from '../../modules/geocode';
 
 const ResultCircle = ({location}) => {
   let radius = 8000;
-  if(location.bounds.northeast && location.bounds.southwest) {
+  if(location?.bounds?.northeast && location?.bounds?.southwest) {
     radius = distanceBetween(location.bounds.northeast, location.bounds.southwest) / 2.0;
   }
   const options = {
