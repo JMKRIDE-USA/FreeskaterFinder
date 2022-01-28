@@ -21,7 +21,15 @@ const defaultCenter = {
 
 const defaultZoom = 3;
 
-const MapComponent = ({selected = undefined, fullscreen = false, center = defaultCenter, zoom = defaultZoom, containerStyle = {}, interactive = true, children}) => {
+const MapComponent = ({
+  fullscreen = false,
+  center = defaultCenter,
+  zoom = defaultZoom,
+  containerStyle = {},
+  interactive = true,
+  onLoad,
+  children
+}) => {
   const googleMapsApiKey = useGetGMapsKey();
   const myContainerStyle = {...(fullscreen ?  fullscreenContainerStyle : CardContainerStyle), ...containerStyle}
   return (
@@ -31,6 +39,7 @@ const MapComponent = ({selected = undefined, fullscreen = false, center = defaul
           mapContainerStyle={{width: '100%', height: '100%'}}
           center={center}
           zoom={zoom}
+          onLoad={onLoad}
           options={{...{
             maxZoom: 9,
             minZoom: 3,

@@ -21,7 +21,7 @@ function MyAccountCard() {
       </>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>
-        <UserItem user={userInfo}/>
+        <UserItem user={userInfo} showAction={false}/>
       </Grid>
     </PageCard>
   )

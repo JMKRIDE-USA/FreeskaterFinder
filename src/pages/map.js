@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { QueryLoader } from '@jeffdude/frontend-helpers';
-import { Box, Typography, List, Divider } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Marker } from '@react-google-maps/api';
 
-import UserItem from '../components/user-item';
+import UserList from '../components/user-list';
 import Page from '../components/page';
-import PageCard from '../components/page-card';
 import Map from '../components/map';
 import { useIsAccountComplete } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
 
-const LoadedMap = ({locations, selected, setSelected}) => {
+import titleLogo from '../assets/FreeskaterFinderLogo_WhiteBG.svg';
+import titleLogoNoText from '../assets/FreeskaterFinderLogo_WhiteBG_NoText.svg';
+
+const LoadedMap = ({locations, setSelected}) => {
+  const [mapInstance, setMapInstance] = useState();
+
+  const onClick = ({users, location}) => {
+    mapInstance.setZoom(8)
+    mapInstance.panTo(
+      new window.google.maps.LatLng(location.lat, location.lng)
+    );
+    setSelected({users, location})
+  }
   return (
-    <Map fullscreen selected={selected}>
+    <Map fullscreen onLoad={mapInst => setMapInstance(mapInst)}>
       {locations.map(({users, location}, index) => 
-        <Marker position={location} key={index} onClick={() => setSelected({users, location})}/>
+        <Marker position={location} key={index} onClick={() => onClick({users, location})}/>
       )}
     </Map>
   )
@@ -30,27 +43,25 @@ const LocationLoader = ({children}) => {
 
 const SelectedUsersDisplay = ({selected}) => {
   const {users, location } = selected;
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
   return (
-    <PageCard sx={{backgroundColor: "white", zIndex: 1}}>
-      <Typography variant="h6">Zip Code: {location.zip}</Typography>
-      <List sx={{width: '100%'}}>
-        {users.map((user, index) => (
-          <React.Fragment key={index}>
-            <UserItem user={user}/>
-            {index + 1 !== users.length && <Divider variant="inset" component="li"/>}
-          </React.Fragment>
-        ))}
-      </List>
-    </PageCard>
+    <UserList sx={{backgroundColor: "white", zIndex: 1, m: {xs: 1, md: 5}, mb: {xs: 4, md: 10}}} headerRow header={
+      <>
+        <img src={isMd ? titleLogo : titleLogoNoText} style={{maxHeight: '100px', maxWidth: '40%'}} alt="JMKRIDE FreeskaterFinder Logo"/>
+        <Typography variant="h6">{location.zip}, {location.country} </Typography>
+      </>
+    } users={users}/>
   )
 }
 
 const LoadedMapPage = ({locations}) => {
   const [selected, setSelected] = useState({})
   return (
-    <Page fullscreen sx={{justifyContent: 'flex-end'}}>
-      <LoadedMap selected={selected} setSelected={setSelected} locations={locations}/>
+    <Page fullscreen absoluteChildren={
+      <LoadedMap setSelected={setSelected} locations={locations}/>
+    } gridStyle={{height: '100%', flexDirection: "column-reverse"}}>
       <SelectedUsersDisplay selected={selected}/>
     </Page>
   )
