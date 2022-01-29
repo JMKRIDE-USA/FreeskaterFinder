@@ -43,6 +43,7 @@ const LocationLoader = ({children}) => {
 
 const SelectedUsersDisplay = ({selected}) => {
   const {users, location } = selected;
+  console.log({users, location })
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
@@ -57,6 +58,7 @@ const SelectedUsersDisplay = ({selected}) => {
 }
 
 const LoadedMapPage = ({locations}) => {
+  console.log({locations})
   const [selected, setSelected] = useState({})
   return (
     <Page fullscreen absoluteChildren={
@@ -69,11 +71,8 @@ const LoadedMapPage = ({locations}) => {
 
 const MapPage = () => {
   const accountComplete = useIsAccountComplete();
-  if(accountComplete) {
-    return (
-      <LocationLoader><LoadedMapPage/></LocationLoader>
-    )
-  }
+  if(accountComplete)
+    return <LocationLoader><LoadedMapPage/></LocationLoader>
   return (
     <Page>
       <Box sx={{p: 0, m:0, minHeight: '50vh', maxHeight: '75vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>

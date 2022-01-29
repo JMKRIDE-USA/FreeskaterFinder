@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { LoadingButton } from '@mui/lab';
 
-function useMakeLoadingButton({buttonText, doAction, isFormButton = true, preProcessData = data => data, thenFn = () => null}) {
+function useMakeLoadingButton({buttonText, button, doAction, isFormButton = true, preProcessData = data => data, thenFn = () => null}) {
 
   const [submitted, setSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(undefined);
@@ -31,15 +31,23 @@ function useMakeLoadingButton({buttonText, doAction, isFormButton = true, prePro
     setSubmissionResult(!!result);
     thenFn(result);
   }
+
+  const buttonComponent = button ? button : () => buttonText
+  const startIcon = submissionResult === undefined
+    ? undefined
+    : submissionResult
+      ? <CheckCircleIcon fontSize="medium"/>
+      : <ErrorIcon fontSize="medium"/>
+
   return {
     onClick,
     render: ({sx, ...props} = {}) => (
       <LoadingButton
         sx={{...{maxWidth: "150px", minWidth: "135px"}, ...(sx ? sx : {})}}
-        margin="normal" loading={loading} color={color} variant="contained"
+        margin="normal" loading={loading} color={color} variant="contained" startIcon={startIcon}
         {...isFormButton ? {type: "submit"} : {onClick}} {...props}
       >
-        {submissionResult === undefined && buttonText}
+        {submissionResult === undefined && buttonComponent()}
         {submissionResult === true && <><CheckCircleIcon fontSize="medium" sx={{mr:1}}/>Success!</>}
         {submissionResult === false && <><ErrorIcon fontSize="medium" sx={{mr:1}}/>Error</>}
       </LoadingButton>
