@@ -2,18 +2,36 @@ import React, { useEffect, useState } from 'react';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
 
-function useMakeLoadingButton({buttonText, button, doAction, isFormButton = true, preProcessData = data => data, thenFn = () => null}) {
+const LoadingButtonResult = ({sx, resultIcon, buttonText, ...props}) => (
+  <LoadingButton
+    sx={{...{maxWidth: "150px", minWidth: "135px"}, ...(sx ? sx : {})}}
+    margin="normal" variant="contained" startIcon={resultIcon}
+    {...props}
+  >
+    {buttonText}
+  </LoadingButton>
+)
+
+const IconButtonResult = ({sx, resultIcon, loading, buttonText, ...props}) => (
+  <IconButton {...props}>
+    {loading 
+      ? <CircularProgress size={30}/>
+      : resultIcon
+    }
+  </IconButton>
+)
+
+function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, color, isFormButton = true, preProcessData = data => data, thenFn = () => null}) {
 
   const [submitted, setSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(undefined);
 
   const loading = submitted && submissionResult === undefined;
-  let color = "primary";
-  if(submissionResult !== undefined){
-    color = submissionResult ? "success" : "error"
-  }
+
   useEffect(() => {
     if(submissionResult !== undefined){
       setTimeout(() => {
@@ -32,25 +50,20 @@ function useMakeLoadingButton({buttonText, button, doAction, isFormButton = true
     thenFn(result);
   }
 
-  const buttonComponent = button ? button : () => buttonText
-  const startIcon = submissionResult === undefined
-    ? undefined
+  const ButtonComponent = iconButton ? IconButtonResult : LoadingButtonResult;
+  const [resultButtonText, resultIcon, resultColor] = submissionResult === undefined
+    ? [buttonText, icon, color ? color : "primary"]
     : submissionResult
-      ? <CheckCircleIcon fontSize="medium"/>
-      : <ErrorIcon fontSize="medium"/>
+      ? ["Success", <CheckCircleIcon fontSize="medium"/>, "success"]
+      : ["Error", <ErrorIcon fontSize="medium"/>, "error"]
 
   return {
     onClick,
-    render: ({sx, ...props} = {}) => (
-      <LoadingButton
-        sx={{...{maxWidth: "150px", minWidth: "135px"}, ...(sx ? sx : {})}}
-        margin="normal" loading={loading} color={color} variant="contained" startIcon={startIcon}
+    render: (props) => (
+      <ButtonComponent
+        loading={loading} color={resultColor} resultIcon={resultIcon} buttonText={resultButtonText}
         {...isFormButton ? {type: "submit"} : {onClick}} {...props}
-      >
-        {submissionResult === undefined && buttonComponent()}
-        {submissionResult === true && <><CheckCircleIcon fontSize="medium" sx={{mr:1}}/>Success!</>}
-        {submissionResult === false && <><ErrorIcon fontSize="medium" sx={{mr:1}}/>Error</>}
-      </LoadingButton>
+      />
     )
   }
 }

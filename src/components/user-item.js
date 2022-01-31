@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton } from '@mui/material';
-import { useGetUserInfo } from '@jeffdude/frontend-helpers';
+import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup } from '@mui/material';
+import { useGetUserInfo, invalidateCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
@@ -18,13 +19,19 @@ const SocialLinkIcons = ({socialLinkData}) => {
   return <>friends!</>
 }
 
-const ThisIsYou = () => <Button aria-label="Go To Profile" endIcon={<ManageAccountsIcon/>}>Manage Account</Button>
+const ThisIsYou = () => <Button aria-label="Go To Profile" endIcon={<ManageAccountsIcon/>} component={Link} to="/my-account">Manage Account</Button>
 
 const FriendRequestForm = ({user, setClicked}) => {
   const createFriendRequest = useCreateFriendRequest();
 
   const { handleSubmit, register, reset } = useForm({defaultValues: {memo: ''}})
-  const { render : renderSubmit, onClick } = useMakeLoadingButton({doAction: createFriendRequest, button: () => <CheckIcon/> })
+  const { render : renderSubmit, onClick } = useMakeLoadingButton({
+    doAction: (data) => createFriendRequest({toUserId: user._id, ...data}),
+    iconButton: true,
+    icon: <CheckIcon/>,
+    color: "success",
+    onSuccess: invalidateCache,
+  })
 
   const onCancel = () => {
     reset()
@@ -35,19 +42,23 @@ const FriendRequestForm = ({user, setClicked}) => {
     <form onSubmit={handleSubmit(onClick)}>
       <Grid container direction="row" sx={{flexGrow: 1, alignItems: "center", justifyContent: "flex-end", "& > *": {m:1}}}>
         <TextField label="memo" inputProps={register('memo')}/>
-        { renderSubmit({sx: { maxWidth: undefined, minWidth: undefined} }) }
-        <IconButton aria-label="cancel" onClick={onCancel}><CancelIcon/></IconButton>
+        <ButtonGroup>
+          { renderSubmit({sx: { maxWidth: undefined, minWidth: undefined} }) }
+          <IconButton aria-label="cancel" onClick={onCancel} color="primary"><CancelIcon/></IconButton>
+        </ButtonGroup>
       </Grid>
     </form>
   )
 }
 const FriendRequester = ({user}) => {
   const [clicked, setClicked] = React.useState(false);
-  if(clicked) return <FriendRequestForm setClicked={setClicked}/>
+  if(clicked) return <FriendRequestForm setClicked={setClicked} user={user}/>
   return <Button aria-label="Friend Request" endIcon={<PersonAddIcon/>} onClick={() => setClicked(true)}>Add Friend</Button>
 }
 
-const PendingFriend = () => <>pending</>
+const OutgoingPendingFriend = () => <>pending</>
+
+const IncomingPendingFriend = () => <>incoming pending</>
 
 const UserItem = ({user, showAction = true}) => {
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
@@ -61,16 +72,18 @@ const UserItem = ({user, showAction = true}) => {
       return <ThisIsYou/>;
     if(user.isFriend)
       return <SocialLinkIcons socialLinkData={user.socialLinks}/>;
-    if(user.isPendingFriend)
-      return <PendingFriend/>
+    if(user.incomingPendingFriend)
+      return <IncomingPendingFriend/>
+    if(user.outgoingPendingFriend)
+      return <OutgoingPendingFriend/>
 
-    return <FriendRequester/>
+    return <FriendRequester user={user}/>
   })();
 
   return (
     <ListItem secondaryAction={showAction ? secondaryAction : null}>
       <ListItemAvatar>
-        <UserAvatar/>
+        <UserAvatar user={user}/>
       </ListItemAvatar>
       <ListItemText
         primary={user.firstName + " " + user.lastName}

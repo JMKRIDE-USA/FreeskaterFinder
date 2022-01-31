@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
 import UserAvatar from '../components/user-avatar';
-import { useGetAuthState } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, useGetAuthState } from '@jeffdude/frontend-helpers';
 import { useNavigate } from 'react-router-dom';
 
 import Outlet from './outlet';
@@ -54,6 +54,7 @@ const ResponsiveAppBar = () => {
   }
 
   const authState = useGetAuthState();
+  const userInfo = useGetUserInfo();
 
   return (
     <div>
@@ -126,7 +127,7 @@ const ResponsiveAppBar = () => {
             <Button color="neutral" sx={{mr: 1}} onClick={logout}>Log Out</Button>
             <Tooltip title="My Account">
               <IconButton onClick={() => navigate(ButtonNameToPage['Profile'])} sx={{ p: 0 }}>
-                <UserAvatar/>
+                <UserAvatar user={userInfo}/>
               </IconButton>
             </Tooltip>
           </Box>
