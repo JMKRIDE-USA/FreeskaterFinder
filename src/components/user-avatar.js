@@ -2,13 +2,10 @@ import React from 'react';
 
 import { Avatar } from '@mui/material';
 
-import { useGetUserInfo } from '@jeffdude/frontend-helpers';
-
-function UserAvatar() {
-  const userInfo = useGetUserInfo();
+function UserAvatar({user}) {
   return (
-    <Avatar alt={userInfo?.firstName}>
-      {userInfo?.firstName?.charAt(0)}
+    <Avatar alt={user?.firstName}>
+      {user?.firstName?.charAt(0)}
     </Avatar>
   )
 }

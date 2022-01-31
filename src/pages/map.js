@@ -20,7 +20,9 @@ const LoadedMap = ({locations, setSelected}) => {
   const [mapInstance, setMapInstance] = useState();
 
   const onClick = ({users, location}) => {
-    mapInstance.setZoom(8)
+    if(mapInstance.getZoom() < 8)
+      mapInstance.setZoom(8)
+
     mapInstance.panTo(
       new window.google.maps.LatLng(location.lat, location.lng)
     );
@@ -41,9 +43,7 @@ const LocationLoader = ({children}) => {
   </QueryLoader>
 }
 
-const SelectedUsersDisplay = ({selected}) => {
-  const {users, location } = selected;
-  console.log({users, location })
+const SelectedUsersDisplay = ({selected : {users, location}}) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
@@ -58,7 +58,6 @@ const SelectedUsersDisplay = ({selected}) => {
 }
 
 const LoadedMapPage = ({locations}) => {
-  console.log({locations})
   const [selected, setSelected] = useState({})
   return (
     <Page fullscreen absoluteChildren={
