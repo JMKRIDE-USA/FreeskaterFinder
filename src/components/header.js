@@ -35,10 +35,13 @@ const ResponsiveAppBar = () => {
     Friends: '/friends',
     Profile: '/my-account',
   }
+  const navigate = useNavigate();
 
   const dispatch = useGetDispatch();
-  const logout = () => dispatch({type: ACTIONS.resetAuth})
-  const navigate = useNavigate();
+  const logout = () => {
+    dispatch({type: ACTIONS.resetAuth})
+    navigate('/')
+  }
 
   const handleCloseNavMenu = (page) => () => {
     setAnchorElNav(null);

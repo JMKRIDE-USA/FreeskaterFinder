@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup } from '@mui/material';
-import { useGetUserInfo, invalidateCache } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -13,7 +13,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import UserAvatar from './user-avatar';
 import { maxBlurbLength } from '../constants';
 import useMakeLoadingButton from '../hooks/loading-button';
-import { useCreateFriendRequest } from '../hooks/user';
+import { useCreateFriendRequest } from '../hooks/friends';
 
 const SocialLinkIcons = ({socialLinkData}) => {
   return <>friends!</>
@@ -30,7 +30,7 @@ const FriendRequestForm = ({user, setClicked}) => {
     iconButton: true,
     icon: <CheckIcon/>,
     color: "success",
-    onSuccess: invalidateCache,
+    thenFn: () => {invalidateJFHCache(); setClicked(false)},
   })
 
   const onCancel = () => {
@@ -41,9 +41,9 @@ const FriendRequestForm = ({user, setClicked}) => {
   return (
     <form onSubmit={handleSubmit(onClick)}>
       <Grid container direction="row" sx={{flexGrow: 1, alignItems: "center", justifyContent: "flex-end", "& > *": {m:1}}}>
-        <TextField label="memo" inputProps={register('memo')}/>
+        <TextField label="Add a note" inputProps={register('memo')}/>
         <ButtonGroup>
-          { renderSubmit({sx: { maxWidth: undefined, minWidth: undefined} }) }
+          { renderSubmit() }
           <IconButton aria-label="cancel" onClick={onCancel} color="primary"><CancelIcon/></IconButton>
         </ButtonGroup>
       </Grid>
@@ -77,7 +77,7 @@ const UserItem = ({user, showAction = true}) => {
     if(user.outgoingPendingFriend)
       return <OutgoingPendingFriend/>
 
-    return <FriendRequester user={user}/>
+    return <FriendRequester key={user._id} user={user}/>
   })();
 
   return (
@@ -94,4 +94,4 @@ const UserItem = ({user, showAction = true}) => {
   )
 }
 
-export default UserItem
+export default UserItem;

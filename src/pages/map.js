@@ -8,6 +8,7 @@ import { Marker } from '@react-google-maps/api';
 
 import UserList from '../components/user-list';
 import Page from '../components/page';
+import PageCard from '../components/page-card';
 import Map from '../components/map';
 import { useIsAccountComplete } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
@@ -48,17 +49,28 @@ const SelectedUsersDisplay = ({selected : {users, location}}) => {
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
   return (
-    <UserList sx={{backgroundColor: "white", zIndex: 1, m: {xs: 1, md: 5}, mb: {xs: 4, md: 10}}} headerRow header={
+    <PageCard sx={{backgroundColor: "white", zIndex: 1, m: {xs: 1, md: 5}, mb: {xs: 4, md: 10}}} headerRow header={
       <>
         <img src={isMd ? titleLogo : titleLogoNoText} style={{maxHeight: '100px', maxWidth: '40%'}} alt="JMKRIDE FreeskaterFinder Logo"/>
         <Typography variant="h6">{location.zip}, {location.country} </Typography>
       </>
-    } users={users}/>
+    }>
+      <UserList users={users}/>
+    </PageCard>
   )
 }
 
 const LoadedMapPage = ({locations}) => {
   const [selected, setSelected] = useState({})
+  React.useEffect(() => {
+    if(selected?.location){
+      for(let location of locations){
+        if(location.location._id === selected.location.id)
+          setSelected(location)
+      }
+    }
+  }, 
+  [locations, selected, setSelected])
   return (
     <Page fullscreen absoluteChildren={
       <LoadedMap setSelected={setSelected} locations={locations}/>

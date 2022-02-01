@@ -8,7 +8,7 @@ import { GMapsAPIKeyProvider } from './modules/map-context';
 
 ReactDOM.render(
   <React.StrictMode>
-    <JFHApp config={{backendURL: "http://192.168.0.88:3600"}}>
+    <JFHApp config={{backendURL: "http://192.168.1.8:3600"}}>
       <GMapsAPIKeyProvider>
         <App />
       </GMapsAPIKeyProvider>
