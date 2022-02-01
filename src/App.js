@@ -8,6 +8,7 @@ import ProfilePage from './pages/profile';
 import PageNotFound from './pages/404';
 import EditProfilePage from './pages/edit-profile';
 import EditLocationPage from './pages/edit-location';
+import FriendsPage from './pages/friends';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -44,6 +45,7 @@ function App() {
               <Route path="my-account" element={<ProfilePage/>}/>
               <Route path="edit-profile" element={<EditProfilePage/>}/>
               <Route path="edit-location" element={<EditLocationPage/>}/>
+              <Route path="friends" element={<FriendsPage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

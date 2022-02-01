@@ -1,4 +1,4 @@
-import { useCreateMutation, invalidateCache, useGetQuery } from "@jeffdude/frontend-helpers"
+import { useCreateMutation, invalidateJFHCache, useGetQuery } from "@jeffdude/frontend-helpers"
 
 export const useLookupLocation = () => {
   return useCreateMutation({
@@ -13,7 +13,7 @@ export const useSaveLocation = () => {
     endpoint: "location/save",
     method: "POST",
     verb: "saving user location",
-    options: { onSuccess: invalidateCache }
+    options: { onSuccess: invalidateJFHCache }
   })
 }
 

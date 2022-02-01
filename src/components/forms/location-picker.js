@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { invalidateCache } from '@jeffdude/frontend-helpers';
+import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
 
 import useMakeLoadingButton from '../../hooks/loading-button';
 import PageCard from '../page-card';
@@ -75,7 +75,7 @@ const LocationPickerCard = ({allCountries, onSuccess}) => {
     isFormButton: false,
     buttonText: "Save",
     thenFn: (result) => { if(result){
-      invalidateCache();
+      invalidateJFHCache();
       onSuccess(result);
     }}
   });
