@@ -41,13 +41,17 @@ function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, c
     }
   }, [submissionResult, setSubmissionResult, setSubmitted])
 
-  const onClick = async (data) => {
+  const onClick = (data) => {
     const newData = preProcessData(data);
     console.log("Submitting:", newData);
     setSubmitted(true)
-    const { result } = await doAction(newData);
-    setSubmissionResult(!!result);
-    thenFn(result);
+    doAction(newData).then(
+      (result) => {
+        console.log("received:", {result})
+        setSubmissionResult(!!result);
+        thenFn(result);
+      }
+    );
   }
 
   const ButtonComponent = iconButton ? IconButtonResult : LoadingButtonResult;

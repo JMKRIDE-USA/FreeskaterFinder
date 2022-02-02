@@ -14,7 +14,6 @@ import RequestList from '../components/request-list';
 
 
 function LoadedPendingFriendsCard({pendingFriends}) {
-  console.log({pendingFriends})
   if(!pendingFriends.length)
     return <></>
   return (
@@ -35,6 +34,7 @@ function PendingFriendsCard() {
 
 function FriendsCard() {
   const { friends } = useGetUserInfo();
+  friends.forEach(friend => friend.isFriend = true);
   return (
     <PageCard sx={{mb:2}} headerRow header={
       <>

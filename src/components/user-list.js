@@ -6,7 +6,7 @@ import UserItem from './user-item';
 
 
 function UserList({users, emptyMessage = "No Users Found"}){
-  if(!users.list)
+  if(!users.length)
     return <Typography variant="body">
       {emptyMessage}
     </Typography>
