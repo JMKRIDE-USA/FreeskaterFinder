@@ -48,7 +48,7 @@ function RequestList({requests}){
       {requests.map(( request, index ) => (
         <>
           <RequestItem request={request} key={index}/>
-          {index < requests.length && <Divider variant="inset" component="li"/>}
+          {index + 1 < requests.length && <Divider variant="inset" component="li"/>}
         </>
       ))}
     </List>

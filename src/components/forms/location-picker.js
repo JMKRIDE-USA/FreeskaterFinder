@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-import { Divider, Grid, TextField, Typography } from '@mui/material';
+import { Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom'
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
@@ -41,8 +40,6 @@ const LocationPickerCard = ({allCountries, onSuccess}) => {
   const lookupLocation = useLookupLocation();
   const saveLocation = useSaveLocation();
 
-  const navigate = useNavigate();
-
   const { handleSubmit, formState: {isDirty, errors}, register, watch } = useForm({ defaultValues: {
     country: location ? location.country : '',
     zip: location ? location.zip : '',
@@ -57,7 +54,7 @@ const LocationPickerCard = ({allCountries, onSuccess}) => {
       return {result: false}
     },
     buttonText: "Lookup",
-    thenFn: ({ result }) => {
+    thenFn: (result) => {
       console.log({result});
       if(result?.error) return setError(result.error);
       if(result?.length) return setLocation(result[0]);

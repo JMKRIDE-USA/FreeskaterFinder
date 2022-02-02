@@ -4,9 +4,9 @@ import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconBu
 import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -58,7 +58,9 @@ const FriendRequester = ({user}) => {
 
 const OutgoingPendingFriend = () => <>pending</>
 
-const IncomingPendingFriend = () => <>incoming pending</>
+const IncomingPendingFriend = () => {
+  return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
+}
 
 const UserItem = ({user, showAction = true}) => {
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
@@ -66,7 +68,7 @@ const UserItem = ({user, showAction = true}) => {
     blurb += "..."
   }
   const userInfo = useGetUserInfo();
-
+  console.log({userInfo, user})
   const secondaryAction = (() => {
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
