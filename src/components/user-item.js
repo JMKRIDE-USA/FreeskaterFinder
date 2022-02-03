@@ -11,12 +11,18 @@ import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import UserAvatar from './user-avatar';
-import { maxBlurbLength } from '../constants';
+import { getSocialLinkTypeByName, maxBlurbLength } from '../constants';
 import useMakeLoadingButton from '../hooks/loading-button';
 import { useCreateFriendRequest } from '../hooks/friends';
 
+
 const SocialLinkIcons = ({socialLinkData}) => {
-  return <>friends!</>
+  return <ButtonGroup>
+    {socialLinkData.map(({link, type}, index) => {
+      const Icon = getSocialLinkTypeByName(type)?.icon;
+      return <IconButton key={index} href={link} target="_blank" color="primary"><Icon/></IconButton>
+    })}
+  </ButtonGroup>
 }
 
 const ThisIsYou = () => <Button aria-label="Go To Profile" endIcon={<ManageAccountsIcon/>} component={Link} to="/my-account">Manage Account</Button>
@@ -68,7 +74,6 @@ const UserItem = ({user, showAction = true}) => {
     blurb += "..."
   }
   const userInfo = useGetUserInfo();
-  console.log({userInfo, user})
   const secondaryAction = (() => {
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
