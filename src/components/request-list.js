@@ -46,10 +46,10 @@ function RequestList({requests}){
   return (
     <List sx={{width: '100%'}}>
       {requests.map(( request, index ) => (
-        <>
+        <React.Fragment key={index}>
           <RequestItem request={request} key={index}/>
           {index + 1 < requests.length && <Divider variant="inset" component="li"/>}
-        </>
+        </React.Fragment>
       ))}
     </List>
   )

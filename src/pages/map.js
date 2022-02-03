@@ -62,7 +62,6 @@ const SelectedUsersDisplay = ({selected : {users, location}}) => {
 
 const LoadedMapPage = ({locations}) => {
   const [selected, setSelected] = useState({})
-  console.log({locations})
   React.useEffect(() => {
     if(selected?.location){
       for(let location of locations){
