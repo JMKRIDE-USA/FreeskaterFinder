@@ -110,11 +110,11 @@ function CreateAccountPage({firstTimeSetup}) {
     if(!userInfo?.socialLinks.length) return 2;
     if(!userInfo?.bio) return 3;
     if(!userInfo?.location) return 4;
-    return 4;
+    return 5;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   })()), []);
   
-  const Redirect = <Navigate to="/"/>;
+  const Redirect = () => <Navigate to="/"/>;
 
   const createComponent = (() => {
     switch(step) {

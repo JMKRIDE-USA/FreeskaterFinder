@@ -9,7 +9,7 @@ import { bodyHeight } from '../constants';
 const fullscreenContainerStyle = {width: '100vw', position: 'absolute', height: bodyHeight};
 
 const CardContainerStyle = {
-  width: '500px',
+  width: 'min(90vw, 500px)',
   height: '500px',
   flexGrow: 1,
 };
@@ -47,7 +47,7 @@ const MapComponent = ({
             mapTypeControl: false,
             mapTypeId: 'terrain',
             fullscreenControl: false,
-          }, ...(interactive ? {} : {gestureHandling: 'none', zoomControl: false})
+          }, ...(interactive ? {gestureHandling: 'greedy'} : {gestureHandling: 'none', zoomControl: false})
         }}>
           { children }
         </GoogleMap>

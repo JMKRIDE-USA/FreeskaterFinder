@@ -60,6 +60,8 @@ function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, c
 
   return {
     onClick,
+    loading,
+    submissionResult,
     render: (props) => (
       <ButtonComponent
         loading={loading} color={resultColor} resultIcon={resultIcon} buttonText={resultButtonText}
