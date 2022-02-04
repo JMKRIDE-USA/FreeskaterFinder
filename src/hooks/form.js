@@ -54,7 +54,7 @@ function useMakeForm({
     <>
       <form onSubmit={handleSubmit(onClick)}>
         <Grid container direction="column" sx={{p: 1}}>
-          {stateList.map(({component}) => component({register, errors}))}
+          {stateList.map(({component}, key) => <React.Fragment key={key}>{component({register, errors})}</React.Fragment>)}
         </Grid>
         <Grid container direction="row" sx={{alignItems: 'center', justifyContent: 'center', '& > *': {ml: 1, mr: 1}}}>
           {renderButton({disabled: !isDirty})}

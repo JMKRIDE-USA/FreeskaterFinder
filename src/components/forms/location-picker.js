@@ -33,7 +33,7 @@ const ResultCircle = ({location}) => {
   return (<Circle center={location} options={options}/>)
 }
 
-const LocationPickerCard = ({allCountries, onSuccess}) => {
+const LocationPickerCard = ({onSuccess}) => {
   const [location, setLocation] = useState();
   const [ error, setError ] = useState('');
 

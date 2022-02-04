@@ -11,7 +11,7 @@ function UserList({users, emptyMessage = "No Users Found"}){
       {emptyMessage}
     </Typography>
   return (
-    <List sx={{width: '100%'}}>
+    <List sx={{width: '100%', overflowY: 'auto'}}>
       {users.map((user, index) => (
         <React.Fragment key={index}>
           <UserItem user={user}/>

@@ -50,3 +50,16 @@ export const getSocialLinkTypeByName = (name) => {
   socialLinkTypes.forEach(type => {if(type.name === name) result = type});
   return result;
 }
+
+export const FFVisibility = {
+  visible: "VISIBLE",
+  hidden: "HIDDEN",
+}
+export const FFUserPrivacy = {
+  private: "PRIVATE",
+  public: "PUBLIC",
+}
+export const defaultUserSettings = {
+  FFMapVisibility: FFVisibility.visible,
+  FFUserPrivacy: FFUserPrivacy.private,
+}
