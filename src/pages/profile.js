@@ -45,6 +45,27 @@ function MyLocationCard(...props) {
   )
 }
 
+function ContactCard() {
+  // fix header Divider alignment
+  return <PageCard headerRow header={
+    <Typography variant="h6">Contact JMK</Typography>
+  } sx={{'& > *': {maxWidth: 'min(90vw, 590px)'}}}>
+    <Typography variant="body1" sx={{mb: 2}}>
+      Please reach out to me about any issues with the website, your account, other users, or anything else at all.
+    </Typography>
+    <Typography variant="h5" sx={{alignSelf: 'center'}}>
+      jeff@jmkride.com
+    </Typography>
+    <Divider sx={{mt: 2, mb: 2, width: '100%'}}/>
+    <Typography variant="body2" color="text.secondary">
+      Thank you for using the JMKRIDE Freeskater Finder.
+      This website was a labor of love by me, Jeff Milling. 
+      It is my gift to the freeskating community. I sincerely hope that this site helps to connect freeskaters with
+      other freeskaters in their area in a way that is safe and beneficial to all parties.
+    </Typography> 
+  </PageCard>
+}
+
 function ProfilePage() {
   const userInfo = useGetUserInfo();
   return (
@@ -53,9 +74,10 @@ function ProfilePage() {
         <Typography variant="subheader">Manage your profile, privacy, and settings here.</Typography>
       </TitleCard>
       <Grid item container direction="row" sx={{justifyContent: 'center', "& > *": {m: 1}}}>
-        <Grid item container direction="column" xs='auto' sx={{'& > *': {mb: 1, mt: 1}}}>
+        <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {mb: 1, mt: 1}}}>
           <MyAccountCard/>
           <UserSettingsCard/>
+          <ContactCard/>
         </Grid>
         <MyLocationCard md={6} xs={12}/>
       </Grid>

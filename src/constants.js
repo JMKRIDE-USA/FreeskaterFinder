@@ -51,7 +51,7 @@ export const getSocialLinkTypeByName = (name) => {
   return result;
 }
 
-export const FFVisibility = {
+export const FFMapVisibility = {
   visible: "VISIBLE",
   hidden: "HIDDEN",
 }
@@ -60,6 +60,6 @@ export const FFUserPrivacy = {
   public: "PUBLIC",
 }
 export const defaultUserSettings = {
-  FFMapVisibility: FFVisibility.visible,
+  FFMapVisibility: FFMapVisibility.visible,
   FFUserPrivacy: FFUserPrivacy.private,
 }
