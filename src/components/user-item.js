@@ -35,7 +35,6 @@ const FriendRequestForm = ({user, setClicked}) => {
     doAction: (data) => createFriendRequest({toUserId: user._id, ...data}),
     iconButton: true,
     icon: <CheckIcon/>,
-    color: "success",
     thenFn: () => {invalidateJFHCache(); setClicked(false)},
   })
 
@@ -56,9 +55,31 @@ const FriendRequestForm = ({user, setClicked}) => {
     </form>
   )
 }
+
+const ConfirmAddFriend = ({user, setClicked}) => {
+  const createFriendRequest = useCreateFriendRequest();
+  const { render } = useMakeLoadingButton({
+    doAction: () => createFriendRequest({toUserId: user._id}),
+    buttonText: "Confirm?",
+    isFormButton: false,
+    thenFn: () => {invalidateJFHCache(); setClicked(false)},
+  })
+  return render({
+    variant: "text", 
+    endIcon: <PersonAddIcon/>,
+  })
+}
+
 const FriendRequester = ({user}) => {
   const [clicked, setClicked] = React.useState(false);
-  if(clicked) return <FriendRequestForm setClicked={setClicked} user={user}/>
+  if(user.isPublic) console.log({user});
+  if(clicked){
+    if(user.isPublic) {
+      return <ConfirmAddFriend setClicked={setClicked} user={user}/>
+    } else {
+      return <FriendRequestForm setClicked={setClicked} user={user}/>
+    }
+  }
   return <Button aria-label="Friend Request" endIcon={<PersonAddIcon/>} onClick={() => setClicked(true)}>Add Friend</Button>
 }
 

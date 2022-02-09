@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, List, ListItemText, ListItem, Typography, Grid } from '@mui/material';
+import { Divider, List, ListItemText, ListItem, Typography } from '@mui/material';
 import { usePatchUser } from '@jeffdude/frontend-helpers';
 
 import { useGetUserSettings } from '../hooks/user';
@@ -20,6 +20,7 @@ const VisibilitySwitch = ({FFMapVisibility : visibility}) => {
 }
 
 const PrivacySwitch = ({FFUserPrivacy : privacy}) => {
+  console.log({privacy})
   const patchUser = usePatchUser();
   const isPublic = privacy === FFUserPrivacy.public;
   return <Switch
@@ -54,7 +55,7 @@ const UserSettingsCard = () => {
           secondary={
             "By default, your account is private, " +
             "which means you must approve friends for them to see your social media links. " +
-            "Set to \'Public\' to allow people to see your social media links without friend requests."
+            "Set to 'Public' to allow people to see your social media links without friend requests."
           } sx={{maxWidth: 'min(80vw, 500px)', mr: 4}}
         />
       </ListItem>

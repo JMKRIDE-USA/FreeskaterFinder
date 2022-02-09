@@ -22,6 +22,7 @@ const PageCard = ({children, header, headerRow = false, small = false, sx, ...pr
   return (
     <Paper elevation={4} sx={{...{
       p:2, minWidth: (small ? {xs: '95vw', md: '300px'} : {xs: '95vw', md: '600px'}),
+      maxWidth: '95vw',
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
     }, ...sx}} {...props}>
       {header && 

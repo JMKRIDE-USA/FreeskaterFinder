@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { useGetUserInfo } from '@jeffdude/frontend-helpers';
-import { Grid, Typography, Divider, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useGetUserInfo, useLogout, ACTIONS, useGetDispatch } from '@jeffdude/frontend-helpers';
+import { Grid, Typography, Divider, Button, ButtonGroup } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { Marker } from '@react-google-maps/api';
 
 import MapComponent from '../components/map';
@@ -14,11 +14,23 @@ import UserSettingsCard from '../components/user-settings';
 
 function MyAccountCard() {
   const userInfo = useGetUserInfo();
+  const logout = useLogout();
+  const dispatch = useGetDispatch();
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    logout();
+    dispatch({type: ACTIONS.resetAuth});
+    navigate("/")
+  }
   return (
     <PageCard small headerRow header={
       <>
         <Typography variant="h6" sx={{ml: 1}}>My Account</Typography>
-        <Button variant="contained" color="neutral" component={Link} to="/edit-profile" sx={{alignSelf: "flex-end"}}>Edit</Button>
+        <ButtonGroup>
+          <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
+          <Button variant="contained" color="neutral" onClick={onLogout}>Log Out</Button>
+        </ButtonGroup>
       </>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>
@@ -51,9 +63,9 @@ function ContactCard() {
     <Typography variant="h6">Contact JMK</Typography>
   } sx={{'& > *': {maxWidth: 'min(90vw, 590px)'}}}>
     <Typography variant="body1" sx={{mb: 2}}>
-      Please reach out to me about any issues with the website, your account, other users, or anything else at all.
+      Please reach out to me about any issues with the website, its users, your account, or anything else at all.
     </Typography>
-    <Typography variant="h5" sx={{alignSelf: 'center'}}>
+    <Typography variant="h5" sx={{alignSelf: 'center'}} href="mailto:jeff@jmkride.com">
       jeff@jmkride.com
     </Typography>
     <Divider sx={{mt: 2, mb: 2, width: '100%'}}/>

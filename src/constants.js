@@ -63,3 +63,10 @@ export const defaultUserSettings = {
   FFMapVisibility: FFMapVisibility.visible,
   FFUserPrivacy: FFUserPrivacy.private,
 }
+
+export const notificationReasons = {
+  friendRequestCreated: 'FRIEND_REQUEST_CREATED',
+  friendAdded: 'FRIEND_ADDED',
+  challengeStatusChanged: 'CHALLENGE_STATUS_CHANGED',
+  referralCodeUsed: 'REFERRAL_CODE_USED'
+}
