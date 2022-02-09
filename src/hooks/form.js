@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
-import { Grid, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
+import { Grid, Dialog, DialogTitle, DialogContent } from '@mui/material';
 
 import useMakeLoadingButton from './loading-button';
 

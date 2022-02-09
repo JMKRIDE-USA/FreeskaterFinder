@@ -21,6 +21,7 @@ const defaultCenter = {
 
 const defaultZoom = 3;
 
+
 const MapComponent = ({
   fullscreen = false,
   center = defaultCenter,

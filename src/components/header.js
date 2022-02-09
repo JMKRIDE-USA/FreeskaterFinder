@@ -20,7 +20,8 @@ import { headerHeight } from '../constants';
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
 import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
-import { ACTIONS, useGetDispatch } from '@jeffdude/frontend-helpers/dist/context';
+
+import NotificationsMenu from './notifications-menu';
 
 const pages = ['Home', 'Friends'];
 
@@ -36,12 +37,6 @@ const ResponsiveAppBar = () => {
     Profile: '/my-account',
   }
   const navigate = useNavigate();
-
-  const dispatch = useGetDispatch();
-  const logout = () => {
-    dispatch({type: ACTIONS.resetAuth})
-    navigate('/')
-  }
 
   const handleCloseNavMenu = (page) => () => {
     setAnchorElNav(null);
@@ -127,7 +122,7 @@ const ResponsiveAppBar = () => {
             <Button onClick={handleSignIn} sx={{my: 2, color: 'white', display: 'block'}}>Sign In</Button>
           </Box>
           <Box sx={{ flexGrow: 0, display: authState ? 'flex' : 'none' }}>
-            <Button color="neutral" sx={{mr: 1}} onClick={logout}>Log Out</Button>
+            <NotificationsMenu/>
             <Tooltip title="My Account">
               <IconButton onClick={() => navigate(ButtonNameToPage['Profile'])} sx={{ p: 0 }}>
                 <UserAvatar user={userInfo}/>
