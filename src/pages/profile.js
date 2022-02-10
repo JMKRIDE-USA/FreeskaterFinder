@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useGetUserInfo, useLogout, ACTIONS, useGetDispatch } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, useLogout } from '@jeffdude/frontend-helpers';
 import { Grid, Typography, Divider, Button, ButtonGroup } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { Marker } from '@react-google-maps/api';
@@ -15,12 +15,10 @@ import UserSettingsCard from '../components/user-settings';
 function MyAccountCard() {
   const userInfo = useGetUserInfo();
   const logout = useLogout();
-  const dispatch = useGetDispatch();
   const navigate = useNavigate();
 
   const onLogout = () => {
     logout();
-    dispatch({type: ACTIONS.resetAuth});
     navigate("/")
   }
   return (
@@ -28,6 +26,7 @@ function MyAccountCard() {
       <>
         <Typography variant="h6" sx={{ml: 1}}>My Account</Typography>
         <ButtonGroup>
+          <Button variant="contained" color="neutral" component={Link} to="/edit-profileicon">Edit Icon</Button>
           <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
           <Button variant="contained" color="neutral" onClick={onLogout}>Log Out</Button>
         </ButtonGroup>
@@ -40,7 +39,7 @@ function MyAccountCard() {
   )
 }
 
-function MyLocationCard(...props) {
+function MyLocationCard() {
   const userInfo = useGetUserInfo()
   return (
     <PageCard sx={{minWidth: '400px', minHeight: '300px'}} small headerRow header={
@@ -48,7 +47,7 @@ function MyLocationCard(...props) {
         <Typography variant="h6" sx={{ml: 1}}>My Location</Typography>
         <Button variant="contained" color="neutral" component={Link} to="/edit-location" sx={{alignSelf: "flex-end"}}>Edit</Button>
       </>
-    } {...props}>
+    }>
       <Typography variant="body" alignSelf="flex-start" mb={1}><b>Location:</b> {userInfo.location.zip}, {userInfo.location.country}</Typography>
       <MapComponent center={userInfo.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
         <Marker position={userInfo.location}/>

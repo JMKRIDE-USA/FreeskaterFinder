@@ -2,11 +2,10 @@ import React from 'react';
 
 import { Avatar } from '@mui/material';
 
+
 function UserAvatar({user}) {
   return (
-    <Avatar alt={user?.firstName}>
-      {user?.firstName?.charAt(0)}
-    </Avatar>
+    <Avatar alt={user?.firstName} sx={{bgcolor: "white"}}/>
   )
 }
 
