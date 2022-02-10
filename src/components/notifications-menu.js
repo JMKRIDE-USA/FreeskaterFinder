@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Badge, IconButton, Menu, List, ListItemButton, ListItemText, ListItemAvatar, ListItem, Divider, ListItemSecondaryAction } from '@mui/material';
-import { Link as MuiLink } from '@mui/material';
 import { useGetAuthState, QueryLoader } from '@jeffdude/frontend-helpers';
 import { Link } from 'react-router-dom';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useGetUserNotifications, useReadNotification } from '../hooks/notifications';
 import { notificationReasons } from '../constants';
@@ -17,6 +17,8 @@ function NotificationItem({notification}){
   //TODO
   challengeStatusChanged: 'CHALLENGE_STATUS_CHANGED',
   referralCodeUsed: 'REFERRAL_CODE_USED'
+          import { Link as MuiLink } from '@mui/material';
+          <MuiLink variant="caption" onClick={markRead}>Mark As Read</MuiLink>
   */
   const { actor } = notification;
   const markRead = useReadNotification(notification._id)
@@ -30,10 +32,12 @@ function NotificationItem({notification}){
         <ListItemText
           primary={actor.firstName + " " + action}
           secondary={"Click to " + seeMore}
-          sx={{maxWidth: '60%'}}
+          sx={{maxWidth: '80%'}}
         />
-        <ListItemSecondaryAction sx={{maxWidth: '40%'}}>
-          <MuiLink onClick={() => markRead()}>Mark As Read</MuiLink>
+        <ListItemSecondaryAction>
+          <IconButton onClick={markRead}>
+            <CancelIcon/> 
+          </IconButton>
         </ListItemSecondaryAction>
       </ListItemButton>
     )
@@ -56,8 +60,6 @@ function NotificationItem({notification}){
 }
 
 function LoadedNotificationsMenu({notifications}) {
-  console.log({notifications})
-
   const [ anchorEl, setAnchorEl ] = useState(null);
 
   const handleOpen = (event) => {
@@ -82,7 +84,7 @@ function LoadedNotificationsMenu({notifications}) {
         open={!!anchorEl} onClose={handleClose}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         transformOrigin={{vertical: 'top', horizontal: 'right'}}
-        PaperProps={{style: {width: 'min(80vw, 450px)'}}}
+        PaperProps={{style: {width: 'min(80vw, 400px)'}}}
       >
         <List>
           {notifications.length
@@ -93,7 +95,7 @@ function LoadedNotificationsMenu({notifications}) {
               </>
             })
             : <ListItem>
-              <ListItemAvatar>
+              <ListItemAvatar sx={{ml: 2}}>
                 <InsertEmoticonIcon/>
               </ListItemAvatar>
               <ListItemText

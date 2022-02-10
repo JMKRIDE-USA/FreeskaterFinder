@@ -4,7 +4,7 @@ import { QueryLoader } from '@jeffdude/frontend-helpers';
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import { Marker } from '@react-google-maps/api';
 
 import UserList from '../components/user-list';
 import Page from '../components/page';
