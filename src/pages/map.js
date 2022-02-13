@@ -67,7 +67,10 @@ const LoadedMap = ({locations, setSelected}) => {
       {mapInstance && locations.map(({users, location}, index) => 
         <Marker
           position={location} key={index} onClick={() => onClick({users, location})}
-          icon={getIcon({users})}
+          icon={getIcon({users})} draggable={false} shape={{
+            coords: [15, 10, 50, 80],
+            type: "rect",
+          }} options={{shape: {coords: [15, 10, 50, 80], type: "rect"}}}
         />
       )}
     </Map>
@@ -122,7 +125,7 @@ const MapPage = () => {
     return <LocationLoader><LoadedMapPage/></LocationLoader>
   return (
     <Page>
-      <Box sx={{p: 0, m:0, minHeight: '50vh', maxHeight: '75vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
+      <Box sx={{p: 0, m:0, height: '95vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
         <img
           src={blurredMap} alt="Freeskater Finder Map Preview"
           style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}

@@ -8,25 +8,24 @@ import PageCard from './page-card';
 import { FFMapVisibility, FFUserPrivacy } from '../constants';
 import Switch from './forms/switch';
 
-const VisibilitySwitch = ({FFMapVisibility : visibility}) => {
+const VisibilitySwitch = ({FFMapVisibility : visibility, userSettings}) => {
   const patchUser = usePatchUser();
   const visible = visibility === FFMapVisibility.visible;
   return <Switch
     checked={visible}
     caption={visible ? "Visible" : "Hidden"}
-    doAction={(data) => patchUser({settings: {FFMapVisibility: data}})}
+    doAction={(data) => patchUser({settings: {...userSettings, ...{FFMapVisibility: data}}})}
     preProcessData={() => visible ? FFMapVisibility.hidden : FFMapVisibility.visible}
   />
 }
 
-const PrivacySwitch = ({FFUserPrivacy : privacy}) => {
-  console.log({privacy})
+const PrivacySwitch = ({FFUserPrivacy : privacy, userSettings}) => {
   const patchUser = usePatchUser();
   const isPublic = privacy === FFUserPrivacy.public;
   return <Switch
     checked={isPublic}
     caption={isPublic ? "Public" : "Private"}
-    doAction={(data) => patchUser({settings: {FFUserPrivacy: data}})}
+    doAction={(data) => patchUser({settings: {...userSettings, ...{FFUserPrivacy: data}}})}
     preProcessData={() => isPublic ? FFUserPrivacy.private : FFUserPrivacy.public}
   />
 }
@@ -41,7 +40,7 @@ const UserSettingsCard = () => {
     </>
   }>
     <List>
-      <ListItem secondaryAction={<VisibilitySwitch FFMapVisibility={userSettings.FFMapVisibility}/>}>
+      <ListItem secondaryAction={<VisibilitySwitch FFMapVisibility={userSettings.FFMapVisibility} userSettings={userSettings}/>}>
         <ListItemText
           primary="Map Visibility"
           secondary="This controls whether you're visible on the map for others to see."
@@ -49,7 +48,7 @@ const UserSettingsCard = () => {
         />
       </ListItem>
       <Divider/>
-      <ListItem secondaryAction={<PrivacySwitch FFUserPrivacy={userSettings.FFUserPrivacy}/>}>
+      <ListItem secondaryAction={<PrivacySwitch FFUserPrivacy={userSettings.FFUserPrivacy} userSettings={userSettings}/>}>
         <ListItemText
           primary="Profile Privacy"
           secondary={

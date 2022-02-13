@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { ListItemAvatar, ListItemText, ListItem, List, Divider } from '@mui/material';
+import { ListItemAvatar, ListItemText, ListItem, List, Divider, ButtonGroup } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
 
 import UserAvatar from '../components/user-avatar';
-import { useAcceptFriendRequest } from '../hooks/friends';
+import { useAcceptFriendRequest, useIgnoreFriendRequest } from '../hooks/friends';
 import useMakeLoadingButton from '../hooks/loading-button';
 import { maxBlurbLength } from '../constants';
 
@@ -19,17 +20,30 @@ function RequestItem({request}){
   }
 
   const acceptRequest = useAcceptFriendRequest(request._id);
+  const ignoreRequest = useIgnoreFriendRequest(request._id);
 
-  const { onClick, render } = useMakeLoadingButton({
+  const { onClick : onClickAccept, render : renderAcceptButton } = useMakeLoadingButton({
     doAction: () => acceptRequest(),
     buttonText: "Accept",
     icon: <PersonAddIcon/>,
     isFormButton: false,
     thenFn: invalidateJFHCache,
   })
+  const { onClick : onClickIgnore, render : renderIgnoreButton } = useMakeLoadingButton({
+    doAction: () => ignoreRequest(),
+    buttonText: "Ignore",
+    icon: <CancelIcon/>,
+    isFormButton: false,
+    thenFn: invalidateJFHCache,
+  })
 
   return (
-    <ListItem secondaryAction={render({onClick, sx: {minWidth: undefined, maxWidth: undefined}})}>
+    <ListItem secondaryAction={
+      <ButtonGroup variant="outline"> 
+        {renderAcceptButton({onClick: onClickAccept, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+        {renderIgnoreButton({onClick: onClickIgnore, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+      </ButtonGroup> 
+    }>
       <ListItemAvatar>
         <UserAvatar user={user}/>
       </ListItemAvatar>
