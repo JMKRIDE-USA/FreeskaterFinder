@@ -33,6 +33,7 @@ const MapComponent = ({
 }) => {
   const googleMapsApiKey = useGetGMapsKey();
   const myContainerStyle = {...(fullscreen ?  fullscreenContainerStyle : CardContainerStyle), ...containerStyle}
+  if(!googleMapsApiKey) return <></>;
   return (
     <Box sx={myContainerStyle}>
       <LoadScript googleMapsApiKey={googleMapsApiKey}>

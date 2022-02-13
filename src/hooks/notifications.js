@@ -1,4 +1,5 @@
 import { useCreateMutation, useGetQuery } from '@jeffdude/frontend-helpers';
+import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
 
 const useNotificationQuery = (endpoint, options) => 
   useGetQuery(endpoint, 'notifications', options)
@@ -12,6 +13,7 @@ export const useReadNotification = (notificationId) =>
     endpoint: "notifications/read/id/" + notificationId,
     method: "POST",
     verb: "marking notification as read",
+    onSuccess: () => invalidateJFHCache(),
   })
 
 export const useReadAllNotifications = () => 

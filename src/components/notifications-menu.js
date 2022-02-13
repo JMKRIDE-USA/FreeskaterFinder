@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Badge, IconButton, Menu, List, ListItemButton, ListItemText, ListItemAvatar, ListItem, Divider, ListItemSecondaryAction } from '@mui/material';
@@ -12,7 +12,7 @@ import { notificationReasons } from '../constants';
 import UserAvatar from './user-avatar';
 
 
-function NotificationItem({notification}){
+function NotificationItem({notification, closeMenu}){
   /*
   //TODO
   challengeStatusChanged: 'CHALLENGE_STATUS_CHANGED',
@@ -25,7 +25,7 @@ function NotificationItem({notification}){
 
   const makeFriendNotificationItem = ({action, seeMore}) => {
     return (
-      <ListItemButton component={Link} to="/friends">
+      <ListItemButton component={Link} to="/friends" onClick={() => {closeMenu(); markRead();}}>
         <ListItemAvatar>
           <UserAvatar user={actor}/>
         </ListItemAvatar>
@@ -35,7 +35,7 @@ function NotificationItem({notification}){
           sx={{maxWidth: '80%'}}
         />
         <ListItemSecondaryAction>
-          <IconButton onClick={markRead}>
+          <IconButton onClick={() => markRead()}>
             <CancelIcon/> 
           </IconButton>
         </ListItemSecondaryAction>
@@ -59,17 +59,21 @@ function NotificationItem({notification}){
   }
 }
 
-function LoadedNotificationsMenu({notifications}) {
+function LoadedNotificationsMenu({notifications, refetch}) {
   const [ anchorEl, setAnchorEl ] = useState(null);
+  const [refreshSwitch, setRefreshSwitch] = useState(true);
+  const refreshSelf = () => setRefreshSwitch(!refreshSwitch);
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   }
-  const handleClose = (event) => {
+  const handleClose = () => {
     setAnchorEl(null)
+    refetch();
+    refreshSelf();
   }
-
-  const unread = notifications.filter(notification => !notification.read)
+  const [ unread, setUnread ] = useState([])
+  useEffect(() => setUnread(notifications.filter(notification => !notification.seen)), [notifications, refreshSwitch])
 
   return (
     <>
@@ -87,11 +91,11 @@ function LoadedNotificationsMenu({notifications}) {
         PaperProps={{style: {width: 'min(80vw, 400px)'}}}
       >
         <List>
-          {notifications.length
-            ? notifications.filter(notification => !notification.read).map((notification, index) => {
+          {unread.length
+            ? unread.map((notification, index) => {
               return <>
-                <NotificationItem notification={notification} key={index}/>
-                {index + 1 !== notifications.length && <Divider variant="inset" component="li"/>}
+                <NotificationItem notification={notification} key={index} closeMenu={handleClose}/>
+                {index + 1 !== unread.length && <Divider variant="inset" component="li"/>}
               </>
             })
             : <ListItem>
@@ -113,7 +117,7 @@ function LoadedNotificationsMenu({notifications}) {
 function NotificationsMenuLoader(){
   const notificationsQuery = useGetUserNotifications()
   return <QueryLoader query={notificationsQuery} propName="notifications">
-    <LoadedNotificationsMenu/>
+    <LoadedNotificationsMenu refetch={notificationsQuery.refetch}/>
   </QueryLoader>
 }
 

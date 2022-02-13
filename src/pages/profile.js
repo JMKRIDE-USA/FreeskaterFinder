@@ -25,15 +25,14 @@ function MyAccountCard() {
     <PageCard small headerRow header={
       <>
         <Typography variant="h6" sx={{ml: 1}}>My Account</Typography>
-        <ButtonGroup>
-          <Button variant="contained" color="neutral" component={Link} to="/edit-profileicon">Edit Icon</Button>
+        <ButtonGroup sx={{'&>*': {mr: 1}}}>
           <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
-          <Button variant="contained" color="neutral" onClick={onLogout}>Log Out</Button>
+          <Button variant="contained" color="error" onClick={onLogout}>Log Out</Button>
         </ButtonGroup>
       </>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>
-        <UserItem user={userInfo} showAction={false}/>
+        <UserItem user={userInfo} showAction={false} editableAvatar/>
       </Grid>
     </PageCard>
   )

@@ -18,3 +18,10 @@ export const useAcceptFriendRequest = (requestId) =>
     method: "POST",
     verb: "accepting friend request"
   })
+
+export const useIgnoreFriendRequest = (requestId) =>
+  useCreateMutation({
+    endpoint: "friends/request/reject/id/" + requestId,
+    method: "POST",
+    verb: "ignoring friend request"
+  })

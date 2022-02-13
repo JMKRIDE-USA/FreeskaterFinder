@@ -7,6 +7,7 @@ import useMakeForm from '../../hooks/form'
 import { makeTextField } from './fields'
 import PageCard from '../page-card';
 import { Button } from '@mui/material';
+import UserAvatar from '../user-avatar';
 
 
 function EditProfileCard({onSuccess, backButton = true}){
@@ -31,6 +32,7 @@ function EditProfileCard({onSuccess, backButton = true}){
   })
 
   return <PageCard small>
+    <UserAvatar user={userInfo} editable/>
     {renderForm()}
   </PageCard>
 }

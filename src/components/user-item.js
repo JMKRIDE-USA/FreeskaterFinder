@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup } from '@mui/material';
+import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography } from '@mui/material';
 import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
+import PendingIcon from '@mui/icons-material/Pending';
 
 import UserAvatar from './user-avatar';
 import { getSocialLinkTypeByName, maxBlurbLength } from '../constants';
@@ -83,13 +84,13 @@ const FriendRequester = ({user}) => {
   return <Button aria-label="Friend Request" endIcon={<PersonAddIcon/>} onClick={() => setClicked(true)}>Add Friend</Button>
 }
 
-const OutgoingPendingFriend = () => <>pending</>
+const OutgoingPendingFriend = () => <Grid container direction="column" sx={{alignItems: "center"}}><PendingIcon/><Typography variant="body2">Requested</Typography></Grid>
 
 const IncomingPendingFriend = () => {
   return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
 }
 
-const UserItem = ({user, showAction = true}) => {
+const UserItem = ({user, showAction = true, editableAvatar = false}) => {
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
   if(blurb.length > maxBlurbLength) {
     blurb += "..."
@@ -111,7 +112,7 @@ const UserItem = ({user, showAction = true}) => {
   return (
     <ListItem secondaryAction={showAction ? secondaryAction : null}>
       <ListItemAvatar>
-        <UserAvatar user={user}/>
+        <UserAvatar user={user} editable={editableAvatar}/>
       </ListItemAvatar>
       <ListItemText
         primary={user.firstName + " " + user.lastName}
