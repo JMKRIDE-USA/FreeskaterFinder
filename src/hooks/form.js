@@ -12,11 +12,13 @@ function useMakeForm({
   validateData = () => ([]),
   cardHeader,
   backButton = () => null,
+  buttonText = "Save",
+  sx={}
 }){
   let initialState = {}
   stateList.forEach(item => initialState[item.key] = item.initialState)
 
-  const { handleSubmit, formState: {isDirty, errors}, register, reset } = useForm(
+  const { handleSubmit, formState: {isDirty, errors}, register, reset, control} = useForm(
     { defaultValues: initialState }
   );
   const [showError, setShowError] = useState(false);
@@ -47,14 +49,14 @@ function useMakeForm({
       console.log({result})
       return result;
     },
-    buttonText: "Save",
+    buttonText,
     thenFn: (result) => {reset(); if(result) onSuccess(result)},
   });
   return () => (
     <>
       <form onSubmit={handleSubmit(onClick)}>
-        <Grid container direction="column" sx={{p: 1}}>
-          {stateList.map(({component}, key) => <React.Fragment key={key}>{component({register, errors})}</React.Fragment>)}
+        <Grid container direction="column" sx={{p: 1, ...sx}}>
+          {stateList.map(({component}, key) => <React.Fragment key={key}>{component({register, errors, control})}</React.Fragment>)}
         </Grid>
         <Grid container direction="row" sx={{alignItems: 'center', justifyContent: 'center', '& > *': {ml: 1, mr: 1}}}>
           {renderButton({disabled: !isDirty})}
