@@ -2,11 +2,11 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import { invalidateJFHCache, useGetUserInfo, usePatchUser } from '@jeffdude/frontend-helpers';
+import { Button } from '@mui/material';
 
 import useMakeForm from '../../hooks/form'
 import { makeTextField } from './fields'
 import PageCard from '../page-card';
-import { Button } from '@mui/material';
 import UserAvatar from '../user-avatar';
 
 
