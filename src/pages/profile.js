@@ -11,6 +11,7 @@ import TitleCard from '../components/title-card';
 import PageCard from '../components/page-card';
 import UserItem from '../components/user-item';
 import UserSettingsCard from '../components/user-settings';
+import AmbassadorCard from '../components/ambassador-card';
 
 function MyAccountCard() {
   const userInfo = useGetUserInfo();
@@ -89,7 +90,10 @@ function ProfilePage() {
           <UserSettingsCard/>
           <ContactCard/>
         </Grid>
-        <MyLocationCard md={6} xs={12}/>
+        <Grid item container direction="column" xs='auto' sx={{ml: 2, alignItems: 'stretch', '& > *': {mb: 1, mt: 1}}}>
+          <MyLocationCard md={6} xs={12}/>
+          <AmbassadorCard/>
+        </Grid>
       </Grid>
     </Page>
   )
