@@ -10,7 +10,7 @@ import UserList from '../components/user-list';
 import Page from '../components/page';
 import PageCard from '../components/page-card';
 import Map from '../components/map';
-import { useIsAccountComplete } from '../components/outlet';
+import { useGetAccountStatus } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
 
@@ -120,8 +120,8 @@ const LoadedMapPage = ({locations}) => {
 }
 
 const MapPage = () => {
-  const accountComplete = useIsAccountComplete();
-  if(accountComplete)
+  const accountStatus = useGetAccountStatus();
+  if(accountStatus === 'logged in')
     return <LocationLoader><LoadedMapPage/></LocationLoader>
   return (
     <Page>

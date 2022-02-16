@@ -11,6 +11,8 @@ import EditLocationPage from './pages/edit-location';
 import FriendsPage from './pages/friends';
 import EditProfileIconPage from './pages/edit-profileicon';
 import AmbassadorApplicationPage from './pages/ambassador-application';
+import AdminPage from './pages/admin';
+import SubmissionPage from './pages/submission';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -50,6 +52,9 @@ function App() {
               <Route path="edit-profileicon" element={<EditProfileIconPage/>}/>
               <Route path="friends" element={<FriendsPage/>}/>
               <Route path="ambassador-application" element={<AmbassadorApplicationPage/>}/>
+              <Route path="admin" element={<AdminPage/>}/>
+              <Route path="submissions" element={<SubmissionPage/>}/>
+              <Route path="submission/:submissionId" element={<SubmissionPage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

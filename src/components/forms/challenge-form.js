@@ -8,7 +8,7 @@ import { makeDateField, makeTextField, makeYesNoField } from './fields';
 import useMakeForm from '../../hooks/form';
 import { Button, Typography } from '@mui/material';
 import { useSubmitChallenge } from '../../hooks/challenges';
-import SubmissionList from '../submission-list';
+import { ChallengeSubmissionList } from '../submission-list';
 
 /*
   "NUMBER",                                 // Number
@@ -83,7 +83,7 @@ function OpenChallengeFormCard({challenge, onSuccess}) {
 
 function ChallengeFormCard({challenge, onSuccess = () => null}){
   if(challenge.submissions.length && !challenge.allowMultipleSubmission)
-    return <SubmissionList challenge={challenge}/>
+    return <ChallengeSubmissionList challenge={challenge}/>
   return <OpenChallengeFormCard {...{challenge, onSuccess}}/>
 }
 

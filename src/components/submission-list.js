@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 import List from '@mui/material/List'
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Link, Grid, ListItemButton, ListItemSecondaryAction, Typography, IconButton, ListItemText, ListItemIcon, ListItem, Collapse } from '@mui/material'
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { 
+  Link, Grid, ListItemButton, ListItemSecondaryAction, Typography,
+  IconButton, ListItemText, ListItemIcon, ListItem, Collapse, ButtonGroup,
+} from '@mui/material'
 import { ISOToReadableString } from '@jeffdude/frontend-helpers';
 
-import { useDeleteSubmission } from '../hooks/challenges';
+import { useDeleteSubmission, useUpdateSubmission } from '../hooks/challenges';
 import PageCard from './page-card';
 
 function StatusIndicator({status}) {
@@ -22,6 +28,27 @@ function StatusIndicator({status}) {
   </Grid>
 }
 
+export function SubmissionDetailsList({submission}){
+  return (
+    <List disablePadding sx={{pl: 2}}>
+      {submission.content.map(({fieldObj : field, content}, index) => (
+        <ListItem key={index} dense sx={{...index % 2 ? {backgroundColor: "#dfdfdf"} : {} }} >
+          <Grid container direction="row" sx={{width: "100%", justifyContent: "space-between"}}>
+            <Typography variant="subtitle1"><b>{field.title}</b></Typography>
+            <Typography variant="subtitle1" sx={{ml: 2}}>{
+              field.fieldType !== 'YES_NO'
+                ? content
+                : content
+                ? 'Yes'
+                : 'No'
+            }</Typography>
+          </Grid>
+        </ListItem>
+      ))}
+    </List>
+  )
+}
+
 function SubmissionItem({submission, expandable = true, onClick = () => null}){
   const deleteSubmission = useDeleteSubmission({submissionId: submission._id})
   const [expanded, setExpanded] = useState(false);
@@ -33,8 +60,8 @@ function SubmissionItem({submission, expandable = true, onClick = () => null}){
   return <>
     <ListItemButton onClick={handleClick} selected={expanded} sx={{minWidth: "min(90vw, 550px)"}}>
       {expandable && <ListItemIcon>{expanded ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}</ListItemIcon>}
-      <ListItemText
-        primary={"Submitted on " + ISOToReadableString(submission.createdAt)}
+      <ListItemText disableTypography
+        primary={<Typography variant="body1">{"Submitted on " + ISOToReadableString(submission.createdAt)}</Typography>}
         secondary={<StatusIndicator status={submission.status}/>}
       />
       {expandable 
@@ -51,45 +78,61 @@ function SubmissionItem({submission, expandable = true, onClick = () => null}){
         : <Link>See More</Link>
       }
     </ListItemButton>
-    <Collapse in={expanded} timeout="auto" unmountOnExit>
-      <List component="div" disablePadding sx={{pl: 2}}>
-        {submission.content.map(({fieldObj : field, content}, index) => (
-          <ListItem key={index} dense sx={{...index % 2 ? {backgroundColor: "#dfdfdf"} : {} }} >
-            <Grid container direction="row" sx={{width: "100%", justifyContent: "space-between"}}>
-              <Typography variant="subtitle1"><b>{field.title}</b></Typography>
-              <Typography variant="subtitle1" sx={{ml: 2}}>{
-                field.fieldType !== 'YES_NO'
-                  ? content
-                  : content
-                  ? 'Yes'
-                  : 'No'
-              }</Typography>
-            </Grid>
-          </ListItem>
-        ))}
-      </List>
-    </Collapse>
+    {expandable && <Collapse in={expanded}><SubmissionDetailsList submission={submission}/></Collapse>}
   </>
 }
 
-function SubmissionList({challenge, ...props}) {
+function AdminSubmissionItem({submission}){
+  const updateSubmission = useUpdateSubmission({submissionId: submission._id})
+  const navigate = useNavigate();
+  const [ expanded, setExpanded ] = useState();
+  return <>
+    <ListItemButton onClick={() => setExpanded(!expanded)} sx={{minWidth: "min(90vw, 550px)"}}>
+      <ListItemIcon>{expanded ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}</ListItemIcon>
+      <ListItemText
+        primary={submission.author.fullName + " - " + submission.challenge.title}
+        secondary={"Submitted on " + ISOToReadableString(submission.createdAt)}
+      />
+      <ListItemSecondaryAction>
+        <Link onClick={() => navigate("/submission/" + submission._id)}>View</Link>
+      </ListItemSecondaryAction>
+    </ListItemButton>
+    <Collapse in={expanded}><SubmissionDetailsList submission={submission}/></Collapse>
+  </>
+}
+
+function makeChallengeFields({challenge}){
   const challengeFields = {}
   challenge.structure.forEach(({_id, ...field}) => challengeFields[_id] = field);
+  return challengeFields;
+}
+
+export function lookupSubmissionFields({submission, challengeFields}){
+  if(!challengeFields) challengeFields = makeChallengeFields({challenge: submission.challenge})
+  submission.content.forEach( // janky frontend lookups because mongodb embedded schemas are weird :(
+    (_, index) => submission.content[index].fieldObj = challengeFields[submission.content[index].field]
+  )
+  return submission;
+}
+
+export function ChallengeSubmissionList({challenge, ...props}) {
+  const challengeFields = makeChallengeFields({challenge}) 
 
   return <PageCard header={<Typography variant="h6">My {challenge.title} Submission</Typography>}>
     <List>
-      {challenge.submissions.map(
-        submission => {
-          submission.content.forEach( // janky frontend lookups because mongodb embedded schemas are weird :(
-            (field, index) => submission.content[index].fieldObj = challengeFields[submission.content[index].field]
-          )
-          return submission;
-        }
-      ).map((submission, index) => (
-        <SubmissionItem challengeFields={challengeFields} submission={submission} key={index} {...props}/>
+      {challenge.submissions.map(submission => lookupSubmissionFields({submission, challengeFields})).map((submission, index) => (
+        <SubmissionItem submission={submission} key={index} {...props}/>
       ))}
     </List>
   </PageCard>
 } 
 
-export default SubmissionList;
+export function AdminSubmissionList({submissions, title}) {
+  return <PageCard header={title && <Typography variant="h6">{title}</Typography>}>
+    <List xs='auto'>
+      {submissions.map(submission => lookupSubmissionFields({submission})).map(
+        (submission, index) => <AdminSubmissionItem submission={submission} key={index}/>
+      )}
+    </List>
+  </PageCard> 
+}

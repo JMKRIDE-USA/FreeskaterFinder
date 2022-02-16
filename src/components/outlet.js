@@ -2,39 +2,41 @@ import React from 'react';
 
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { useGetAuthState, useGetUserInfo } from '@jeffdude/frontend-helpers';
+import { useGetAuthState, useGetUserInfo, useGetAccessToken } from '@jeffdude/frontend-helpers';
 import { SignInDialog } from './sign-in'
 
-export const useIsAccountComplete = () => { 
+export const useGetAccountStatus = () => { 
   const authState = useGetAuthState();
+  const accessToken = useGetAccessToken();
   const userInfo = useGetUserInfo();
   const { socialLinks, location} = userInfo;
-  return (authState && socialLinks && location)
+
+  if(!accessToken) return 'logged out'
+  if(accessToken && !authState) return 'loading';
+  if(authState && !(socialLinks && location)) return 'incomplete'
+  return 'logged in'
 }
 
 
 const MyOutlet = () => {
-  const authState = useGetAuthState();
-  const accountComplete = useIsAccountComplete();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const accountStatus = useGetAccountStatus();
+
   React.useEffect(() =>{
-    if(authState && (!accountComplete && location.pathname !== '/setup-account')){
+    if(accountStatus === 'incomplete' && location.pathname !== '/setup-account'){
       navigate("/setup-account", {replace: true})
     }
-  }, [authState, accountComplete, location, navigate])
+  }, [accountStatus, location, navigate])
 
-  if(authState && (!accountComplete && location.pathname !== '/setup-account')){
-    return <></>
-  } else {
-    return (
-      <>
-        <Outlet/>
-        {!authState && !(['/create-account', '/setup-account'].includes(location.pathname)) && <SignInDialog open={true}/>}
-      </>
-    )
-  }
+  if(accountStatus === 'logged out') return (
+    <>
+      <Outlet/>
+      {accountStatus === 'logged out' && !(['/create-account', '/setup-account'].includes(location.pathname)) && <SignInDialog open={true}/>}
+    </>
+  )
+  return <Outlet/>
 }
 
 export default MyOutlet;

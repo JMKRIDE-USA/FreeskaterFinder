@@ -12,7 +12,7 @@ const EditProfileIconPage = () => {
   return ( 
     <Page>
       <TitleCard title="Choose A Profile Icon"/>
-      <ProfileIconPickerCard onComplete={() => navigate('/my-account')}/>
+      <ProfileIconPickerCard onSuccess={() => navigate('/my-account')}/>
     </Page>
   )
 }

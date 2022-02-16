@@ -6,6 +6,7 @@ import { QueryLoader } from '@jeffdude/frontend-helpers/dist/data';
 import GroupIcon from '@mui/icons-material/Group';
 
 import { useGetIncomingPendingFriends } from '../hooks/friends';
+import { ListCardSkeleton, FriendsLoadingPage } from '../components/loading-page';
 import Page from '../components/page';
 import PageCard from '../components/page-card';
 import TitleCard from '../components/title-card';
@@ -27,7 +28,7 @@ function LoadedPendingFriendsCard({pendingFriends}) {
 
 function PendingFriendsCard() {
   const pendingFriendsQuery = useGetIncomingPendingFriends()
-  return <QueryLoader query={pendingFriendsQuery} propName="pendingFriends">
+  return <QueryLoader query={pendingFriendsQuery} propName="pendingFriends" loading={() => <ListCardSkeleton length={2}/>}>
     <LoadedPendingFriendsCard/>
   </QueryLoader>
 }
@@ -50,6 +51,7 @@ function FriendsCard() {
 
 function FriendsPage() {
   const userInfo = useGetUserInfo();
+  if(!userInfo.id) return <FriendsLoadingPage/>
   return <Page>
     <TitleCard title={userInfo.firstName + "'s Freeskate Family"}/>
     <PendingFriendsCard/>

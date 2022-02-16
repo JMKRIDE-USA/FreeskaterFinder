@@ -5,6 +5,7 @@ import { Grid, Typography, Divider, Button, ButtonGroup } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { Marker } from '@react-google-maps/api';
 
+import { ProfileLoadingPage } from '../components/loading-page';
 import MapComponent from '../components/map';
 import Page from '../components/page';
 import TitleCard from '../components/title-card';
@@ -79,6 +80,9 @@ function ContactCard() {
 
 function ProfilePage() {
   const userInfo = useGetUserInfo();
+  if(!userInfo.id){
+    return <ProfileLoadingPage/>
+  }
   return (
     <Page>
       <TitleCard title={"Welcome, " + userInfo.firstName + "!"}>
