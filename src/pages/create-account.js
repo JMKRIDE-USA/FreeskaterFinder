@@ -17,9 +17,10 @@ import useMakeLoadingButton from '../hooks/loading-button'
 import LocationPickerCard from '../components/forms/location-picker'
 import SocialsPickerCard from '../components/forms/socials-picker';
 import EditProfileCard from '../components/forms/edit-profile';
+import ProfileIconPickerCard from '../components/forms/profileicon-picker';
 
 
-const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
+const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}) => {
   const [step, setStep] = stepState;
   return (
     <PageCard sx={{mb: 2}}>
@@ -30,12 +31,12 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, ...props}) => {
           </IconButton>
         }
         <Box sx={{ flexGrow: 1, mr: 1, mt: 2, mb: 2 }}>
-          <LinearProgress variant="determinate" value={Math.round(100 * (step/4))} {...props} />
+          <LinearProgress variant="determinate" value={Math.round(100 * (step/numSteps))} {...props} />
         </Box>
         <Box sx={{ minWidth: 85 }}>
-          <Typography variant="body2" color="text.secondary">Step {step} of 4</Typography>
+          <Typography variant="body2" color="text.secondary">Step {step} of {numSteps}</Typography>
         </Box>
-        {step < 4 && 
+        {step < numSteps && 
           <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
             <ArrowForwardIosIcon color="primary" fontSize="small"/>
           </IconButton>
@@ -109,8 +110,9 @@ function CreateAccountPage({firstTimeSetup}) {
     if(!authState) return 1;
     if(!userInfo?.socialLinks.length) return 2;
     if(!userInfo?.bio) return 3;
-    if(!userInfo?.location) return 4;
-    return 5;
+    if(!userInfo?.profileIconName) return 4;
+    if(!userInfo?.location) return 5;
+    return 6;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   })()), []);
   
@@ -123,8 +125,10 @@ function CreateAccountPage({firstTimeSetup}) {
       case 2:
         return <SocialsPickerCard socialLinkData={userInfo.socialLinks} onSuccess={incrementStep}/>
       case 3:
-        return <EditProfileCard onSuccess={incrementStep}/>
+        return <EditProfileCard onSuccess={incrementStep} noProfileIcon title="Confirm your Profile Info"/>
       case 4:
+        return <ProfileIconPickerCard onSuccess={incrementStep} title="Choose a Profile Icon"/>
+      case 5:
         return <LocationPickerCard onSuccess={incrementStep}/>
       default:
         return <Redirect/>
@@ -147,7 +151,7 @@ function CreateAccountPage({firstTimeSetup}) {
           <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
         </Typography>
       </TitleCard>
-      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} stepState={[step, setStep]}/>}
+      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} stepState={[step, setStep]} numSteps={5}/>}
       { createComponent }
     </Page>
   )

@@ -7,7 +7,7 @@ import ProfileIcons from '../profile-icon';
 import PageCard from '../page-card';
 
 
-const ProfileIconPickerCard = ({onComplete}) => {
+const ProfileIconPickerCard = ({onSuccess, title}) => {
 
   const [selectedCategory, setSelectedCategory] = useState('JMK');
 
@@ -18,12 +18,12 @@ const ProfileIconPickerCard = ({onComplete}) => {
   const patchUser = usePatchUser();
   const makeOnClick = (iconName) => () => {
     patchUser({profileIconName: iconName});
-    onComplete();
+    onSuccess();
   }
 
 
   return (
-    <PageCard sx={{maxWidth: 'min(1000px, 95vw)'}}>
+    <PageCard sx={{maxWidth: 'min(1000px, 95vw)'}} header={title && <Typography variant="h6">{title}</Typography>}>
       <ToggleButtonGroup
         value={selectedCategory} exclusive
         onChange={(_,value) => setSelectedCategory(value)}
