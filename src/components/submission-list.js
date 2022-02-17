@@ -5,8 +5,6 @@ import List from '@mui/material/List'
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import CheckIcon from '@mui/icons-material/Check';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { 
   Link, Grid, ListItemButton, ListItemSecondaryAction, Typography,
   IconButton, ListItemText, ListItemIcon, ListItem, Collapse, ButtonGroup,
@@ -16,13 +14,13 @@ import { ISOToReadableString } from '@jeffdude/frontend-helpers';
 import { useDeleteSubmission, useUpdateSubmission } from '../hooks/challenges';
 import PageCard from './page-card';
 
-function StatusIndicator({status}) {
+export function StatusIndicator({status, sx = {}}) {
   const backgroundColor = {
     "PENDING": "#FFE240",
-    "APPROVED": "#5FD83A",
+    "ACCEPTED": "#5FD83A",
     "DENIED": "#D84B3A",
   }[status]
-  return <Grid container direction="row" sx={{alignItems: "center"}}>
+  return <Grid container direction="row" sx={{alignItems: "center", ...sx}}>
     <Typography variant="subtitle2" sx={{mr: 2}}>Status:</Typography>
     <div style={{padding: "3px 10px", borderRadius: "20px", backgroundColor}}><Typography variant="button">{status}</Typography></div>
   </Grid>
@@ -83,7 +81,6 @@ function SubmissionItem({submission, expandable = true, onClick = () => null}){
 }
 
 function AdminSubmissionItem({submission}){
-  const updateSubmission = useUpdateSubmission({submissionId: submission._id})
   const navigate = useNavigate();
   const [ expanded, setExpanded ] = useState();
   return <>
@@ -129,10 +126,13 @@ export function ChallengeSubmissionList({challenge, ...props}) {
 
 export function AdminSubmissionList({submissions, title}) {
   return <PageCard header={title && <Typography variant="h6">{title}</Typography>}>
-    <List xs='auto'>
-      {submissions.map(submission => lookupSubmissionFields({submission})).map(
-        (submission, index) => <AdminSubmissionItem submission={submission} key={index}/>
-      )}
-    </List>
+    {submissions.length
+      ?  <List xs='auto'>
+        {submissions.map(submission => lookupSubmissionFields({submission})).map(
+          (submission, index) => <AdminSubmissionItem submission={submission} key={index}/>
+        )}
+      </List>
+      : <Typography variant="body1">No Pending Submissions Found.</Typography>
+    }
   </PageCard> 
 }
