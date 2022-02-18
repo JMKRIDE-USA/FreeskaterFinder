@@ -23,14 +23,14 @@ function LoadedSingleSubmissionCard({ submission }) {
   const updateSubmission = useUpdateSubmission({submissionId: submission._id})
 
   const { onClick : onClickAccept, render : renderAccept} = useMakeLoadingButton({
-    doAction: () => updateSubmission({status: 'ACCEPTED'}),
+    doAction: () => updateSubmission({status: 'APPROVED'}),
     buttonText: "Accept",
     icon: <CheckIcon/>,
     color: "success"
   })
 
   const { onClick : onClickReject, render : renderReject} = useMakeLoadingButton({
-    doAction: () => updateSubmission({status: 'REJECTED', note}),
+    doAction: () => updateSubmission({status: 'DENIED', note}),
     buttonText: "Reject",
     icon: <CancelIcon/>,
     color: "error"
@@ -83,7 +83,7 @@ function AllSubmissionsLoader({children}) {
 function SubmissionPage(){
   const { submissionId } = useParams();
   return <Page>
-    <TitleCard title={submissionId ? "" : "My Submissions"}/>
+    <TitleCard/>
     {submissionId
       ? <SingleSubmissionCard submissionId={submissionId}/>
       : <AllSubmissionsLoader><SubmissionsTable title="All Submissions"/></AllSubmissionsLoader>

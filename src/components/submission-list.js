@@ -14,14 +14,14 @@ import { ISOToReadableString } from '@jeffdude/frontend-helpers';
 import { useDeleteSubmission, useUpdateSubmission } from '../hooks/challenges';
 import PageCard from './page-card';
 
-export function StatusIndicator({status, sx = {}}) {
+export function StatusIndicator({status, hint = true, sx = {}}) {
   const backgroundColor = {
     "PENDING": "#FFE240",
-    "ACCEPTED": "#5FD83A",
+    "APPROVED": "#5FD83A",
     "DENIED": "#D84B3A",
   }[status]
   return <Grid container direction="row" sx={{alignItems: "center", ...sx}}>
-    <Typography variant="subtitle2" sx={{mr: 2}}>Status:</Typography>
+    {hint && <Typography variant="subtitle2" sx={{mr: 2}}>Status:</Typography>}
     <div style={{padding: "3px 10px", borderRadius: "20px", backgroundColor}}><Typography variant="button">{status}</Typography></div>
   </Grid>
 }

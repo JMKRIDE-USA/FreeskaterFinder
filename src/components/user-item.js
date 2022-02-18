@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography } from '@mui/material';
+import { Badge, Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography } from '@mui/material';
 import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
+import StarIcon from '@mui/icons-material/Star';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CheckIcon from '@mui/icons-material/Check';
@@ -90,7 +91,7 @@ const IncomingPendingFriend = () => {
   return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
 }
 
-const UserItem = ({user, showAction = true, editableAvatar = false}) => {
+const UserItem = ({user, showAction = true, editableAvatar = false, sx={}}) => {
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
   if(blurb.length > maxBlurbLength) {
     blurb += "..."
@@ -109,10 +110,18 @@ const UserItem = ({user, showAction = true, editableAvatar = false}) => {
     return <FriendRequester key={user._id} user={user}/>
   })();
 
+  const AmbassadorBadge = user.permissionLevel === "ambassador"
+    ? ({children}) => <Badge overlap='circular' badgeContent={
+          <StarIcon fontSize='medium' stroke="#000" stroke-width={1} sx={{color: "#fbb03b"}}/>
+        }>{children}</Badge>
+    : ({children}) => children
+
   return (
-    <ListItem secondaryAction={showAction ? secondaryAction : null}>
+    <ListItem secondaryAction={showAction ? secondaryAction : null} sx={sx}>
       <ListItemAvatar>
-        <UserAvatar user={user} editable={editableAvatar}/>
+        <AmbassadorBadge>
+          <UserAvatar user={user} editable={editableAvatar}/>
+        </AmbassadorBadge>
       </ListItemAvatar>
       <ListItemText
         primary={user.firstName + " " + user.lastName}
