@@ -1,33 +1,56 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { Typography } from '@mui/material';
 
-import PageCard from '../page-card';
+import { TableCard } from './table';
+import { ISOToReadableString } from '@jeffdude/frontend-helpers/dist/date';
+import { StatusIndicator } from '../submission-list';
 
 const columns = [
   {
     headerName: 'Date',
     field: 'createdAt', 
     width: 200,
-    type: 'date',
+    type: 'dateTime',
+    valueFormatter: ({value}) => ISOToReadableString(value),
   },
+  {
+    headerName: 'Status',
+    field: 'status',
+    width: 150,
+    renderCell: ({value}) => <StatusIndicator status={value} hint={false}/>
+  },
+  {
+    headerName: 'Challenge',
+    field: 'challenge',
+    width: 250,
+    renderCell: ({value}) => <Button component={Link} to={"/challenge/" + value._id}>{value.title}</Button>
+  },
+  {
+    headerName: 'Author',
+    field: 'author',
+    width: 150,
+    renderCell: ({value}) => <Button component={Link} to={"/user/" + value._id}>{value.fullName}</Button>
+  },
+  {
+    headerName: 'Link',
+    field: '_id',
+    width: 150,
+    renderCell: ({value}) => <Button variant="contained" color="secondary" component={Link} to={"/submission/" + value}>View</Button>
+  }
 ]
 
 function SubmissionTable({submissions, title}){
-  console.log({submissions})
-  ///todo fix styling
   return (
-    <PageCard header={<Typography variant="h6">{title}</Typography>} sx={{
-      width: "min(90vw, 500px)",
-      minHeight: "min(" + (submissions.length + 1) * 100 + "px,500px)"
-    }}>
+    <TableCard title={title} length={submissions.length}>
       <DataGrid
         getRowId={row => row._id}
         rows={submissions}
         columns={columns}
       />
-    </PageCard>
+    </TableCard>
   )
 }
 
