@@ -4,6 +4,8 @@ import { useGetQuery, useCreateMutation } from '@jeffdude/frontend-helpers';
 const useGetChallengeQuery = (endpoint, options) => useGetQuery(endpoint, 'challenges', options);
 
 export const useGetAmbassadorApplication = () => useGetChallengeQuery("challenges/ambassadorApplication")
+export const useGetChallenge = (challengeId) => useGetChallengeQuery("challenges/id/" + challengeId)
+export const useGetAllChallenges = () => useGetChallengeQuery("challenges/all")
 
 export const useGetSubmission = (submissionId) => useGetChallengeQuery("submission/id/" + submissionId)
 export const useGetAllSubmissions = (submissionId) => useGetChallengeQuery("submissions/all")

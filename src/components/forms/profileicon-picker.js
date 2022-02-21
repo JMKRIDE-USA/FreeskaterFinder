@@ -23,7 +23,7 @@ const ProfileIconPickerCard = ({onSuccess, title}) => {
 
 
   return (
-    <PageCard sx={{maxWidth: 'min(1000px, 95vw)'}} header={title && <Typography variant="h6">{title}</Typography>}>
+    <PageCard sx={{maxWidth: 'min(1000px, 95vw)'}} title={title}>
       <ToggleButtonGroup
         value={selectedCategory} exclusive
         onChange={(_,value) => setSelectedCategory(value)}

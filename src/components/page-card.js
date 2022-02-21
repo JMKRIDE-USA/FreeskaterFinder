@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
@@ -17,7 +18,7 @@ const HeaderColumn = ({sx = {}, children, ...props}) => (
   </Grid>
 )
 
-const PageCard = ({children, header, headerRow = false, small = false, sx, ...props}) => {
+const PageCard = ({children, header, title, headerRow = false, small = false, sx, ...props}) => {
   const HeaderContainer = headerRow ? HeaderRow : HeaderColumn;
   return (
     <Paper elevation={4} sx={{...{
@@ -25,9 +26,10 @@ const PageCard = ({children, header, headerRow = false, small = false, sx, ...pr
       maxWidth: '95vw',
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
     }, ...sx}} {...props}>
-      {header && 
+      {(header || title) && 
         <>
           <HeaderContainer>
+            {title && <Typography variant="h6">{title}</Typography>}
             {header}
           </HeaderContainer>
           <Divider variant="middle" sx={{width: '100%', mt: 1, mb: 2}}/>

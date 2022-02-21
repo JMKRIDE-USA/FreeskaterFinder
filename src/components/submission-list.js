@@ -7,11 +7,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { 
   Link, Grid, ListItemButton, ListItemSecondaryAction, Typography,
-  IconButton, ListItemText, ListItemIcon, ListItem, Collapse, ButtonGroup,
+  IconButton, ListItemText, ListItemIcon, ListItem, Collapse,
 } from '@mui/material'
 import { ISOToReadableString } from '@jeffdude/frontend-helpers';
 
-import { useDeleteSubmission, useUpdateSubmission } from '../hooks/challenges';
+import { useDeleteSubmission } from '../hooks/challenges';
 import PageCard from './page-card';
 
 export function StatusIndicator({status, hint = true, sx = {}}) {
@@ -115,7 +115,7 @@ export function lookupSubmissionFields({submission, challengeFields}){
 export function ChallengeSubmissionList({challenge, ...props}) {
   const challengeFields = makeChallengeFields({challenge}) 
 
-  return <PageCard header={<Typography variant="h6">My {challenge.title} Submission</Typography>}>
+  return <PageCard title={"My " + challenge.title + " Submission"}>
     <List>
       {challenge.submissions.map(submission => lookupSubmissionFields({submission, challengeFields})).map((submission, index) => (
         <SubmissionItem submission={submission} key={index} {...props}/>
@@ -125,7 +125,7 @@ export function ChallengeSubmissionList({challenge, ...props}) {
 } 
 
 export function AdminSubmissionList({submissions, title}) {
-  return <PageCard header={title && <Typography variant="h6">{title}</Typography>}>
+  return <PageCard title={title}>
     {submissions.length
       ?  <List xs='auto'>
         {submissions.map(submission => lookupSubmissionFields({submission})).map(

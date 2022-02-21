@@ -1,14 +1,20 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { Button } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Button, Link as MuiLink } from '@mui/material';
 
-import { TableCard } from './table';
+import Table from './table';
 import { ISOToReadableString } from '@jeffdude/frontend-helpers/dist/date';
 import { StatusIndicator } from '../submission-list';
 
 const columns = [
+  {
+    headerName: 'Link',
+    field: '_id',
+    width: 90,
+    sortable: false,
+    renderCell: ({value}) => <Button variant="contained" color="secondary" component={Link} to={"/submission/" + value}>View</Button>
+  },
   {
     headerName: 'Date',
     field: 'createdAt', 
@@ -26,31 +32,19 @@ const columns = [
     headerName: 'Challenge',
     field: 'challenge',
     width: 250,
-    renderCell: ({value}) => <Button component={Link} to={"/challenge/" + value._id}>{value.title}</Button>
+    renderCell: ({value}) => <MuiLink component={Link} to={"/challenge/" + value._id}>{value.title}</MuiLink>
   },
   {
     headerName: 'Author',
     field: 'author',
     width: 150,
-    renderCell: ({value}) => <Button component={Link} to={"/user/" + value._id}>{value.fullName}</Button>
+    renderCell: ({value}) => <MuiLink component={Link} to={"/user/" + value._id}>{value.fullName}</MuiLink>
   },
-  {
-    headerName: 'Link',
-    field: '_id',
-    width: 150,
-    renderCell: ({value}) => <Button variant="contained" color="secondary" component={Link} to={"/submission/" + value}>View</Button>
-  }
 ]
 
 function SubmissionTable({submissions, title}){
   return (
-    <TableCard title={title} length={submissions.length}>
-      <DataGrid
-        getRowId={row => row._id}
-        rows={submissions}
-        columns={columns}
-      />
-    </TableCard>
+    <Table title={title} rows={submissions} columns={columns}/>
   )
 }
 

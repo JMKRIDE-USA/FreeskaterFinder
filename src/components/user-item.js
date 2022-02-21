@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Badge, Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography } from '@mui/material';
+import { Badge, Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography, Link as MuiLink } from '@mui/material';
 import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -16,6 +16,7 @@ import UserAvatar from './user-avatar';
 import { getSocialLinkTypeByName, maxBlurbLength } from '../constants';
 import useMakeLoadingButton from '../hooks/loading-button';
 import { useCreateFriendRequest } from '../hooks/friends';
+import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
 
 
 const SocialLinkIcons = ({socialLinkData}) => {
@@ -91,13 +92,17 @@ const IncomingPendingFriend = () => {
   return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
 }
 
-const UserItem = ({user, showAction = true, editableAvatar = false, sx={}}) => {
+const UserItem = ({user, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
+  const adminView = useGetAuthState() === 500;
+
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
   if(blurb.length > maxBlurbLength) {
     blurb += "..."
   }
+  const isAmbassador = user.permissionLevel === "ambassador" || user?.isAmbassador
   const userInfo = useGetUserInfo();
   const secondaryAction = (() => {
+    if(!showAction) return <></>
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
     if(user.isFriend)
@@ -110,24 +115,25 @@ const UserItem = ({user, showAction = true, editableAvatar = false, sx={}}) => {
     return <FriendRequester key={user._id} user={user}/>
   })();
 
-  const AmbassadorBadge = user.permissionLevel === "ambassador"
+  const AmbassadorBadge = isAmbassador
     ? ({children}) => <Badge overlap='circular' badgeContent={
           <StarIcon fontSize='medium' stroke="#000" stroke-width={1} sx={{color: "#fbb03b"}}/>
         }>{children}</Badge>
     : ({children}) => children
 
   return (
-    <ListItem secondaryAction={showAction ? secondaryAction : null} sx={sx}>
+    <ListItem sx={{minWidth: 'min(80vw, 400px)', ...sx}} divider={divider} secondaryAction={secondaryAction}>
       <ListItemAvatar>
         <AmbassadorBadge>
           <UserAvatar user={user} editable={editableAvatar}/>
         </AmbassadorBadge>
       </ListItemAvatar>
       <ListItemText
-        primary={user.firstName + " " + user.lastName}
+        primary={<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}
         secondary={blurb}
         sx={{maxWidth: '200px'}}
       />
+      {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
     </ListItem>
   )
 }

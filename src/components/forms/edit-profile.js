@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import { invalidateJFHCache, useGetUserInfo, usePatchUser } from '@jeffdude/frontend-helpers';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 
 import useMakeForm from '../../hooks/form'
 import { makeTextField } from './fields'
@@ -31,7 +31,7 @@ function EditProfileCard({onSuccess, title, noProfileIcon = false, backButton = 
     ),
   })
 
-  return <PageCard small header={title && <Typography variant="h6">{title}</Typography>}>
+  return <PageCard small title={title}>
     {!noProfileIcon && <UserAvatar user={userInfo} editable/>}
     {renderForm()}
   </PageCard>

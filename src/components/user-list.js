@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Divider, List, Typography } from '@mui/material';
+import { List, Typography } from '@mui/material';
 
 import UserItem from './user-item';
 
 
-function UserList({users, emptyMessage = "No Users Found"}){
+function UserList({users, emptyMessage = "No Users Found", ...props}){
   if(!users.length)
     return <Typography variant="body">
       {emptyMessage}
@@ -22,8 +22,7 @@ function UserList({users, emptyMessage = "No Users Found"}){
     <List sx={{width: '100%', overflowY: 'auto'}}>
       {users.map((user, index) => (
         <React.Fragment key={index}>
-          <UserItem user={user}/>
-          {index + 1 !== users.length && <Divider variant="inset" component="li"/>}
+          <UserItem user={user} divider={index + 1 !== users.length} {...props}/>
         </React.Fragment>
       ))}
     </List>
