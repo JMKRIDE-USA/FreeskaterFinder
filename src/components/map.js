@@ -28,8 +28,8 @@ const MapComponent = ({
   zoom = defaultZoom,
   containerStyle = {},
   interactive = true,
-  onLoad,
-  children
+  children,
+  ...props
 }) => {
   const googleMapsApiKey = useGetGMapsKey();
   const myContainerStyle = {...(fullscreen ?  fullscreenContainerStyle : CardContainerStyle), ...containerStyle}
@@ -41,7 +41,6 @@ const MapComponent = ({
           mapContainerStyle={{width: '100%', height: '100%'}}
           center={center}
           zoom={zoom}
-          onLoad={onLoad}
           options={{...{
             maxZoom: 9,
             minZoom: 3,
@@ -49,8 +48,9 @@ const MapComponent = ({
             mapTypeControl: false,
             mapTypeId: 'terrain',
             fullscreenControl: false,
-          }, ...(interactive ? {gestureHandling: 'greedy'} : {gestureHandling: 'none', zoomControl: false})
-        }}>
+          }, ...(interactive ? {gestureHandling: 'greedy'} : {gestureHandling: 'none', zoomControl: false})}}
+          {...props}
+        >
           { children }
         </GoogleMap>
       </LoadScript>

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { QueryLoader } from '@jeffdude/frontend-helpers';
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Marker } from '@react-google-maps/api';
+import { useParams } from 'react-router-dom';
 
 import UserList from '../components/user-list';
 import Page from '../components/page';
@@ -22,8 +23,9 @@ import FFMarkerAmbassadorAndFriend from '../assets/FF_MarkerAmbassadorAndFriend.
 import titleLogo from '../assets/FreeskaterFinderLogo_WhiteBG.svg';
 import titleLogoNoText from '../assets/FreeskaterFinderLogo_WhiteBG_NoText.svg';
 
-const LoadedMap = ({locations, setSelected}) => {
+const LoadedMap = ({locations, selected, setSelected, unsetSelected}) => {
   const [mapInstance, setMapInstance] = useState();
+  const [initialized, setInitialized] = useState(false);
 
   function panToOffsetCenter(latlng, offsety) {
     // offsety is the distance you want that point to move upwards, in pixels
@@ -40,7 +42,7 @@ const LoadedMap = ({locations, setSelected}) => {
     mapInstance.panTo(newCenter);
   }
 
-  const getIcon = ({users}) => {
+  const getMarkerIcon = ({users}) => {
     const friend = users.some(user => user.isFriend)
     const ambassador = users.some(user => user.isAmbassador)
     const url = (() => {
@@ -52,7 +54,7 @@ const LoadedMap = ({locations, setSelected}) => {
     return {url, scaledSize: new window.google.maps.Size(...(friend || ambassador) ? [65, 65] : [57, 57])}
   }
 
-  const onClick = ({users, location}) => {
+  const panToLocation = ({users, location}) => {
     if(mapInstance.getZoom() < 8)
       mapInstance.setZoom(8)
 
@@ -60,14 +62,23 @@ const LoadedMap = ({locations, setSelected}) => {
       new window.google.maps.LatLng(location.lat, location.lng),
       Math.min(users.length * 100, 0.2 * (window.innerHeight))
     );
-    setSelected({users, location})
   }
+
+  useEffect(() => {
+    if(selected?.location && mapInstance && initialized) panToLocation(selected)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, mapInstance, initialized])
+
   return (
-    <Map fullscreen onLoad={mapInst => setMapInstance(mapInst)}>
+    <Map fullscreen
+      onLoad={mapInst => setMapInstance(mapInst)}
+      onProjectionChanged={() => setInitialized(true)}
+      onClick={unsetSelected}
+    >
       {mapInstance && locations.map(({users, location}, index) => 
         <Marker
-          position={location} key={index} onClick={() => onClick({users, location})}
-          icon={getIcon({users})} draggable={false} shape={{
+          position={location} key={index} onClick={() => setSelected({users, location})}
+          icon={getMarkerIcon({users})} draggable={false} shape={{
             coords: [15, 10, 50, 80],
             type: "rect",
           }} options={{shape: {coords: [15, 10, 50, 80], type: "rect"}}}
@@ -76,14 +87,8 @@ const LoadedMap = ({locations, setSelected}) => {
     </Map>
   )
 }
-const LocationLoader = ({children}) => {
-  const locationsQuery = useGetAllLocations({refetchOnMount: false, refetchOnWindowFocus: false});
-  return <QueryLoader query={locationsQuery} propName="locations">
-    {children}
-  </QueryLoader>
-}
 
-const SelectedUsersDisplay = ({selected : {users, location}}) => {
+const SelectedUsersDisplay = ({selected : {users, location} = {}}) => {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
@@ -99,20 +104,32 @@ const SelectedUsersDisplay = ({selected : {users, location}}) => {
   )
 }
 
-const LoadedMapPage = ({locations}) => {
-  const [selected, setSelected] = useState({})
+const LoadedMapPage = ({locations, locationId}) => {
+  const [selected, setSelectedState] = useState()
+
+  const setSelected = (newSelected) => {
+    window.history.replaceState(null, '', '/location/' + newSelected.location._id)
+    setSelectedState(newSelected)
+  }
+  const unsetSelected = () => {
+    window.history.replaceState(null, '', '/')
+    setSelectedState({selected: {}})
+  }
+
   React.useEffect(() => {
-    if(selected?.location){
+    if(selected?.location || locationId){
+      let selectedId = selected?.location || locationId;
       for(let location of locations){
-        if(location.location._id === selected.location.id)
-          setSelected(location)
+        if(location.location._id === selectedId)
+          setSelectedState(location)
       }
     }
   }, 
-  [locations, selected, setSelected])
+  [locations, selected, setSelectedState, locationId])
+
   return (
     <Page fullscreen absoluteChildren={
-      <LoadedMap setSelected={setSelected} locations={locations}/>
+      <LoadedMap {...{selected, setSelected, unsetSelected, locations}}/>
     } gridStyle={{height: '100%', flexDirection: "column-reverse"}}>
       <SelectedUsersDisplay selected={selected}/>
     </Page>
@@ -120,9 +137,15 @@ const LoadedMapPage = ({locations}) => {
 }
 
 const MapPage = () => {
+  const { locationId } = useParams();
   const accountStatus = useGetAccountStatus();
+  const useGetAllLocationQuery = () => useGetAllLocations({refetchOnMount: false, refetchOnWindowFocus: false});
   if(accountStatus === 'logged in')
-    return <LocationLoader><LoadedMapPage/></LocationLoader>
+    return (
+      <QueryLoader query={useGetAllLocationQuery} propName="locations" generateQuery>
+        <LoadedMapPage locationId={locationId}/>
+      </QueryLoader>
+    )
   return (
     <Page>
       <Box sx={{p: 0, m:0, height: '95vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>

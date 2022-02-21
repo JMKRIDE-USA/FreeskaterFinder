@@ -18,9 +18,7 @@ function LoadedPendingFriendsCard({pendingFriends}) {
   if(!pendingFriends.length)
     return <></>
   return (
-    <PageCard sx={{mb:2}} headerRow header={
-      <Typography variant="h6">Friend Requests</Typography>
-    }>
+    <PageCard sx={{mb:2}} headerRow title="Friend Requests">
       <RequestList requests={pendingFriends}/>
     </PageCard>
   )

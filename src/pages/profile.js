@@ -24,14 +24,11 @@ function MyAccountCard() {
     navigate("/")
   }
   return (
-    <PageCard small headerRow header={
-      <>
-        <Typography variant="h6" sx={{ml: 1}}>My Account</Typography>
-        <ButtonGroup sx={{'&>*': {mr: 1}}}>
-          <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
-          <Button variant="contained" color="error" onClick={onLogout}>Log Out</Button>
-        </ButtonGroup>
-      </>
+    <PageCard small headerRow title="My Account" header={
+      <ButtonGroup sx={{'&>*': {mr: 1}}}>
+        <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
+        <Button variant="contained" color="error" onClick={onLogout}>Log Out</Button>
+      </ButtonGroup>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>
         <UserItem user={userInfo} showAction={false} editableAvatar/>
@@ -43,11 +40,11 @@ function MyAccountCard() {
 function MyLocationCard() {
   const userInfo = useGetUserInfo()
   return (
-    <PageCard sx={{minWidth: '400px', minHeight: '300px'}} small headerRow header={
-      <>
-        <Typography variant="h6" sx={{ml: 1}}>My Location</Typography>
-        <Button variant="contained" color="neutral" component={Link} to="/edit-location" sx={{alignSelf: "flex-end"}}>Edit</Button>
-      </>
+    <PageCard sx={{minWidth: '400px', minHeight: '300px'}} small headerRow title="My Location" header={
+      <ButtonGroup>
+        <Button variant="contained" color="neutral" component={Link} to={"/location/" + userInfo.location._id}>View</Button>
+        <Button variant="contained" color="neutral" component={Link} to="/edit-location">Edit</Button>
+      </ButtonGroup>
     }>
       <Typography variant="body" alignSelf="flex-start" mb={1}><b>Location:</b> {userInfo.location.zip}, {userInfo.location.country}</Typography>
       <MapComponent center={userInfo.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
@@ -59,9 +56,7 @@ function MyLocationCard() {
 
 function ContactCard() {
   // fix header Divider alignment
-  return <PageCard headerRow header={
-    <Typography variant="h6">Contact JMK</Typography>
-  } sx={{'& > *': {maxWidth: 'min(90vw, 590px)'}}}>
+  return <PageCard headerRow title="Contact JMK" sx={{'& > *': {maxWidth: 'min(90vw, 590px)'}}}>
     <Typography variant="body1" sx={{mb: 2}}>
       Please reach out to me about any issues with the website, its users, your account, or anything else at all.
     </Typography>

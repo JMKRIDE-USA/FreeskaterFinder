@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { QueryLoader } from '@jeffdude/frontend-helpers';
-import { Grid, Link, TextField, Typography, ButtonGroup } from '@mui/material';
+import { Grid, Link as MuiLink, TextField, Typography, ButtonGroup } from '@mui/material';
 
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -40,7 +40,7 @@ function LoadedSingleSubmissionCard({ submission }) {
     <PageCard headerRow header={
       <>
         <Typography variant="h6">
-          Submission by <Link href={"/user/" + submission.author._id}><b>{submission.author.fullName}</b></Link>
+          Submission by <MuiLink component={Link} to={"/user/" + submission.author._id}><b>{submission.author.fullName}</b></MuiLink>
         </Typography>
         <Typography variant="h6">Submitted on {ISOToReadableString(submission.createdAt)}</Typography>
       </>
@@ -83,7 +83,7 @@ function AllSubmissionsLoader({children}) {
 function SubmissionPage(){
   const { submissionId } = useParams();
   return <Page>
-    <TitleCard/>
+    <TitleCard>{submissionId && <MuiLink component={Link} to={"/submissions"}>All Submissions</MuiLink>}</TitleCard>
     {submissionId
       ? <SingleSubmissionCard submissionId={submissionId}/>
       : <AllSubmissionsLoader><SubmissionsTable title="All Submissions"/></AllSubmissionsLoader>

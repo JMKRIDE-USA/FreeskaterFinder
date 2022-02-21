@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, List, ListItemText, ListItem, Typography } from '@mui/material';
+import { Divider, List, ListItemText, ListItem } from '@mui/material';
 import { usePatchUser } from '@jeffdude/frontend-helpers';
 
 import { useGetUserSettings } from '../hooks/user';
@@ -34,11 +34,7 @@ const PrivacySwitch = ({FFUserPrivacy : privacy, userSettings}) => {
 const UserSettingsCard = () => {
   const userSettings = useGetUserSettings();
 
-  return <PageCard small headerRow header={
-    <>
-      <Typography variant="h6">My Settings</Typography>
-    </>
-  }>
+  return <PageCard small headerRow title="My Settings">
     <List>
       <ListItem secondaryAction={<VisibilitySwitch FFMapVisibility={userSettings.FFMapVisibility} userSettings={userSettings}/>}>
         <ListItemText
