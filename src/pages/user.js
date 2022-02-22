@@ -18,6 +18,7 @@ import InfoList from '../components/info-list';
 import useMakeForm from '../hooks/form';
 import { makeTextField } from '../components/forms/fields';
 import { useGetUserTransactions } from '../hooks/transactions';
+import { useCreateReferralCode } from '../hooks/referral-codes';
 
 function UserDetailCard({user}){
   const {
@@ -35,9 +36,10 @@ function UserDetailCard({user}){
   )
 }
 
-function ReferralCodeCreationForm(){
+function ReferralCodeCreationForm({user}){
+  const createReferralCode = useCreateReferralCode();
   const renderForm = useMakeForm({
-    actionFn: console.log, //TODO
+    actionFn: (data) => createReferralCode({owner: user._id, ...data}),
     onSuccess: invalidateJFHCache,
     stateList: [
       {
@@ -66,7 +68,7 @@ function AmbassadorDetailCard({user}){
     <InfoList object={{"Ambassador Point Balance": user.balance}}/>
     {user.referralCode 
       ? <InfoList object={user.referralCode}/> //TODO
-      : <ReferralCodeCreationForm/>
+      : <ReferralCodeCreationForm user={user}/>
     }
   </PageCard>
 }
@@ -75,22 +77,24 @@ function SingleUserCards({user}){
   user.authState = permissionLevelToAuthState(user.permissionLevel)
   const useTransactionsQuery = () => useGetUserTransactions(user._id)
   return <>
-    <Grid container direction="row" sx={{mb: 2, justifyContent: 'center', "& > *": {m: 1}}}>
-      <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {mb: 1, mt: 1}}}>
+    <Grid container direction="row" sx={{m: 1, justifyContent: 'center', "& > *": {m: 1}}}>
+      <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
         <PageCard headerRow title={"User: " + user.fullName} xs="auto">
           <UserItem user={{isFriend: true, ...user}}/>
         </PageCard>
         <UserDetailCard user={user}/>
         {user.authState > 1 && <AmbassadorDetailCard user={user}/>}
       </Grid>
-      <PageCard headerRow title={user.firstName + "'s location:"} header={
-        <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>
-      }>
-        <MapComponent center={user.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
-          <Marker position={user.location}/>
-        </MapComponent>
-      </PageCard>
-      {user.friends.length && <UserTable users={user.friends} title={user.firstName + "'s friends"} basic/>}
+      <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
+        <PageCard headerRow title={user.firstName + "'s location:"} header={
+          <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>
+        }>
+          <MapComponent center={user.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
+            <Marker position={user.location}/>
+          </MapComponent>
+        </PageCard>
+        {user.friends.length && <UserTable users={user.friends} title={user.firstName + "'s friends"} basic/>}
+      </Grid>
       {user.authState > 1 && <QueryLoader query={useTransactionsQuery} propName="transactions" generateQuery>
         <TransactionsTable title={user.fullName + "'s Transactions"}/>
       </QueryLoader>}

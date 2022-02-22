@@ -24,11 +24,10 @@ function AmbassadorInfoCard() {
 
 function AmbassadorCard(){
   const authState = useGetAuthState();
-  const makeApplicationQuery = useGetAmbassadorApplication;
   if(authState > 1){
     return <AmbassadorInfoCard/>
   }
-  return <QueryLoader query={makeApplicationQuery()} propName="ambassadorApplication">
+  return <QueryLoader query={useGetAmbassadorApplication} propName="ambassadorApplication" generateQuery>
     <AmbassadorApplicationStatus/>
   </QueryLoader>
   

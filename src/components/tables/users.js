@@ -43,7 +43,7 @@ const fullColumns = [
   {
     headerName: 'Location',
     field: 'location',
-    width: '200',
+    width: 200,
     renderCell: ({value}) => <MuiLink component={Link} to={"/location/" + value._id}>{value.zip + ", " + value.country}</MuiLink>,
   }
 ]

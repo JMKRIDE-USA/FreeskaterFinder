@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { Typography, Link as MuiLink } from '@mui/material';
+import { Button, Typography, Link as MuiLink } from '@mui/material';
 import { ISOToReadableString } from '@jeffdude/frontend-helpers';
 
 import Table from './table';
@@ -9,6 +9,12 @@ import Table from './table';
 const CellLink = ({to, children}) => <MuiLink component={Link} to={to}>{children}</MuiLink>
 
 const columns = [
+  {
+    headerName: '',
+    field: '_id',
+    width: 80,
+    renderCell: ({value}) => <Button variant="contained" color="secondary" component={Link} to={"/transaction/" + value}>View</Button>
+  },
   {
     headerName: 'Date',
     field: 'createdAt',
@@ -53,8 +59,8 @@ const columns = [
   },
 ]
 
-function TransactionsTable({transactions, title}){
-  return <Table title={title} rows={transactions} columns={columns}/>
+function TransactionsTable({transactions, title, single = false}){
+  return <Table title={title} rows={transactions} columns={single ? columns.slice(1) : columns}/>
 }
 
 export default TransactionsTable;
