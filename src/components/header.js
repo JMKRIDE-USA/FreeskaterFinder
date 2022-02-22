@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Outlet from './outlet';
 import { headerHeight } from '../constants';
+import AdminMenu from './admin-menu';
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
 import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
@@ -102,6 +103,7 @@ const ResponsiveAppBar = () => {
                 </MenuItem>
               ))}
             </Menu>
+            <AdminMenu/>
           </Box>
           <ButtonBase onClick={handleCloseNavMenu('Home')} sx={{display: {xs: 'none', md: 'flex'}}}>
             <img style={{marginRight: "15px"}} src={mdlogo} height={50} alt="JMKRIDE logo"/>
@@ -116,6 +118,7 @@ const ResponsiveAppBar = () => {
                 {page}
               </Button>
             ))}
+            <AdminMenu/>
           </Box>
 
           <Box sx={{ flexGrow: 0, display: authState ? 'none' : 'flex' }}>

@@ -14,6 +14,8 @@ import ChallengePage from './pages/challenge';
 import AdminPage from './pages/admin';
 import SubmissionPage from './pages/submission';
 import UserPage from './pages/user';
+import TransactionPage from './pages/transaction';
+import ReferralCodePage from './pages/referral-code';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -60,6 +62,10 @@ function App() {
               <Route path="submission/:submissionId" element={<SubmissionPage/>}/>
               <Route path="user/:userId" element={<UserPage/>}/>
               <Route path="users" element={<UserPage/>}/>
+              <Route path="transactions" element={<TransactionPage/>}/>
+              <Route path="transaction/:transactionId" element={<TransactionPage/>}/>
+              <Route path="referral-code/:referralCodeId" element={<ReferralCodePage/>}/>
+              <Route path="referral-codes" element={<ReferralCodePage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
 
 import PageCard from '../page-card';
 import { makeDateField, makeTextField, makeYesNoField } from './fields';
@@ -62,12 +63,12 @@ const makeStateList = (fields) => fields.map(({_id : key, title : label, fieldTy
   }
 })
 
-function OpenChallengeFormCard({challenge, onSuccess}) {
+function OpenChallengeFormCard({challenge}) {
   const stateList = makeStateList(challenge.structure)
   const submitChallenge = useSubmitChallenge({challengeId: challenge._id});
   const renderForm = useMakeForm({
     actionFn: submitChallenge,
-    onSuccess, buttonText: "Submit",
+    onSuccess: invalidateJFHCache, buttonText: "Submit",
     stateList, backButton: () => <Button component={Link} to="/">Back to Home</Button>,
     sx: {width: "min(90vw, 900px)"},
   })
@@ -81,10 +82,10 @@ function OpenChallengeFormCard({challenge, onSuccess}) {
   >{renderForm()}</PageCard>
 }
 
-function ChallengeFormCard({challenge, onSuccess = () => null}){
+function ChallengeFormCard({challenge}){
   if(challenge.submissions.length && !challenge.allowMultipleSubmission)
     return <ChallengeSubmissionList challenge={challenge}/>
-  return <OpenChallengeFormCard {...{challenge, onSuccess}}/>
+  return <OpenChallengeFormCard {...{challenge}}/>
 }
 
 export default ChallengeFormCard;

@@ -14,26 +14,27 @@ import SubmissionsTable from '../components/tables/submissions';
 import Page from '../components/page';
 import TitleCard from '../components/title-card';
 import PageCard from '../components/page-card';
-import { ISOToReadableString } from '@jeffdude/frontend-helpers/dist/date';
+import { ISOToReadableString, invalidateJFHCache } from '@jeffdude/frontend-helpers/dist/date';
 import useMakeLoadingButton from '../hooks/loading-button';
 
 function LoadedSingleSubmissionCard({ submission }) {
   const [note, setNote] = useState('');
   submission = lookupSubmissionFields({submission})
   const updateSubmission = useUpdateSubmission({submissionId: submission._id})
+  const thenFn = invalidateJFHCache;
 
   const { onClick : onClickAccept, render : renderAccept} = useMakeLoadingButton({
     doAction: () => updateSubmission({status: 'APPROVED'}),
     buttonText: "Accept",
     icon: <CheckIcon/>,
-    color: "success"
+    color: "success", thenFn,
   })
 
   const { onClick : onClickReject, render : renderReject} = useMakeLoadingButton({
     doAction: () => updateSubmission({status: 'DENIED', note}),
     buttonText: "Reject",
     icon: <CancelIcon/>,
-    color: "error"
+    color: "error", thenFn,
   })
 
   return (
@@ -83,7 +84,7 @@ function AllSubmissionsLoader({children}) {
 function SubmissionPage(){
   const { submissionId } = useParams();
   return <Page>
-    <TitleCard>{submissionId && <MuiLink component={Link} to={"/submissions"}>All Submissions</MuiLink>}</TitleCard>
+    <TitleCard>{submissionId && <MuiLink component={Link} to={"/submissions"}>View All Submissions</MuiLink>}</TitleCard>
     {submissionId
       ? <SingleSubmissionCard submissionId={submissionId}/>
       : <AllSubmissionsLoader><SubmissionsTable title="All Submissions"/></AllSubmissionsLoader>

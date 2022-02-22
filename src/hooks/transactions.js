@@ -5,3 +5,9 @@ const useGetTransactionQuery = (endpoint, options) => useGetQuery(endpoint, 'tra
 export function useGetUserTransactions(userId){
   return useGetTransactionQuery("transactions/get?populate=true&userId=" + userId)
 }
+export function useGetAllTransactions(){
+  return useGetTransactionQuery("transactions/get?populate=true")
+}
+export function useGetTransactionById(transactionId){
+  return useGetTransactionQuery("transactions/get?populate=true&transactionId=" + transactionId)
+}
