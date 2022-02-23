@@ -15,6 +15,9 @@ export function useGetUserReferralCodes(userId){
 export function useGetReferralCodeById(referralCodeId){
   return useGetReferralCodeQuery("referralCodes/get?referralCodeId=" + referralCodeId)
 }
+export function useGetReferralCodeOptions(){
+  return useGetReferralCodeQuery("referralCodes/options")
+}
 export function useGetAllReferralCodes(){
   return useGetReferralCodeQuery("referralCodes/get/all")
 }

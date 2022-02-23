@@ -92,7 +92,7 @@ const IncomingPendingFriend = () => {
   return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
 }
 
-const UserItem = ({user, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
+const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
   const adminView = useGetAuthState() === 500;
 
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
@@ -133,6 +133,7 @@ const UserItem = ({user, showAction = true, editableAvatar = false, sx={}, divid
         secondary={blurb}
         sx={{maxWidth: '200px'}}
       />
+      {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
       {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
     </ListItem>
   )

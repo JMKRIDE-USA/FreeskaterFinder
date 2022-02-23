@@ -25,7 +25,7 @@ function MyAccountCard() {
   }
   return (
     <PageCard small headerRow title="My Account" header={
-      <ButtonGroup sx={{'&>*': {mr: 1}}}>
+      <ButtonGroup>
         <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
         <Button variant="contained" color="error" onClick={onLogout}>Log Out</Button>
       </ButtonGroup>
