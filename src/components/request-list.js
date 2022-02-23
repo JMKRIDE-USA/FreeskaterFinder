@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ListItemAvatar, ListItemText, ListItem, List, Divider, ButtonGroup } from '@mui/material';
+import { Grid, ListItemAvatar, ListItemText, ListItem, List, Link as MuiLink, ButtonGroup } from '@mui/material';
+import { Link } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
@@ -11,7 +12,7 @@ import useMakeLoadingButton from '../hooks/loading-button';
 import { maxBlurbLength } from '../constants';
 
 
-function RequestItem({request}){
+function RequestItem({request, divider}){
   const { from: user } = request;
 
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
@@ -38,20 +39,26 @@ function RequestItem({request}){
   })
 
   return (
-    <ListItem secondaryAction={
-      <ButtonGroup variant="outline"> 
-        {renderAcceptButton({onClick: onClickAccept, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
-        {renderIgnoreButton({onClick: onClickIgnore, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
-      </ButtonGroup> 
-    }>
+    <ListItem divider={divider}>
       <ListItemAvatar>
         <UserAvatar user={user}/>
       </ListItemAvatar>
       <ListItemText
         primary={<><b>{user.firstName + " " + user.lastName}</b>{" - \"" + request.memo + "\""}</>}
         secondary={blurb}
-        sx={{maxWidth: '200px'}}
+        sx={{maxWidth: '80vw', flexGrow: 1}}
       />
+      <MuiLink component={Link} to={"/location/" + user.location._id} sx={{ml: 2, flexGrow: 1}}>{user.location.zip}, {user.location.country}</MuiLink>
+      <>
+        <ButtonGroup variant="outline" sx={{ml: 2, display: {xs: 'none', md: 'flex'}}}> 
+          {renderAcceptButton({onClick: onClickAccept, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+          {renderIgnoreButton({onClick: onClickIgnore, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+        </ButtonGroup> 
+        <Grid container direction="row" sx={{maxWidth: '25vw', "&>*": {xs: 'auto'}, display: {xs: 'flex', md: 'none'}}}> 
+          {renderAcceptButton({onClick: onClickAccept, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+          {renderIgnoreButton({onClick: onClickIgnore, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}
+        </Grid> 
+      </>
     </ListItem>
   )
 }
@@ -60,10 +67,7 @@ function RequestList({requests}){
   return (
     <List sx={{width: '100%'}}>
       {requests.map(( request, index ) => (
-        <React.Fragment key={index}>
-          <RequestItem request={request} key={index}/>
-          {index + 1 < requests.length && <Divider variant="inset" component="li"/>}
-        </React.Fragment>
+        <RequestItem request={request} key={index} divider={index + 1 < requests.length}/>
       ))}
     </List>
   )

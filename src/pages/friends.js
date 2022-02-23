@@ -42,7 +42,7 @@ function FriendsCard() {
         <div/>
       </>
     }>
-      <UserList users={friends} emptyMessage="Go to the map and add some friends!"/>
+      <UserList users={friends} emptyMessage="Go to the map and add some friends!" showLocation/>
     </PageCard>
   )
 }

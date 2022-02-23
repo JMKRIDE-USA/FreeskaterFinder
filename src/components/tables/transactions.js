@@ -48,7 +48,7 @@ const columns = [
     width: 150,
     renderCell: ({row}) => {
       if(row.submission) return <CellLink to={"/submission/" + row.submission}>Submission</CellLink>
-      if(row.referralCode) return <CellLink to={"/referralCode/" + row.referralCode}>Referral Code</CellLink>
+      if(row.referralCode) return <CellLink to={"/referral-code/" + row.referralCode}>Referral Code</CellLink>
       return <></>
     }
   },

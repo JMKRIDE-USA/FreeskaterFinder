@@ -32,8 +32,9 @@ function AdminMenu(){
           Submissions: "/submissions",
           Users: "/users",
           Transactions: "/transactions",
+          "Referral Codes": "/referral-codes",
         }).map(([key, value]) => (
-          <ListItemButton key={key} onClick={() => navigate(value)}>{ key }</ListItemButton>
+          <ListItemButton key={key} onClick={() => {navigate(value); handleClose()}}>{ key }</ListItemButton>
         ))}
           
       </List>

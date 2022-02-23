@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useParams, Link } from 'react-router-dom';
 import { QueryLoader, ISOToReadableString, permissionLevelToAuthState, invalidateJFHCache } from '@jeffdude/frontend-helpers';
-import { Grid, Link as MuiLink, Typography } from '@mui/material';
+import { Button, ButtonGroup, Grid, Link as MuiLink, Typography } from '@mui/material';
 import { Marker } from '@react-google-maps/api';
 
 import { useGetUserById, useGetAllUsers } from '../hooks/users';
@@ -47,9 +47,9 @@ function ReferralCodeCreationForm({user}){
         component: makeTextField({key: 'code', label: 'Code', validation: {required: 'This field is required'}}),
       },
       {
-        key: 'percentage', label: 'Percentage', initialState: '5', formatFn: i => (1.0 * (parseInt(i))/100.0),
+        key: 'percent', label: 'Percentage', initialState: '5', formatFn: i => parseInt(i),
         component: makeTextField(
-          {key: 'percentage', label: 'Percentage', validation: {
+          {key: 'percent', label: 'Percentage', validation: {
             required: 'This field is required',
             validate: value => {const num = parseInt(value); return (0 < num && num < 100)},
           }}
@@ -64,12 +64,19 @@ function ReferralCodeCreationForm({user}){
 }
 
 function AmbassadorDetailCard({user}){
-  return <PageCard headerRow title={"Ambassador Details"}>
-    <InfoList object={{"Ambassador Point Balance": user.balance}}/>
-    {user.referralCode 
-      ? <InfoList object={user.referralCode}/> //TODO
-      : <ReferralCodeCreationForm user={user}/>
+  let ambassadorInfo = {"Ambassador Point Balance": user.balance}
+  if(user.referralCode)
+    ambassadorInfo = {
+      ...ambassadorInfo,
+      "Code": user.referralCode.code,
+      "Percentage": user.referralCode.percent + "%",
+      "Num Uses": user.referralCode.usageCount,
     }
+  return <PageCard headerRow title={"Ambassador Details"} header={
+    user.referralCode && <Button color="neutral" variant="contained" component={Link} to={"/referral-code/" + user.referralCode._id}>View Referral Code</Button>
+  }>
+    <InfoList object={ambassadorInfo} sx={{width: '100%'}}/>
+    {!user.referralCode && <ReferralCodeCreationForm user={user}/>}
   </PageCard>
 }
 
@@ -93,7 +100,7 @@ function SingleUserCards({user}){
             <Marker position={user.location}/>
           </MapComponent>
         </PageCard>
-        {user.friends.length && <UserTable users={user.friends} title={user.firstName + "'s friends"} basic/>}
+        {user.friends.length ? <UserTable users={user.friends} title={user.firstName + "'s friends"} basic/> : <></>}
       </Grid>
       {user.authState > 1 && <QueryLoader query={useTransactionsQuery} propName="transactions" generateQuery>
         <TransactionsTable title={user.fullName + "'s Transactions"}/>
@@ -106,7 +113,7 @@ function UserPage(){
   const { userId } = useParams();
   const useGetUserQuery = () => useGetUserById(userId);
   return <Page>
-    <TitleCard>{userId && <MuiLink component={Link} to={"/users"} sx={{mt: 2}}>View All Users</MuiLink>}</TitleCard>
+    <TitleCard>{userId && <MuiLink component={Link} to={"/users"}>View All Users</MuiLink>}</TitleCard>
     {userId
       ? <QueryLoader
         query={useGetUserQuery} propName="user" generateQuery

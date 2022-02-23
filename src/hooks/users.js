@@ -4,3 +4,5 @@ const useGetUserQuery = (endpoint, options) => useGetQuery(endpoint, 'users', op
 
 export const useGetUserById = (userId) => useGetUserQuery('users/id/' + userId, {version: 'v2'});
 export const useGetAllUsers = () => useGetUserQuery('users/all', {version: 'v2'});
+
+export const useGetAmbassadorUserOptions = () => useGetUserQuery('users/ambassador-options')

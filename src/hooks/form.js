@@ -10,7 +10,6 @@ function useMakeForm({
   onSuccess = () => null,
   stateList,
   validateData = () => ([]),
-  cardHeader,
   backButton = () => null,
   buttonText = "Save",
   sx={}

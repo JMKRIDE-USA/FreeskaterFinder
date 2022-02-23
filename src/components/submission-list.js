@@ -124,8 +124,8 @@ export function ChallengeSubmissionList({challenge, ...props}) {
   </PageCard>
 } 
 
-export function AdminSubmissionList({submissions, title}) {
-  return <PageCard title={title}>
+export function AdminSubmissionList({submissions, title, ...props}) {
+  return <PageCard title={title} {...props}>
     {submissions.length
       ?  <List xs='auto'>
         {submissions.map(submission => lookupSubmissionFields({submission})).map(
