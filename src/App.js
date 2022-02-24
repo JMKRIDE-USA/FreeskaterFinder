@@ -17,6 +17,8 @@ import UserPage from './pages/user';
 import TransactionPage from './pages/transaction';
 import ReferralCodePage from './pages/referral-code';
 import FaqPage from './pages/faq';
+import PrivacyPolicyPage from './pages/privacy-policy';
+import TermsOfServicePage from './pages/terms-of-service';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -68,6 +70,8 @@ function App() {
               <Route path="referral-code/:referralCodeId" element={<ReferralCodePage/>}/>
               <Route path="referral-codes" element={<ReferralCodePage/>}/>
               <Route path="faq" element={<FaqPage/>}/>
+              <Route path="privacy-policy" element={<PrivacyPolicyPage/>}/>
+              <Route path="terms-of-service" element={<TermsOfServicePage/>}/>
               <Route path="*" element={<PageNotFound/>}/>
             </Route>
           </Routes>

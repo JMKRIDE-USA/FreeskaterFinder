@@ -1,14 +1,16 @@
 import React from 'react';
 
 import Page from '../components/page';
+import TitleCard from '../components/title-card';
 import PageCard from '../components/page-card';
 
 function PrivacyPolicyPage() {
   return (
     <Page>
-      <PageCard>
+      <TitleCard/>
+      <PageCard sx={{maxWidth: 'min(90vw, 800px)'}}>
         <h2>Privacy Policy</h2>
-        <p>Your privacy is important to us. It is JMKRIDE&#39;s policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, <a href="https://ambassadors.jmkride.com">https://ambassadors.jmkride.com</a>, and other sites we own and operate. </p>
+        <p>Your privacy is important to us. It is JMKRIDE&#39;s policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, <a href="https://freeskaterfinder.jmkride.com">https://freeskaterfinder.jmkride.com</a>, and other sites we own and operate. </p>
         <p>This policy is effective as of 29 April 2021 and was last updated on 29 April 2021. </p>
         <h3>Information We Collect</h3>
         <p>Information we collect includes both information you knowingly and actively provide us when using or participating in any of our services and promotions, and any information automatically sent by your devices in the course of accessing our products and services. </p>
