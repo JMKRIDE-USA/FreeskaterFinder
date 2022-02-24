@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useParams, Link } from 'react-router-dom';
 import { QueryLoader, ISOToReadableString, permissionLevelToAuthState, invalidateJFHCache } from '@jeffdude/frontend-helpers';
-import { Button, ButtonGroup, Grid, Link as MuiLink, Typography } from '@mui/material';
+import { Grid, Link as MuiLink, Typography } from '@mui/material';
 import { Marker } from '@react-google-maps/api';
 
 import { useGetUserById, useGetAllUsers } from '../hooks/users';
@@ -19,6 +19,7 @@ import useMakeForm from '../hooks/form';
 import { makeTextField } from '../components/forms/fields';
 import { useGetUserTransactions } from '../hooks/transactions';
 import { useCreateReferralCode } from '../hooks/referral-codes';
+import { AmbassadorDetailCard } from '../components/ambassador-card';
 
 function UserDetailCard({user}){
   const {
@@ -63,23 +64,6 @@ function ReferralCodeCreationForm({user}){
   </>)
 }
 
-function AmbassadorDetailCard({user}){
-  let ambassadorInfo = {"Ambassador Point Balance": user.balance}
-  if(user.referralCode)
-    ambassadorInfo = {
-      ...ambassadorInfo,
-      "Code": user.referralCode.code,
-      "Percentage": user.referralCode.percent + "%",
-      "Num Uses": user.referralCode.usageCount,
-    }
-  return <PageCard headerRow title={"Ambassador Details"} header={
-    user.referralCode && <Button color="neutral" variant="contained" component={Link} to={"/referral-code/" + user.referralCode._id}>View Referral Code</Button>
-  }>
-    <InfoList object={ambassadorInfo} sx={{width: '100%'}}/>
-    {!user.referralCode && <ReferralCodeCreationForm user={user}/>}
-  </PageCard>
-}
-
 function SingleUserCards({user}){
   user.authState = permissionLevelToAuthState(user.permissionLevel)
   const useTransactionsQuery = () => useGetUserTransactions(user._id)
@@ -90,7 +74,7 @@ function SingleUserCards({user}){
           <UserItem user={{isFriend: true, ...user}}/>
         </PageCard>
         <UserDetailCard user={user}/>
-        {user.authState > 1 && <AmbassadorDetailCard user={user}/>}
+        {user.authState > 1 && <AmbassadorDetailCard user={user} noReferralCodeElement={<ReferralCodeCreationForm user={user}/>}/>}
       </Grid>
       <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
         <PageCard headerRow title={user.firstName + "'s location:"} header={

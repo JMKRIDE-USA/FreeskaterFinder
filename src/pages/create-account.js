@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ReCAPTCHA from "react-google-recaptcha";
 
 import { useGetUserInfo, useGetAuthState, useCreateAccount } from '@jeffdude/frontend-helpers';
 import Page from '../components/page';
@@ -49,6 +50,7 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}
 const CreateAccountCard = ({incrementStep}) => {
   const { register, handleSubmit, formState: {errors}, watch}  = useForm();
   const createAccount = useCreateAccount();
+  const [ captchaClicked, setCaptchaClicked ] = useState(false);
   const { onClick, render : renderButton } = useMakeLoadingButton({
     doAction: createAccount,
     buttonText: "Submit",
@@ -89,11 +91,14 @@ const CreateAccountCard = ({incrementStep}) => {
               validate: value => value === password.current || "The passwords do not match.",
             }), type: "password"}
           } error={!!errors.password2} helperText={errors?.password2?.message}/>
-          <FormControlLabel control={
-            <Checkbox {...register("tos", {required: true})}/>
-          } label={<>I agree to the <Link to="/terms-of-service">Terms of Service.</Link></>}
-          />
-          {renderButton({disabled: !tos.current, sx: {alignSelf: "center"}})}
+          <Grid container direction="column" sx={{width: '100%', alignItems: 'center', mb: 2}}>
+            <ReCAPTCHA sitekey="6LfzM5oeAAAAAPhOYNf7YPC0OTZOTAyI4TP0aQ0o" onChange={value => setCaptchaClicked(!!value)}/>
+            <FormControlLabel control={
+              <Checkbox {...register("tos", {required: true})}/>
+            } label={<>I agree to the <Link to="/terms-of-service">Terms of Service.</Link></>}
+            />
+          </Grid>
+          {renderButton({disabled: !(captchaClicked && tos.current), sx: {alignSelf: "center"}})}
         </Grid>
       </form>
     </Paper>

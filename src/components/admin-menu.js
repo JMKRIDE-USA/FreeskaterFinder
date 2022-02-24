@@ -17,7 +17,7 @@ function AdminMenu(){
   const handleClose = () => {
     setAnchorEl(null)
   }
-  if(authState < 500) return <></>
+  if(!authState || authState < 500) return <></>
   return <>
     <Button onClick={handleOpen} sx={{color: "white"}}>
       Admin

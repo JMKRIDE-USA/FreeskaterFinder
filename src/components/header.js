@@ -24,7 +24,7 @@ import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
 
 import NotificationsMenu from './notifications-menu';
 
-const pages = ['Home', 'Friends'];
+const pages = ['Home', 'Friends', 'FAQ'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -36,6 +36,7 @@ const ResponsiveAppBar = () => {
     Home: '/',
     Friends: '/friends',
     Profile: '/my-account',
+    FAQ: '/faq',
   }
   const navigate = useNavigate();
 

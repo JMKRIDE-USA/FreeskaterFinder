@@ -87,11 +87,11 @@ function ProfilePage() {
         <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {mb: 1, mt: 1}}}>
           <MyAccountCard/>
           <UserSettingsCard/>
-          <ContactCard/>
+          <AmbassadorCard/>
         </Grid>
         <Grid item container direction="column" xs='auto' sx={{ml: 2, alignItems: 'stretch', '& > *': {mb: 1, mt: 1}}}>
           <MyLocationCard md={6} xs={12}/>
-          <AmbassadorCard/>
+          <ContactCard/>
         </Grid>
       </Grid>
     </Page>
