@@ -104,7 +104,8 @@ const SelectedUsersDisplay = ({selected : {users, location} = {}}) => {
   )
 }
 
-const LoadedMapPage = ({locations, locationId}) => {
+const LoadedMapPage = ({locations}) => {
+  const { locationId } = useParams();
   const [selected, setSelectedState] = useState()
 
   const setSelected = (newSelected) => {
@@ -113,19 +114,21 @@ const LoadedMapPage = ({locations, locationId}) => {
   }
   const unsetSelected = () => {
     window.history.replaceState(null, '', '/')
-    setSelectedState({selected: {}})
+    setSelectedState({})
   }
+  React.useEffect(() => {
+    if(locationId){
+      setSelectedState(locations.find(l => l.location._id === locationId))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationId, setSelectedState])
 
   React.useEffect(() => {
-    if(selected?.location || locationId){
-      let selectedId = selected?.location || locationId;
-      for(let location of locations){
-        if(location.location._id === selectedId)
-          setSelectedState(location)
-      }
+    if(selected?.location){
+      setSelectedState(locations.find(l => l.location._id === selected.location._id))
     }
   }, 
-  [locations, selected, setSelectedState, locationId])
+  [locations, selected, setSelectedState])
 
   return (
     <Page fullscreen absoluteChildren={
@@ -137,13 +140,12 @@ const LoadedMapPage = ({locations, locationId}) => {
 }
 
 const MapPage = () => {
-  const { locationId } = useParams();
   const accountStatus = useGetAccountStatus();
   const useGetAllLocationQuery = () => useGetAllLocations({refetchOnMount: false, refetchOnWindowFocus: false});
   if(accountStatus === 'logged in')
     return (
       <QueryLoader query={useGetAllLocationQuery} propName="locations" generateQuery>
-        <LoadedMapPage locationId={locationId}/>
+        <LoadedMapPage/>
       </QueryLoader>
     )
   return (
