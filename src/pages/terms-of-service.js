@@ -11,7 +11,7 @@ const template = { __html }
 function TermsOfServicePage() {
   return <Page>
     <TitleCard/>
-    <PageCard>
+    <PageCard sx={{maxWidth: 'min(1300px, 90vw)'}}>
       <div dangerouslySetInnerHTML={template}/>
     </PageCard>
   </Page>

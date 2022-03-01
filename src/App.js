@@ -17,6 +17,7 @@ import UserPage from './pages/user';
 import TransactionPage from './pages/transaction';
 import ReferralCodePage from './pages/referral-code';
 import FaqPage from './pages/faq';
+import AmbassadorFaqPage from './pages/ambassador-faq';
 import PrivacyPolicyPage from './pages/privacy-policy';
 import TermsOfServicePage from './pages/terms-of-service';
 
@@ -50,7 +51,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Header/>}>
               <Route index element={<MapPage/>}/>
-              <Route path="location/:locationId" element={<MapPage/>}/> <Route path="create-account" element={<CreateAccountPage firstTimeSetup={true}/>}/>
+              <Route path="location/:locationId" element={<MapPage/>}/>
+              <Route path="create-account" element={<CreateAccountPage firstTimeSetup={true}/>}/>
               <Route path="setup-account" element={<CreateAccountPage firstTimeSetup={false}/>}/>
               <Route path="my-account" element={<ProfilePage/>}/>
               <Route path="edit-profile" element={<EditProfilePage/>}/>
@@ -70,6 +72,7 @@ function App() {
               <Route path="referral-code/:referralCodeId" element={<ReferralCodePage/>}/>
               <Route path="referral-codes" element={<ReferralCodePage/>}/>
               <Route path="faq" element={<FaqPage/>}/>
+              <Route path="ambassador-faq" element={<AmbassadorFaqPage/>}/>
               <Route path="privacy-policy" element={<PrivacyPolicyPage/>}/>
               <Route path="terms-of-service" element={<TermsOfServicePage/>}/>
               <Route path="*" element={<PageNotFound/>}/>

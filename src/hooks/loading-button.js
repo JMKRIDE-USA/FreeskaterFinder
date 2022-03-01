@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import 'regenerator-runtime/runtime'
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';

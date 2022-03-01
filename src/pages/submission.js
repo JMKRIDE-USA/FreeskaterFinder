@@ -14,7 +14,7 @@ import SubmissionsTable from '../components/tables/submissions';
 import Page from '../components/page';
 import TitleCard from '../components/title-card';
 import PageCard from '../components/page-card';
-import { ISOToReadableString, invalidateJFHCache } from '@jeffdude/frontend-helpers/dist/date';
+import { ISOToReadableString, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import useMakeLoadingButton from '../hooks/loading-button';
 
 function LoadedSingleSubmissionCard({ submission }) {
