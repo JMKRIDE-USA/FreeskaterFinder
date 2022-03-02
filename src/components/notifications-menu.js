@@ -12,7 +12,7 @@ import { notificationReasons } from '../constants';
 import UserAvatar from './user-avatar';
 
 
-function NotificationItem({notification, closeMenu}){
+function NotificationItem({notification, closeMenu, divider}){
   /*
   //TODO
   challengeStatusChanged: 'CHALLENGE_STATUS_CHANGED',
@@ -25,7 +25,7 @@ function NotificationItem({notification, closeMenu}){
 
   const makeFriendNotificationItem = ({action, seeMore}) => {
     return (
-      <ListItemButton component={Link} to="/friends" onClick={() => {closeMenu(); markRead();}}>
+      <ListItemButton component={Link} to="/friends" onClick={() => {closeMenu(); markRead();}} divider={divider}>
         <ListItemAvatar>
           <UserAvatar user={actor}/>
         </ListItemAvatar>
@@ -92,12 +92,14 @@ function LoadedNotificationsMenu({notifications, refetch}) {
       >
         <List>
           {unread.length
-            ? unread.map((notification, index) => {
-              return <>
-                <NotificationItem notification={notification} key={index} closeMenu={handleClose}/>
-                {index + 1 !== unread.length && <Divider variant="inset" component="li"/>}
-              </>
-            })
+            ? unread.map((notification, index) => (
+              <NotificationItem
+                key={index}
+                notification={notification}
+                closeMenu={handleClose}
+                divider={index + 1 !== unread.length}
+              />
+            ))
             : <ListItem>
               <ListItemAvatar sx={{ml: 2}}>
                 <InsertEmoticonIcon/>

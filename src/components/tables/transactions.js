@@ -8,13 +8,13 @@ import Table from './table';
 
 const CellLink = ({to, children}) => <MuiLink component={Link} to={to}>{children}</MuiLink>
 
-const columns = [
-  {
+const getColumns = ({single, admin}) => ([
+  ...(single ? [] : [{
     headerName: '',
     field: '_id',
     width: 80,
     renderCell: ({value}) => <Button variant="contained" color="secondary" component={Link} to={"/transaction/" + value}>View</Button>
-  },
+  }]),
   {
     headerName: 'Date',
     field: 'createdAt',
@@ -34,13 +34,17 @@ const columns = [
     headerName: 'Source',
     field: 'source',
     width: 150,
-    renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>
+    ...admin
+      ? {renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>}
+      : {valueFormatter: ({value}) => value.fullName},
   },
   {
     headerName: 'Destination',
     field: 'destination',
     width: 150,
-    renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>
+    ...admin
+      ? {renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>}
+      : {valueFormatter: ({value}) => value.fullName},
   },
   {
     headerName: 'Subject',
@@ -55,12 +59,13 @@ const columns = [
   {
     headerName: 'Reason',
     field: 'reason',
-    width: 250,
+    width: 350,
   },
-]
+])
 
-function TransactionsTable({transactions, title, single = false}){
-  return <Table title={title} rows={transactions} columns={single ? columns.slice(1) : columns}/>
+function TransactionsTable({transactions, title, single = false, admin = false}){
+  const columns = getColumns({single, admin});
+  return <Table title={title} rows={transactions} columns={columns}/>
 }
 
 export default TransactionsTable;

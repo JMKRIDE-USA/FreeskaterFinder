@@ -29,6 +29,15 @@ const pages = ['Home', 'Friends', 'FAQ'];
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+  }
+  console.log(getWindowDimensions())
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };

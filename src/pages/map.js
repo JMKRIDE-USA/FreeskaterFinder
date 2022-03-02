@@ -93,7 +93,7 @@ const SelectedUsersDisplay = ({selected : {users, location} = {}}) => {
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
   if(!location) return <></>
   return (
-    <PageCard sx={{backgroundColor: "white", zIndex: 1, m: {xs: 1, md: 5}, maxHeight: '40vh'}} headerRow header={
+    <PageCard sx={{backgroundColor: "white", zIndex: 1, mb: {xs: 5, md: 10}, m: {xs: 1, md: 5}, maxHeight: '40vh'}} headerRow header={
       <>
         <img src={isMd ? titleLogo : titleLogoNoText} style={{maxHeight: '100px', maxWidth: '40%'}} alt="JMKRIDE FreeskaterFinder Logo"/>
         <Typography variant="h6">{location.zip}, {location.country} </Typography>

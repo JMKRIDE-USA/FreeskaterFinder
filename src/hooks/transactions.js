@@ -4,16 +4,16 @@ import { useCreateMutation } from '@jeffdude/frontend-helpers/dist/data';
 const useGetTransactionQuery = (endpoint, options) => useGetQuery(endpoint, 'transactions', options);
 
 export function useGetUserTransactions(userId){
-  return useGetTransactionQuery("transactions/get?populate=true&userId=" + userId)
+  return useGetTransactionQuery("transactions/user/id/" + userId)
 }
 export function useGetReferralCodeTransactions(referralCodeId){
-  return useGetTransactionQuery("transactions/get?populate=true&referralCodeId=" + referralCodeId)
+  return useGetTransactionQuery("transactions/referralCode/id/" + referralCodeId)
 }
 export function useGetAllTransactions(){
-  return useGetTransactionQuery("transactions/get?populate=true")
+  return useGetTransactionQuery("transactions/all")
 }
 export function useGetTransactionById(transactionId){
-  return useGetTransactionQuery("transactions/get?populate=true&transactionId=" + transactionId)
+  return useGetTransactionQuery("transactions/id/" + transactionId)
 }
 
 export function useCreateReferralCodeUsage(){
