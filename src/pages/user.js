@@ -68,7 +68,7 @@ function SingleUserCards({user}){
   user.authState = permissionLevelToAuthState(user.permissionLevel)
   const useTransactionsQuery = () => useGetUserTransactions(user._id)
   return <>
-    <Grid container direction="row" sx={{m: 1, justifyContent: 'center', "& > *": {m: 1}}}>
+    <Grid container direction="row" sx={{m: 1, justifyContent: 'center', "& > *": {m: 1}, maxWidth: 'min(100vw, 2000px)'}}>
       <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
         <PageCard headerRow title={"User: " + user.fullName} xs="auto">
           <UserItem user={{isFriend: true, ...user}}/>

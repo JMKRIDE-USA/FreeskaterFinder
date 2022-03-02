@@ -20,12 +20,12 @@ import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
 
 
 const SocialLinkIcons = ({socialLinkData}) => {
-  return <ButtonGroup>
+  return <Grid container direction="row" sx={{alignItems: 'center', maxWidth: 'min(20vw, 200px)', backgroundColor: 'red'}}>
     {socialLinkData.map(({link, type}, index) => {
       const Icon = getSocialLinkTypeByName(type)?.icon;
       return <IconButton key={index} href={link} target="_blank" color="primary"><Icon/></IconButton>
     })}
-  </ButtonGroup>
+  </Grid>
 }
 
 const ThisIsYou = () => <Button aria-label="Go To Profile" endIcon={<ManageAccountsIcon/>} component={Link} to="/my-account">Manage Account</Button>
@@ -89,7 +89,7 @@ const FriendRequester = ({user}) => {
 const OutgoingPendingFriend = () => <Grid container direction="column" sx={{alignItems: "center"}}><PendingIcon/><Typography variant="body2">Requested</Typography></Grid>
 
 const IncomingPendingFriend = () => {
-  return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Approve Friend</Button>
+  return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Review Request</Button>
 }
 
 const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
@@ -122,19 +122,21 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
     : ({children}) => children
 
   return (
-    <ListItem sx={{minWidth: 'min(80vw, 400px)', ...sx}} divider={divider} secondaryAction={secondaryAction}>
-      <ListItemAvatar>
+    <ListItem sx={{padding: 'min(10px, 2vh) min(5px, 2vw)', minWidth: 'min(80vw, 400px)', ...sx}} divider={divider} secondaryAction={secondaryAction}>
+      <ListItemAvatar sx={{pl: 0}}>
         <AmbassadorBadge>
           <UserAvatar user={user} editable={editableAvatar}/>
         </AmbassadorBadge>
       </ListItemAvatar>
-      <ListItemText
-        primary={<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}
-        secondary={blurb}
-        sx={{maxWidth: '200px'}}
-      />
-      {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
-      {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
+      <Grid container direction="row" sx={{maxWidth: '75%', alignItems: 'center', backgroundColor: 'blue'}}>
+        <ListItemText
+          primary={<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}
+          secondary={blurb}
+          sx={{maxWidth: 'min(200px, 40%)', flexGrow: 3}}
+        />
+        {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id} sx={{flexGrow: 1, maxWidth: 'min(200px, 35%)'}}>{user.location.zip}, {user.location.country}</MuiLink>}
+        {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
+      </Grid>
     </ListItem>
   )
 }
