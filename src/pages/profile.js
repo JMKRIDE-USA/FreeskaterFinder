@@ -26,8 +26,9 @@ function MyAccountCard() {
   return (
     <PageCard small headerRow title="My Account" header={
       <ButtonGroup>
+        <Button variant="contained" color="neutral" component={Link} to="/edit-socials">Edit Socials</Button>
         <Button variant="contained" color="neutral" component={Link} to="/edit-profile">Edit</Button>
-        <Button variant="contained" color="error" onClick={onLogout}>Log Out</Button>
+        <Button variant="contained" color="error" onClick={onLogout} sx={{ml: 2}}>Log Out</Button>
       </ButtonGroup>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>

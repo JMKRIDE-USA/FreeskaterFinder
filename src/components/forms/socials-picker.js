@@ -56,7 +56,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess}) => {
         </>
       }>
         <form onSubmit={handleSubmit(onClick)}>
-          <Grid container direction="column" sx={{p: 1}}>
+          <Grid container direction="column" sx={{minWidth: 'min(600px, 90vw)', p: 1}}>
             {socialLinkTypes.map((socialType, key) => <SocialLink {...{key, socialType, register, errors}}/>)}
           </Grid>
           {renderButton()}

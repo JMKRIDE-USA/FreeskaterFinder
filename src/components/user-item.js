@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Badge, Grid, ListItem, ListItemText, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography, Link as MuiLink } from '@mui/material';
+import { useTheme, Badge, Grid, ListItem, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography, Link as MuiLink } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useGetUserInfo, invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -20,7 +21,7 @@ import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
 
 
 const SocialLinkIcons = ({socialLinkData}) => {
-  return <Grid container direction="row" sx={{alignItems: 'center', maxWidth: 'min(20vw, 200px)', backgroundColor: 'red'}}>
+  return <Grid item container direction="row" xs='auto' sx={{alignItems: 'center', justifyContent: {xs: 'flex-start', sm: 'flex-end'}}}>
     {socialLinkData.map(({link, type}, index) => {
       const Icon = getSocialLinkTypeByName(type)?.icon;
       return <IconButton key={index} href={link} target="_blank" color="primary"><Icon/></IconButton>
@@ -94,6 +95,8 @@ const IncomingPendingFriend = () => {
 
 const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
   const adminView = useGetAuthState() === 500;
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.up('sm'));
 
   let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
   if(blurb.length > maxBlurbLength) {
@@ -122,20 +125,22 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
     : ({children}) => children
 
   return (
-    <ListItem sx={{padding: 'min(10px, 2vh) min(5px, 2vw)', minWidth: 'min(80vw, 400px)', ...sx}} divider={divider} secondaryAction={secondaryAction}>
+    <ListItem sx={{padding: 'min(10px, 2vh) min(5px, 2vw)', minWidth: 'min(80vw, 400px)', ...sx}} divider={divider}>
       <ListItemAvatar sx={{pl: 0}}>
         <AmbassadorBadge>
           <UserAvatar user={user} editable={editableAvatar}/>
         </AmbassadorBadge>
       </ListItemAvatar>
-      <Grid container direction="row" sx={{maxWidth: '75%', alignItems: 'center', backgroundColor: 'blue'}}>
-        <ListItemText
-          primary={<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}
-          secondary={blurb}
-          sx={{maxWidth: 'min(200px, 40%)', flexGrow: 3}}
-        />
-        {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id} sx={{flexGrow: 1, maxWidth: 'min(200px, 35%)'}}>{user.location.zip}, {user.location.country}</MuiLink>}
+      <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
+        <Grid item container direction="column" xs='auto'>
+          <Typography variant="body1">{<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}</Typography>
+          <Typography variant="body2">{blurb}</Typography>
+        </Grid>
         {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
+        <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
+          {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
+          {secondaryAction}
+        </Grid>
       </Grid>
     </ListItem>
   )
