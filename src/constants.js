@@ -8,7 +8,8 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import TikTokSVG from './assets/tiktok_icon.svg';
 
 export const headerHeight = {xs: '55px', md: '70px'}
-export const bodyHeight = {md: 'calc(100vh - ' + headerHeight.md + ')', xs: 'calc(100vh - ' + headerHeight.xs + ')'}
+const windowHeight = window.innerHeight;
+export const bodyHeight = {md: 'calc(' + windowHeight + 'px - ' + headerHeight.md + ')', xs: 'calc(' + windowHeight + 'px - ' + headerHeight.xs + ')'}
 
 export const maxBlurbLength = 55;
 
@@ -41,7 +42,7 @@ export const socialLinkTypes = [
     name: "tiktok",
     label: "TikTok",
     icon: () => <img src={TikTokSVG} height={20} alt="TikTok Logo"/>,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?tiktok\.com\/[a-zA-Z0-9-]+.*/,
+    validationRegex: /(http[s]?:\/\/)?(www\.)?tiktok\.com\/@[a-zA-Z0-9-]+.*/,
   },
 ]
 
