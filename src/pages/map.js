@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { QueryLoader } from '@jeffdude/frontend-helpers';
-import { Box, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Marker } from '@react-google-maps/api';
@@ -14,6 +14,7 @@ import Map from '../components/map';
 import { useGetAccountStatus } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
+import { bodyHeight } from '../constants';
 
 import FFMarkerDefault from '../assets/FF_MarkerDefault.svg'
 import FFMarkerAmbassador from '../assets/FF_MarkerAmbassador.svg'
@@ -94,7 +95,7 @@ const SelectedUsersDisplay = ({selected : {users, location} = {}}) => {
   if(!location) return <></>
   //margin: {xs: "0px 0px 100px", sm: "5px"},
   return (
-    <PageCard sx={{backgroundColor: "white", zIndex: 1, m: 2, maxHeight: 'max(50vh, 400px)'}} headerRow header={
+    <PageCard sx={{backgroundColor: "white", zIndex: 1, ml: 1, mr: 1, mb: 4, maxHeight: 'max(50vh, 400px)'}} headerRow header={
       <>
         <img src={isMd ? titleLogo : titleLogoNoText} style={{maxHeight: '100px', maxWidth: '40%'}} alt="JMKRIDE FreeskaterFinder Logo"/>
         <Typography variant="h6">{location.zip}, {location.country} </Typography>
@@ -143,6 +144,7 @@ const LoadedMapPage = ({locations}) => {
 const MapPage = () => {
   const accountStatus = useGetAccountStatus();
   const useGetAllLocationQuery = () => useGetAllLocations({refetchOnMount: false, refetchOnWindowFocus: false});
+
   if(accountStatus === 'logged in')
     return (
       <QueryLoader query={useGetAllLocationQuery} propName="locations" generateQuery>
@@ -151,12 +153,12 @@ const MapPage = () => {
     )
   return (
     <Page>
-      <Box sx={{p: 0, m:0, height: '95vh', width: '100vw', margin: {xs: '0 -100%', lg: 0}}}>
+      <Grid sx={{height: bodyHeight, width: window.innerWidth + 'px'}}>
         <img
           src={blurredMap} alt="Freeskater Finder Map Preview"
-          style={{ objectFit: 'center', minWidth: '100%', flexGrow: 1, minHeight: '50vh', margin: '0 -100%'}}
+          style={{ objectFit: 'cover', objectPosition: '50% 100%', width: '100%', height: '100%'}}
         />
-      </Box>
+      </Grid>
     </Page>
   )
 }

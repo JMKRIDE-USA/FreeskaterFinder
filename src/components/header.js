@@ -57,11 +57,11 @@ const ResponsiveAppBar = () => {
   const userInfo = useGetUserInfo();
 
   return (
-    <div>
+    <>
       <AppBar position="fixed">
-        <Container maxWidth="xl" sx={
-          {display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: headerHeight, maxHeight: headerHeight}
-        }>
+        <Container maxWidth="xl" sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: headerHeight, maxHeight: headerHeight
+        }}>
           <ButtonBase onClick={handleCloseNavMenu('Home')}
           sx={{display: {xs: 'flex', md: 'none'}}}>
             <img
@@ -138,7 +138,7 @@ const ResponsiveAppBar = () => {
       <Box disableGutters sx={{mt: headerHeight }}>
         <Outlet/>
       </Box>
-    </div>
+    </>
   );
 };
 export default ResponsiveAppBar;

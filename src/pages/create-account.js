@@ -4,7 +4,7 @@ import {
   Checkbox, FormControlLabel, IconButton,
 } from '@mui/material'
 import { useForm } from 'react-hook-form';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -65,13 +65,17 @@ const CreateAccountCard = ({incrementStep}) => {
     <Paper elevation={4} sx={{p:2, width: {xs: '95vw', md: '500px'}}}>
       <form onSubmit={handleSubmit(onClick)}>
         <Grid container direction="column">
-          <Grid item container direction="row">
-            <TextField label="First Name" margin="normal" sx={{mr:1}} inputProps={
-              register("firstName", {required: 'This field is required.'})
-            } error={!!errors.firstName} helperText={errors?.firstName?.message}/>
-            <TextField label="Last Name" margin="normal" inputProps={
-              register("lastName", {required: 'This field is required.'})
-            } error={!!errors.lastName} helperText={errors?.lastName?.message}/>
+          <Grid item container direction="row" spacing={2} sx={{justifyContent: 'center', width: '100%'}}>
+            <Grid item xs={6}>
+              <TextField label="First Name" margin="normal" fullWidth inputProps={
+                register("firstName", {required: 'This field is required.'})
+              } error={!!errors.firstName} helperText={errors?.firstName?.message}/>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Last Name" margin="normal" fullWidth inputProps={
+                register("lastName", {required: 'This field is required.'})
+              } error={!!errors.lastName} helperText={errors?.lastName?.message}/>
+            </Grid>
           </Grid>
           <TextField label="Email" margin="normal" inputProps={
             register("email", {
@@ -105,11 +109,18 @@ const CreateAccountCard = ({incrementStep}) => {
   )
 }
 
+function Redirector() {
+  const navigate = useNavigate();
+  React.useEffect(() => navigate('/?welcome=true'), [navigate])
+  return <></>
+}
+
 function CreateAccountPage({firstTimeSetup}) {
   const authState = useGetAuthState();
   const userInfo = useGetUserInfo();
   const [step, setStep] = useState(1);
   const incrementStep = () => setStep(step + 1);
+  const navigate = useNavigate();
 
   useEffect(() => setStep((() => {
     if(!authState) return 1;
@@ -121,8 +132,6 @@ function CreateAccountPage({firstTimeSetup}) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   })()), []);
   
-  const Redirect = () => <Navigate to="/"/>;
-
   const createComponent = (() => {
     switch(step) {
       case 1:
@@ -134,9 +143,9 @@ function CreateAccountPage({firstTimeSetup}) {
       case 4:
         return <ProfileIconPickerCard onSuccess={incrementStep} title="Choose a Profile Icon"/>
       case 5:
-        return <LocationPickerCard onSuccess={incrementStep}/>
+        return <LocationPickerCard onSuccess={() => navigate('/?welcome=true')}/>
       default:
-        return <Redirect/>
+        return <Redirector/>
     }
   })();
 
