@@ -76,7 +76,6 @@ const ConfirmAddFriend = ({user, setClicked}) => {
 
 const FriendRequester = ({user}) => {
   const [clicked, setClicked] = React.useState(false);
-  if(user.isPublic) console.log({user});
   if(clicked){
     if(user.isPublic) {
       return <ConfirmAddFriend setClicked={setClicked} user={user}/>

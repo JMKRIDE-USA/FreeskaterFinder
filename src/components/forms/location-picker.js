@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
+import { invalidateJFHCache, useGetUserInfo } from '@jeffdude/frontend-helpers';
 
 import useMakeLoadingButton from '../../hooks/loading-button';
 import PageCard from '../page-card';
@@ -34,7 +34,9 @@ const ResultCircle = ({location}) => {
 }
 
 const LocationPickerCard = ({onSuccess}) => {
-  const [location, setLocation] = useState();
+  const userInfo = useGetUserInfo();
+
+  const [location, setLocation] = useState(userInfo?.location ? userInfo.location : undefined);
   const [ error, setError ] = useState('');
 
   const lookupLocation = useLookupLocation();
