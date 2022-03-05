@@ -6,7 +6,7 @@ import { useLogin } from '@jeffdude/frontend-helpers';
 
 import useMakeLoadingButton from '../hooks/loading-button';
 
-export function SignInDialog({open}) {
+function SignInDialog({open}) {
   const { register, handleSubmit, formState: {errors}}  = useForm();
   const login = useLogin();
   const { onClick, render } = useMakeLoadingButton({buttonText: "Sign In", doAction: login})
@@ -40,3 +40,5 @@ export function SignInDialog({open}) {
     </Dialog>
   )
 }
+
+export default SignInDialog;

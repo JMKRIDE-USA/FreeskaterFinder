@@ -8,7 +8,7 @@ export function InfoList({object, sx, noStringify}){
       { Object.entries(object).map(([key, value]) => (
         <ListItem dense key={key} sx={{alignItems: 'flex-start'}}>
           <Typography variant="body1" sx={{overflowWrap: 'break-word', maxWidth: '100%'}}>
-            <b>{key}</b>:
+            <b>{key}</b>:{" "}
             {noStringify ? value : JSON.stringify( value )}
           </Typography>
         </ListItem>
