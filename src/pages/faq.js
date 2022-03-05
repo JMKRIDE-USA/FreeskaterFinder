@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link as MuiLink, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Button, Link as MuiLink, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import Page from '../components/page';
@@ -48,8 +48,38 @@ function FaqPage() {
       </>
     },
     {
+      question: "What does it mean if someone is an ambassador?",
+      answer: (
+        "Our ambassadors are hand-selected by JMKRIDE as our rockstar community members from all around the world. " + 
+        "They are all passionate about sharing this sport with others, are very friendly, and open to showing new people how to skate. " +
+        "They almost always have at least one spare pair of skates to let others try, and they are given an affiliate code " +
+        "which gets you a 5% discount, and gives them a point credit. Note: While it's safe to assume they would be more willing, being " +
+        "an ambassador does not mean that the person has any more obligation to add you as a friend/meet up with you/etc."
+      ),
+      children: <Typography variant="body"><b>
+        Please follow all the usual {" "}
+        <MuiLink component={Link} to={"/safety"}>safety precautions</MuiLink>
+        {" "} when interacting with and/or meeting up with ambassadors.</b>{" "}
+        The ambassador application process is a simple online exchange, no references/background checks/thorough vetting has been done.
+      </Typography>
+    },
+    {
       question: "How do I become an ambassador?",
-      answer: "Our ambassadors are our rockstar community members from all around the world."
+      children: (
+        <>
+          <Typography variant="body">
+            If you are an experienced rider, who is stoked on sharing this sport with new people... <br/>
+            If you have an extra set, and never hesitate to show a new person how to ride... <br/>
+            We want YOU, for our ambassador program!
+          </Typography>
+          <Button variant="outlined" component={Link} to="/ambassador-application">Apply Now</Button>
+          <Typography variant="body">
+            Note: I am prioritizing ambassadors applying from areas with fewer ambassadors nearby. 
+            I want to be as fair as possible, so if your application is not accepted, please don't hesitate to reach out
+            to me via email: jeff@jmkride.com
+          </Typography>
+        </>
+      ),
     },
   ]
 

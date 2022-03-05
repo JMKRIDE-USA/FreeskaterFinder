@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Container, Grid } from '@mui/material'
 
-import { bodyHeight } from '../constants';
+import { useGetBodyHeight } from '../modules/window-context';
 
-      // ...(fullscreen ? {height: '100vh'} : {}),
 function Page({sx = {}, gridStyle = {}, absoluteChildren = null, fullscreen = false, children}) {
+  const bodyHeight = useGetBodyHeight();
   return (
     <Container disableGutters sx={{
       ...{p: 0, m:0, spacing: 0, minWidth: '100%'},
