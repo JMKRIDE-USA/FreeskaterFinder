@@ -8,8 +8,6 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import TikTokSVG from './assets/tiktok_icon.svg';
 
 export const headerHeight = {xs: '55px', md: '70px'}
-const windowHeight = window.innerHeight;
-export const bodyHeight = {md: 'calc(' + windowHeight + 'px - ' + headerHeight.md + ')', xs: 'calc(' + windowHeight + 'px - ' + headerHeight.xs + ')'}
 
 export const maxBlurbLength = 55;
 

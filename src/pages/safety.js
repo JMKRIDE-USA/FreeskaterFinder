@@ -30,10 +30,10 @@ function SafetyPage() {
 
   return <Page>
     <TitleCard><Typography variant="h5" sx={{mt: 2}}>Freeskater Finder Safety</Typography></TitleCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)', mt: 2}} title="Important Safety Advice">
+    <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)', mt: 2}} title="Important Safety Advice">
       <InfoList sx={{width: '100%'}} noStringify object={safetyAdvice}/>
     </PageCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)', mt: 2}} title="Meetup Safety Tips">
+    <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)', mt: 2}} title="Meetup Safety Tips">
       <InfoList sx={{width: '100%'}} noStringify object={meetupAdvice}/>
     </PageCard>
   </Page>

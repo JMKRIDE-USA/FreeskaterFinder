@@ -7,6 +7,7 @@ import App from './App';
 
 import { JFHApp } from '@jeffdude/frontend-helpers';
 import { GMapsAPIKeyProvider } from './modules/map-context';
+import WindowSizeProvider from './modules/window-context';
 
 
 const theme = createTheme({
@@ -33,7 +34,9 @@ ReactDOM.render(
       <CssBaseline/>
       <JFHApp config={{backendURL: "http://192.168.1.8:3600"}}>
         <GMapsAPIKeyProvider>
-          <App />
+          <WindowSizeProvider>
+            <App />
+          </WindowSizeProvider>
         </GMapsAPIKeyProvider>
       </JFHApp>
     </ThemeProvider>

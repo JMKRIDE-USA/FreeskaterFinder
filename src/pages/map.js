@@ -14,7 +14,7 @@ import Map from '../components/map';
 import { useGetAccountStatus } from '../components/outlet';
 import blurredMap from '../assets/GMapBlurred.png';
 import { useGetAllLocations } from '../hooks/location';
-import { bodyHeight } from '../constants';
+import { useGetBodyHeight } from '../modules/window-context';
 
 import FFMarkerDefault from '../assets/FF_MarkerDefault.svg'
 import FFMarkerAmbassador from '../assets/FF_MarkerAmbassador.svg'
@@ -144,6 +144,8 @@ const LoadedMapPage = ({locations}) => {
 const MapPage = () => {
   const accountStatus = useGetAccountStatus();
   const useGetAllLocationQuery = () => useGetAllLocations({refetchOnMount: false, refetchOnWindowFocus: false});
+
+  const bodyHeight = useGetBodyHeight();
 
   if(accountStatus === 'logged in')
     return (

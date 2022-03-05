@@ -4,9 +4,7 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import { Box } from '@mui/material';
 
 import useGetGMapsKey from '../modules/map-context';
-import { bodyHeight } from '../constants';
-
-const fullscreenContainerStyle = {width: '100vw', position: 'absolute', height: bodyHeight};
+import { useGetBodyHeight } from '../modules/window-context';
 
 const CardContainerStyle = {
   width: 'min(90vw, 500px)',
@@ -32,7 +30,10 @@ const MapComponent = ({
   ...props
 }) => {
   const googleMapsApiKey = useGetGMapsKey();
+  const bodyHeight = useGetBodyHeight();
+  const fullscreenContainerStyle = {width: '100vw', position: 'absolute', height: bodyHeight};
   const myContainerStyle = {...(fullscreen ?  fullscreenContainerStyle : CardContainerStyle), ...containerStyle}
+
   if(!googleMapsApiKey) return <></>;
   return (
     <Box sx={myContainerStyle}>
