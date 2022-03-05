@@ -24,8 +24,6 @@ import mdlogo from '../assets/FreeskaterFinderHeaderLogo_md.svg';
 
 import NotificationsMenu from './notifications-menu';
 
-const pages = ['Home', 'Friends', 'FAQ'];
-
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -35,14 +33,18 @@ const ResponsiveAppBar = () => {
   const ButtonNameToPage = {
     Home: '/',
     Friends: '/friends',
-    Profile: '/my-account',
     FAQ: '/faq',
+    Rules: '/rules',
+    Safety: '/safety',
+    Shop: 'https://www.jmkride.com/'
   }
   const navigate = useNavigate();
 
   const handleCloseNavMenu = (page) => () => {
     setAnchorElNav(null);
     if(page) switch(page) {
+      case 'Shop':
+        return window.open(ButtonNameToPage[page])
       default: 
         return navigate(ButtonNameToPage[authState ? page : 'Home']);
     }
@@ -98,7 +100,7 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
+              {Object.keys(ButtonNameToPage).map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
@@ -110,7 +112,7 @@ const ResponsiveAppBar = () => {
             <img style={{marginRight: "15px"}} src={mdlogo} height={50} alt="JMKRIDE logo"/>
           </ButtonBase>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {Object.keys(ButtonNameToPage).map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu(page)}
@@ -128,7 +130,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0, display: authState ? 'flex' : 'none' }}>
             <NotificationsMenu/>
             <Tooltip title="My Account">
-              <IconButton onClick={() => navigate(ButtonNameToPage['Profile'])} sx={{ p: 0 }}>
+              <IconButton onClick={() => navigate('/my-account')} sx={{ p: 0 }}>
                 <UserAvatar user={userInfo}/>
               </IconButton>
             </Tooltip>

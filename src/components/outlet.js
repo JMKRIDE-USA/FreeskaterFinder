@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useGetAuthState, useGetUserInfo, useGetAccessToken } from '@jeffdude/frontend-helpers';
-import { SignInDialog } from './sign-in'
+import SignInDialog from './sign-in'
+import WelcomeDialog from './welcome';
 
 export const useGetAccountStatus = () => { 
   const authState = useGetAuthState();
@@ -17,10 +18,23 @@ export const useGetAccountStatus = () => {
   return 'logged in'
 }
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 
 const MyOutlet = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [params, setParams] = useSearchParams()
+  const welcome = !!params.get("welcome")
+
+  const onClose = () => {
+    const {welcome, ...newParams} = params;
+    setParams(newParams)
+  }
 
   const accountStatus = useGetAccountStatus();
 
@@ -36,7 +50,10 @@ const MyOutlet = () => {
       {accountStatus === 'logged out' && !(['/create-account', '/setup-account'].includes(location.pathname)) && <SignInDialog open={true}/>}
     </>
   )
-  return <Outlet/>
+  return <>
+    <Outlet/>
+    <WelcomeDialog open={welcome} onClose={onClose}/>
+  </>
 }
 
 export default MyOutlet;

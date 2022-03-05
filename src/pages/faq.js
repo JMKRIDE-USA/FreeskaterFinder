@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, Divider, Link as MuiLink, Typography } from '@mui/material';
+import { Link as MuiLink, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import Page from '../components/page';
@@ -15,50 +15,52 @@ const toObject = (list) => {
 }
 
 function FaqPage() {
-  const rules = toObject([
-    "You must be over the age of 18 to use this Site",
-    "All profile information must be true, accurate, and non-deceptive.",
-    "Linked social media accounts must be owned and operated only by the corresponding FreeskaterFinder account owner.",
-    "Your profile's location must be set accurately according to where you live and freeskate.",
-    "You may only create one Freeskater Finder account per person.",
-    "Agree and understand that you are responsible for your own safety, and to use lots of discretion if meeting up with anybody offline.",
-  ]);
+  const neverItems = [
+    "meet up with someone without bringing a friend or family member along",
+    "accept a ride to or from the meetup.",
+    "meet at either party's house. Find a public area like a skatepark.",
+    "further clarify your location, e.g. 'I'm across the street from X'",
+  ]
 
-  const safetyAdvice = toObject([
-    "Do not share any personal information beyond your social media accounts, especially your address or anything like 'I'm across the street from X'.",
-    "There are many reasons why you are required to use a social media site. Take advantage of their built in safety features like blocking, reporting, message requests, etc.",
-    "If you suspect any suspicious behavior, please immediately let me know about it via my email jeff@jmkride.com."
-  ])
-  const meetupAdvice = toObject([
-    "Please be extremely careful when deciding to meet up in person. Follow all common sense precautions that you would meeting a stranger IRL. Listen to your gut, if something feels off or weird, please do not risk it.",
-    "Accepting a friend request does not mean you are committing to meeting up in person.",
-    "Meeting a group of strangers is just as dangerous as meeting a single stranger, bring a friend/family member!",
-    "If possible, bring a friend. If not, make sure to inform someone of where you are going and who you are meeting.",
-    "Always meet in a public place. (Like a skatepark)",
-    "Do not accept a ride in a car to/from the meetup location.",
-  ])
+  const FAQs = [
+    {
+      question: "What are the Rules of the Freeskater Finder?", 
+      children: <MuiLink component={Link} to="/rules">View the rules page here.</MuiLink>
+    },
+    {
+      question: "How can I stay safe while using the Freeskater Finder?",
+      answer: (
+        "It is extremely important to use caution when using this site, since by its nature " +
+        "it is publicizing personal information to untrusted third parties. " +
+        "Take advantage of your social media privacy and safety features, and..."
+      ),
+      children: <>
+        <List dense>
+          {neverItems.map((item, index) => (
+            <ListItem>
+              <ListItemText>
+                <b> NEVER {" "} </b>{item}
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+        <MuiLink component={Link} to="/safety">Read all safety information.</MuiLink>
+      </>
+    },
+    {
+      question: "How do I become an ambassador?",
+      answer: "Our ambassadors are our rockstar community members from all around the world."
+    },
+  ]
 
   return <Page>
-    <TitleCard><Typography variant="h5" sx={{mt: 2}}>Rules & Frequently Asked Questions</Typography></TitleCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)'}} title="By using this Site, you agree to abide by the following rules:">
-      <InfoList sx={{width: '100%'}} noStringify object={rules}/>
-      <Divider sx={{width: '100%'}}/>
-      <Grid direction='row' sx={{mt: 2}}>
-        <MuiLink component={Link} to={"/terms-of-service"} sx={{mr: 4}}>Terms of Service</MuiLink>
-        <MuiLink component={Link} to={"/privacy-policy"}>User Privacy Policy</MuiLink>
-      </Grid>
-    </PageCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)', mt: 2}} title="Important Safety Advice">
-      <InfoList sx={{width: '100%'}} noStringify object={safetyAdvice}/>
-    </PageCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)', mt: 2}} title="Meetup Safety Tips">
-      <InfoList sx={{width: '100%'}} noStringify object={meetupAdvice}/>
-    </PageCard>
-    <PageCard headerRow sx={{maxWidth: 'min(1300px, 90vw)', mt: 2}} title="How do I become an ambassador?">
-      <Typography variant="body">
-        Our ambassadors are our rockstar community members from all around the world.
-      </Typography>
-    </PageCard>
+    <TitleCard><Typography variant="h5" sx={{mt: 2}}>Frequently Asked Questions</Typography></TitleCard>
+    {FAQs.map(({question, answer, children}, index) => (
+      <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)', mt: 2}} title={question} key={index}>
+        <Typography variant="body">{answer}</Typography>
+        {children}
+      </PageCard>
+    ))}
   </Page>
 }
 

@@ -16,10 +16,12 @@ import SubmissionPage from './pages/submission';
 import UserPage from './pages/user';
 import TransactionPage from './pages/transaction';
 import ReferralCodePage from './pages/referral-code';
-import FaqPage from './pages/faq';
 import AmbassadorFaqPage from './pages/ambassador-faq';
 import PrivacyPolicyPage from './pages/privacy-policy';
 import TermsOfServicePage from './pages/terms-of-service';
+import FaqPage from './pages/faq';
+import SafetyPage from './pages/safety';
+import RulesPage from './pages/rules';
 
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -57,6 +59,8 @@ function App() {
             <Route path="ambassador-faq" element={<AmbassadorFaqPage/>}/>
             <Route path="privacy-policy" element={<PrivacyPolicyPage/>}/>
             <Route path="terms-of-service" element={<TermsOfServicePage/>}/>
+            <Route path="safety" element={<SafetyPage/>}/>
+            <Route path="rules" element={<RulesPage/>}/>
             <Route path="*" element={<PageNotFound/>}/>
           </Route>
         </Routes>
