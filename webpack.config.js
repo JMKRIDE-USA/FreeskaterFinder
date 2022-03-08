@@ -1,5 +1,9 @@
 const path = require('path');
+const webpack = require('webpack')
+const dotenv = require('dotenv')
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+
+dotenv.config();
 
 module.exports = {
   entry: ["regenerator-runtime/runtime.js", "./src/index.js"],
@@ -63,6 +67,10 @@ module.exports = {
     ],
   },
   plugins: [
+    // fix "process is not defined" error:
+    new webpack.DefinePlugin({
+       'process.env': JSON.stringify(process.env)
+    }),
     new HtmlWebPackPlugin({
       template: './src/index.html',
     }),

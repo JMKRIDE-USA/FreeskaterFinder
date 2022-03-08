@@ -20,18 +20,20 @@ function SingleReferralCodeCard({referralCode, isAdmin}){
   const userUrl = isAdmin ? "/user/" + referralCode.owner._id : "/my-account"
   return <>
     <PageCard title={"Referral Code: '" + referralCode.code + "'"} small sx={{mb: 2}}>
-      <Grid container direction="row" sx={{justifyContent: 'flex-start', pl: 2}}>
-        <Typography variant="body1" sx={{mr: 1}}><b>Owner: </b></Typography>
-        <MuiLink component={Link} to={userUrl}>{referralCode.owner.fullName}</MuiLink>
+      <Grid container direction="column">
+        <Grid item container direction="row" sx={{justifyContent: 'flex-start', pl: 2}}>
+          <Typography variant="body1" sx={{mr: 1}}><b>Owner: </b></Typography>
+          <MuiLink component={Link} to={userUrl}>{referralCode.owner.fullName}</MuiLink>
+        </Grid>
+        <InfoList object={{
+          Percentage: referralCode.percent + "%",
+          "Num Uses": referralCode.usageCount,
+          "Created": ISOToReadableString(referralCode.createdAt),
+        }}/>
       </Grid>
-      <InfoList object={{
-        Percentage: referralCode.percent + "%",
-        "Num Uses": referralCode.usageCount,
-        "Created": ISOToReadableString(referralCode.createdAt),
-      }}/>
     </PageCard>
     <QueryLoader query={useGetTransactions} propName="transactions" generateQuery loading={() => <ListCardSkeleton/>}>
-      <TransactionsTable/>
+      <TransactionsTable noSubject/>
     </QueryLoader>
   </>
 }

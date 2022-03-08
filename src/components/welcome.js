@@ -19,8 +19,8 @@ function WelcomeDialog({open, onClose}){
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please read and abide by <MuiLink component={Link} to="/rules">the rules</MuiLink>.<br/>
-          Before meeting up with anyone IRL, please read and follow the <MuiLink component={Link} to="/safety">Safety Suggestions</MuiLink>.<br/>
+          Please read and abide by <MuiLink component={Link} to="/rules">the site rules</MuiLink>.<br/>
+          Before meeting up with anyone IRL, please read and follow the <MuiLink component={Link} to="/safety">Safety Rules</MuiLink>.<br/>
         </DialogContentText>
         <DialogActions>
           <Button onClick={onClose}>I Agree</Button>

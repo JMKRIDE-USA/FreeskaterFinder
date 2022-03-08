@@ -15,8 +15,8 @@ function ListItemSkeleton() {
     <ListItem sx={{maxWidth: '85vw'}}>
       <ListItemAvatar><Skeleton variant="circular" width={50} height={50}/></ListItemAvatar>
       <ListItemText disableTypography
-        primary={<Skeleton variant="text" width={'min(90vw, ' + primaryWidth + 'px)'}/>}
-        secondary={<Skeleton variant="text" width={'min(90vw, ' + secondaryWidth + 'px)'}/>}
+        primary={<Skeleton variant="text" sx={{width: 'min(70vw, ' + primaryWidth + 'px)'}}/>}
+        secondary={<Skeleton variant="text" sx={{width: 'min(70vw, ' + secondaryWidth + 'px)'}}/>}
       />
     </ListItem>
   )

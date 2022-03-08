@@ -25,7 +25,7 @@ export function useCreateReferralCodeUsage(){
 
 export function useCreateAdminTransaction(){
   return useCreateMutation({
-    endpoint: "transaction/admin/create",
+    endpoint: "transactions/admin/create",
     method: "POST",
   })
 }
