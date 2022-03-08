@@ -12,11 +12,11 @@ function ListItemSkeleton() {
   const primaryWidth = Math.random() * (400 - 200) + 200;
   const secondaryWidth = Math.random() * (450 - 300) + 300;
   return (
-    <ListItem>
+    <ListItem sx={{maxWidth: '85vw'}}>
       <ListItemAvatar><Skeleton variant="circular" width={50} height={50}/></ListItemAvatar>
       <ListItemText disableTypography
-        primary={<Skeleton variant="text" width={primaryWidth}/>}
-        secondary={<Skeleton variant="text" width={secondaryWidth}/>}
+        primary={<Skeleton variant="text" width={'min(90vw, ' + primaryWidth + 'px)'}/>}
+        secondary={<Skeleton variant="text" width={'min(90vw, ' + secondaryWidth + 'px)'}/>}
       />
     </ListItem>
   )
@@ -24,7 +24,7 @@ function ListItemSkeleton() {
 
 export function ListCardSkeleton({length = 6, sx = {}}) {
   return (
-    <PageCard xs={12} md={4} headerRow header={<Skeleton variant="text" width={400}/>} sx={{m: 2, ...sx}}>
+    <PageCard xs={12} md={4} headerRow header={<Skeleton variant="text" width={'min(90vw, ' + 400 + 'px)'}/>} sx={{m: 2, ...sx}}>
       <List>
         {Array.from(Array(length).keys()).map(index => <ListItemSkeleton key={index}/>)}
       </List>
@@ -34,10 +34,9 @@ export function ListCardSkeleton({length = 6, sx = {}}) {
 
 export function DetailCardSkeleton({sx = {}}) {
   return (
-    <PageCard xs={12} md={4} headerRow header={<Skeleton variant="text" width={400}/>} sx={{m: 2, ...sx}}>
+    <PageCard xs={12} md={4} headerRow header={<Skeleton variant="text" sx={{width: 'min(90vw, ' + 400 + 'px)'}}/>} sx={{m: 2, ...sx}}>
       <Grid item container direction="row">
-        <Skeleton variant="circular" width={50} height={50} sx={{mr: 3}}/>
-        <Skeleton variant="rectangle" width={450} height={300}/>
+        <Skeleton variant="rectangle" width={'min(80vw, ' + 450 + 'px)'} height={300}/>
       </Grid>
     </PageCard>
   )
@@ -46,7 +45,7 @@ export function DetailCardSkeleton({sx = {}}) {
 export function RawCardSkeleton({sx = {}}) {
   return (
     <PageCard xs={12} md={4} sx={{m: 2, ...sx}}>
-      <Skeleton variant="rectangle" width={500} height={650}/>
+      <Skeleton variant="rectangle" sx={{width: 'min(90vw, ' + 500 + 'px)'}} height={650}/>
     </PageCard>
   )
 }

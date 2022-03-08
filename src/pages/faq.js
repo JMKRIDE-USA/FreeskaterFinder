@@ -37,7 +37,7 @@ function FaqPage() {
       children: <>
         <List dense>
           {neverItems.map((item, index) => (
-            <ListItem>
+            <ListItem key={index}>
               <ListItemText>
                 <b> NEVER {" "} </b>{item}
               </ListItemText>

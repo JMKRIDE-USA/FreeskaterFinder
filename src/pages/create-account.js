@@ -143,7 +143,7 @@ function CreateAccountPage({firstTimeSetup}) {
       case 4:
         return <ProfileIconPickerCard onSuccess={incrementStep} title="Choose a Profile Icon"/>
       case 5:
-        return <LocationPickerCard onSuccess={() => navigate('/?welcome=true')}/>
+        return <LocationPickerCard onSuccess={incrementStep}/>
       default:
         return <Redirector/>
     }

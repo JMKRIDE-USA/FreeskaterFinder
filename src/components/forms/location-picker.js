@@ -73,7 +73,7 @@ const LocationPickerCard = ({onSuccess}) => {
     preProcessData: () => location,
     isFormButton: false,
     buttonText: "Save",
-    thenFn: (result) => { if(result){
+    thenFn: (result) => { console.log({lpr: result}); if(result){
       invalidateJFHCache();
       onSuccess(result);
     }}

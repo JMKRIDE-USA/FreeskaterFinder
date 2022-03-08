@@ -78,11 +78,14 @@ function SingleUserCards({user}){
       </Grid>
       <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
         <PageCard headerRow title={user.firstName + "'s location:"} header={
-          <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>
+          user.location ? <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink> : undefined
         }>
-          <MapComponent center={user.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
-            <Marker position={user.location}/>
-          </MapComponent>
+          {user.location
+            ? <MapComponent center={user.location} containerStyle={{minHeight: '300px'}} zoom={6} interactive={false}>
+              <Marker position={user.location}/>
+            </MapComponent>
+            : <Typography variant="body1">No Location</Typography>
+          }
         </PageCard>
         {user.friends.length ? <UserTable users={user.friends} title={user.firstName + "'s friends"} basic/> : <></>}
       </Grid>
