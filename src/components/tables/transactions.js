@@ -8,7 +8,7 @@ import Table from './table';
 
 const CellLink = ({to, children}) => <MuiLink component={Link} to={to}>{children}</MuiLink>
 
-const getColumns = ({single, admin}) => ([
+const getColumns = ({single, admin, noSubject}) => ([
   ...(single ? [] : [{
     headerName: '',
     field: '_id',
@@ -46,16 +46,18 @@ const getColumns = ({single, admin}) => ([
       ? {renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>}
       : {valueFormatter: ({value}) => value.fullName},
   },
-  {
-    headerName: 'Subject',
-    field: 'submission',
-    width: 150,
-    renderCell: ({row}) => {
-      if(row.submission) return <CellLink to={"/submission/" + row.submission}>Submission</CellLink>
-      if(row.referralCode) return <CellLink to={"/referral-code/" + row.referralCode}>Referral Code</CellLink>
-      return <></>
-    }
-  },
+  ...(noSubject ? [] : [
+    {
+      headerName: 'Subject',
+      field: 'submission',
+      width: 150,
+      renderCell: ({row}) => {
+        if(row.submission) return <CellLink to={"/submission/" + row.submission}>Submission</CellLink>
+        if(row.referralCode) return <CellLink to={"/referral-code/" + row.referralCode}>Referral Code</CellLink>
+        return <></>
+      }
+    },
+  ]),
   {
     headerName: 'Reason',
     field: 'reason',
@@ -63,8 +65,8 @@ const getColumns = ({single, admin}) => ([
   },
 ])
 
-function TransactionsTable({transactions, title, single = false, admin = false}){
-  const columns = getColumns({single, admin});
+function TransactionsTable({transactions, title, single = false, admin = false, noSubject = false}){
+  const columns = getColumns({single, admin, noSubject});
   return <Table title={title} rows={transactions} columns={columns}/>
 }
 
