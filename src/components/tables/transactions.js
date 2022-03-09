@@ -35,8 +35,8 @@ const getColumns = ({single, admin, noSubject}) => ([
     field: 'source',
     width: 150,
     ...admin
-      ? {renderCell: ({value}) => <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink>}
-      : {valueFormatter: ({value}) => value.fullName},
+      ? {renderCell: ({value}) => value ? <CellLink to={"/user/" + value._id}>{value.fullName}</CellLink> : "None"}
+      : {valueFormatter: ({value}) => value ? value.fullName : 'None'},
   },
   {
     headerName: 'Destination',

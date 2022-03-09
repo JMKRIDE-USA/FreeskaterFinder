@@ -20,10 +20,10 @@ function TransactionPage(){
     <TitleCard>{transactionId && admin && <MuiLink component={Link} to={"/transactions"}>View All Transactions</MuiLink>}</TitleCard>
     { transactionId
       ? <QueryLoader query={useGetTransaction} propName="transactions" generateQuery loading={() => <DetailCardSkeleton/>}>
-        <TransactionsTable single/>
+        <TransactionsTable single admin={admin}/>
       </QueryLoader>
       : <QueryLoader query={useGetAllTransactions} propName="transactions" generateQuery loading={() => <ListCardSkeleton/>}>
-        <TransactionsTable/>
+        <TransactionsTable admin={admin}/>
       </QueryLoader>
     }
   </Page>
