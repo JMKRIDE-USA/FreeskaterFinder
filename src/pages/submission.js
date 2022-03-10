@@ -46,7 +46,7 @@ function LoadedSingleSubmissionCard({ submission }) {
         <Typography variant="h6">Submitted on {ISOToReadableString(submission.createdAt)}</Typography>
       </>
     }>
-      <Typography variant="h6">Challenge: <b>{submission.challenge.title}</b></Typography>
+      <Typography variant="h6">Challenge: <MuiLink component={Link} to={"/challenge/" + submission.challenge._id}><b>{submission.challenge.title}</b></MuiLink></Typography>
       <StatusIndicator status={submission.status} sx={{width: 'min(80vw, 250px)'}}/>
       <SubmissionDetailsList submission={submission}/>
       {submission.status === 'PENDING' &&
