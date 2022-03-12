@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-freeskaterfinder-dev-192316-authRole",
+      "UnauthRoleArn": "arn:aws:iam::604107779718:role/amplify-freeskaterfinder-dev-192316-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::604107779718:role/amplify-freeskaterfinder-dev-192316-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-freeskaterfinder-dev-192316-deployment",
+      "UnauthRoleName": "amplify-freeskaterfinder-dev-192316-unauthRole",
+      "StackName": "amplify-freeskaterfinder-dev-192316",
+      "StackId": "arn:aws:cloudformation:us-east-2:604107779718:stack/amplify-freeskaterfinder-dev-192316/8b20d4d0-a0a7-11ec-ab12-0ad4d1dcc9f8",
+      "AmplifyAppId": "d2lq3khc564oz4"
+    }
+  }
+}
