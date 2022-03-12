@@ -87,7 +87,7 @@ const LocationPickerCard = ({onSuccess}) => {
     <PageCard header={
     <>
       <Typography variant="h6">Select your location.</Typography>
-      <Typography variant="subheader">For reasons of safety, you can only go as specific as your zip code.</Typography>
+      <Typography variant="subheader">For safety reasons, you can only go as specific as your zip code.</Typography>
     </>}>
       {error &&
         <Grid container direction="row" sx={{mb: 1, justifyContent: "center"}}>

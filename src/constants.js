@@ -11,6 +11,16 @@ export const headerHeight = {xs: '55px', md: '70px'}
 
 export const maxBlurbLength = 55;
 
+export const unauthLocations = [
+  '/create-account',
+  '/setup-account',
+  '/terms-of-service',
+  '/privacy-policy',
+  '/safety',
+  '/rules',
+  '/faq',
+]
+
 export const socialLinkTypes = [
   {
     name: "facebook",

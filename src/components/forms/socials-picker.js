@@ -53,6 +53,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess}) => {
         <>
           <Typography variant="h6">How can people contact you?</Typography>
           <Typography variant="subtitle1">Please add at least one social media account.</Typography>
+          <Typography variant="subtitle1" sx={{mt: -1}}>Use full URLS e.g. 'https://facebook.com/jmkride'</Typography>
         </>
       }>
         <form onSubmit={handleSubmit(onClick)}>

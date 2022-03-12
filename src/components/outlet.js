@@ -3,6 +3,8 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useGetAuthState, useGetUserInfo, useGetAccessToken } from '@jeffdude/frontend-helpers';
+
+import { unauthLocations } from '../constants';
 import SignInDialog from './sign-in'
 import WelcomeDialog from './welcome';
 
@@ -16,12 +18,6 @@ export const useGetAccountStatus = () => {
   if(accessToken && !authState) return 'loading';
   if(authState && !(socialLinks && location)) return 'incomplete'
   return 'logged in'
-}
-
-function useQuery() {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 const MyOutlet = () => {
@@ -39,7 +35,7 @@ const MyOutlet = () => {
   const accountStatus = useGetAccountStatus();
 
   React.useEffect(() =>{
-    if(accountStatus === 'incomplete' && location.pathname !== '/setup-account'){
+    if(accountStatus === 'incomplete' && !(unauthLocations.includes(location.pathname))){
       navigate("/setup-account", {replace: true})
     }
   }, [accountStatus, location, navigate])
@@ -47,7 +43,7 @@ const MyOutlet = () => {
   if(accountStatus === 'logged out') return (
     <>
       <Outlet/>
-      {accountStatus === 'logged out' && !(['/create-account', '/setup-account'].includes(location.pathname)) && <SignInDialog open={true}/>}
+      {accountStatus === 'logged out' && !(unauthLocations.includes(location.pathname)) && <SignInDialog open={true}/>}
     </>
   )
   return <>
