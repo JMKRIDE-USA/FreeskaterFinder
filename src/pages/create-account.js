@@ -37,7 +37,7 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}
         <Box sx={{ minWidth: 85 }}>
           <Typography variant="body2" color="text.secondary">Step {step} of {numSteps}</Typography>
         </Box>
-        {step < numSteps && 
+        {(step > 1 && step < numSteps) && 
           <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
             <ArrowForwardIosIcon color="primary" fontSize="small"/>
           </IconButton>
@@ -72,9 +72,9 @@ const CreateAccountCard = ({incrementStep}) => {
               } error={!!errors.firstName} helperText={errors?.firstName?.message}/>
             </Grid>
             <Grid item xs={6}>
-              <TextField label="Last Name" margin="normal" fullWidth inputProps={
-                register("lastName", {required: 'This field is required.'})
-              } error={!!errors.lastName} helperText={errors?.lastName?.message}/>
+              <TextField label="Last Name" margin="normal" fullWidth inputProps={register("lastName")}
+                error={!!errors.lastName} helperText={errors?.lastName?.message}
+              />
             </Grid>
           </Grid>
           <TextField label="Email" margin="normal" inputProps={
@@ -86,7 +86,7 @@ const CreateAccountCard = ({incrementStep}) => {
           <TextField label="Password" margin="normal" inputProps={{
             ...register("password", {
               required: 'This field is required.',
-              pattern: {value: /\w{8,}/, message: 'Password must be 8 characters long or more.'},
+              validate: value => value.length > 7 || 'Password must be 8 characters long or more.',
             }), type: "password"}
           } error={!!errors.password} helperText={errors?.password?.message}/>
           <TextField label="Repeat Password" margin="normal" inputProps={{

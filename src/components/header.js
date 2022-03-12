@@ -14,9 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import UserAvatar from '../components/user-avatar';
 import { useGetUserInfo, useGetAuthState } from '@jeffdude/frontend-helpers';
 import { useNavigate } from 'react-router-dom';
+import Outlet, { useGetAccountStatus } from './outlet';
 
-import Outlet from './outlet';
-import { headerHeight } from '../constants';
+import { unauthLocations, headerHeight } from '../constants';
 import AdminMenu from './admin-menu';
 
 import xslogo from '../assets/FreeskaterFinderHeaderLogo_xs.svg';
@@ -27,27 +27,29 @@ import NotificationsMenu from './notifications-menu';
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
+  const authState = useGetAuthState();
+  const accountStatus = useGetAccountStatus()
+  const userInfo = useGetUserInfo();
+
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const ButtonNameToPage = {
+  let ButtonNameToPage = {
     Home: '/',
     Friends: '/friends',
     FAQ: '/faq',
     Rules: '/rules',
     Safety: '/safety',
-    Shop: 'https://www.jmkride.com/'
+    Account: '/my-account',
+    Shop: 'https://www.jmkride.com/',
   }
+  if(authState > 1) ButtonNameToPage['Ambassador FAQ'] = '/ambassador-faq';
   const navigate = useNavigate();
 
   const handleCloseNavMenu = (page) => () => {
     setAnchorElNav(null);
-    if(page) switch(page) {
-      case 'Shop':
-        return window.open(ButtonNameToPage[page])
-      default: 
-        return navigate(ButtonNameToPage[authState ? page : 'Home']);
-    }
+    authNavigate(page)
   };
 
   const handleSignIn = () => {
@@ -55,8 +57,20 @@ const ResponsiveAppBar = () => {
     return navigate('/');
   }
 
-  const authState = useGetAuthState();
-  const userInfo = useGetUserInfo();
+  const authNavigate = (page) => {
+    if(page) switch(page) {
+      case 'Shop':
+        return window.open(ButtonNameToPage[page])
+      default: 
+        return navigate(ButtonNameToPage[
+          accountStatus === 'logged in'
+          ? page
+          : unauthLocations.includes(ButtonNameToPage[page]) 
+          ? page 
+          : 'Home'
+        ]);
+    }
+  }
 
   return (
     <>
@@ -100,7 +114,7 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {Object.keys(ButtonNameToPage).map((page) => (
+              {Object.keys(ButtonNameToPage).filter(i => i !== 'Account').map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
@@ -112,7 +126,7 @@ const ResponsiveAppBar = () => {
             <img style={{marginRight: "15px"}} src={mdlogo} height={50} alt="JMKRIDE logo"/>
           </ButtonBase>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {Object.keys(ButtonNameToPage).map((page) => (
+            {Object.keys(ButtonNameToPage).filter(i => i !== 'Account').map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu(page)}
@@ -130,7 +144,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0, display: authState ? 'flex' : 'none' }}>
             <NotificationsMenu/>
             <Tooltip title="My Account">
-              <IconButton onClick={() => navigate('/my-account')} sx={{ p: 0 }}>
+              <IconButton onClick={() => authNavigate('Account')} sx={{ p: 0 }}>
                 <UserAvatar user={userInfo}/>
               </IconButton>
             </Tooltip>
