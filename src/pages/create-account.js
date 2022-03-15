@@ -21,8 +21,8 @@ import EditProfileCard from '../components/forms/edit-profile';
 import ProfileIconPickerCard from '../components/forms/profileicon-picker';
 
 
-const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}) => {
-  const [step, setStep] = stepState;
+const LinearProgressWithLabel = ({firstTimeSetup, actualStep, stepOffsetState, numSteps, ...props}) => {
+  const [step, setStep] = stepOffsetState;
   return (
     <PageCard sx={{mb: 2}}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%'}}>
@@ -32,10 +32,10 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}
           </IconButton>
         }
         <Box sx={{ flexGrow: 1, mr: 1, mt: 2, mb: 2 }}>
-          <LinearProgress variant="determinate" value={Math.round(100 * (step/numSteps))} {...props} />
+          <LinearProgress variant="determinate" value={Math.round(100 * (actualStep/numSteps))} {...props} />
         </Box>
         <Box sx={{ minWidth: 85 }}>
-          <Typography variant="body2" color="text.secondary">Step {step} of {numSteps}</Typography>
+          <Typography variant="body2" color="text.secondary">Step {actualStep} of {numSteps}</Typography>
         </Box>
         {(step > 1 && step < numSteps) && 
           <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
@@ -118,7 +118,10 @@ function Redirector() {
 function CreateAccountPage({firstTimeSetup}) {
   const authState = useGetAuthState();
   const userInfo = useGetUserInfo();
+
   const [step, setStep] = useState(1);
+  const [stepOffset, setStepOffset] = useState(0);
+
   const incrementStep = () => setStep(step + 1);
   const navigate = useNavigate();
 
@@ -129,11 +132,10 @@ function CreateAccountPage({firstTimeSetup}) {
     if(!userInfo?.profileIconName) return 4;
     if(!userInfo?.location) return 5;
     return 6;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  })()), []);
+  })()), [authState, userInfo]);
   
   const createComponent = (() => {
-    switch(step) {
+    switch(step + stepOffset) {
       case 1:
         return <CreateAccountCard incrementStep={incrementStep}/>
       case 2:
@@ -165,7 +167,7 @@ function CreateAccountPage({firstTimeSetup}) {
           <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
         </Typography>
       </TitleCard>
-      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} stepState={[step, setStep]} numSteps={5}/>}
+      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} actualStep={step} stepOffsetState={[stepOffset, setStepOffset]} numSteps={5}/>}
       { createComponent }
     </Page>
   )
