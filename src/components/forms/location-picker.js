@@ -33,7 +33,7 @@ const ResultCircle = ({location}) => {
   return (<Circle center={location} options={options}/>)
 }
 
-const LocationPickerCard = ({onSuccess}) => {
+const LocationPickerCard = ({onSuccess = () => null}) => {
   const userInfo = useGetUserInfo();
 
   const [location, setLocation] = useState(userInfo?.location ? userInfo.location : undefined);
@@ -73,7 +73,7 @@ const LocationPickerCard = ({onSuccess}) => {
     preProcessData: () => location,
     isFormButton: false,
     buttonText: "Save",
-    thenFn: (result) => { console.log({lpr: result}); if(result){
+    thenFn: (result) => {if(result){
       invalidateJFHCache();
       onSuccess(result);
     }}

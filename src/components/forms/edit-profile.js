@@ -10,12 +10,12 @@ import PageCard from '../page-card';
 import UserAvatar from '../user-avatar';
 
 
-function EditProfileCard({onSuccess, title, noProfileIcon = false, backButton = true}){
+function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, backButton = true}){
   const userInfo = useGetUserInfo();
   const patchUser = usePatchUser();
   const renderForm = useMakeForm({
     actionFn: patchUser,
-    onSuccess: (result) => {invalidateJFHCache(); onSuccess(result)},
+    onSuccess: (result) => onSuccess(result),
     stateList: [
       ["firstName" , "First Name"],
       ["lastName", "Last Name"],

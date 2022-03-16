@@ -7,7 +7,7 @@ import ProfileIcons from '../profile-icon';
 import PageCard from '../page-card';
 
 
-const ProfileIconPickerCard = ({onSuccess, title}) => {
+const ProfileIconPickerCard = ({onSuccess = () => null, title}) => {
 
   const [selectedCategory, setSelectedCategory] = useState('JMK');
 

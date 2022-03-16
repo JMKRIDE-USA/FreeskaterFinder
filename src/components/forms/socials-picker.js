@@ -20,7 +20,7 @@ const SocialLink = ({socialType, register, errors}) => {
   )
 }
 
-const SocialsPickerCard = ({socialLinkData, onSuccess}) => {
+const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
   const socialLinkObject = {}
   if(socialLinkData) {
     socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
@@ -45,7 +45,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess}) => {
       link.length ? {type, link} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
-    thenFn: (result) => {if(result) onSuccess()},
+    thenFn: (result) => onSuccess(result),
   });
   return (
     <>

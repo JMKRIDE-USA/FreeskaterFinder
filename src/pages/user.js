@@ -73,10 +73,11 @@ function SingleUserCards({user}){
   const [copied, flipCopied] = React.useReducer(state => !state, false)
   React.useEffect(() => setTimeout(() => {if(copied) flipCopied()}, 1000), [copied, flipCopied]);
 
-  const createPasswordResetToken = useCreatePasswordResetToken({createMutationCallOptions: {onSuccess: ({ result }) => setPwResetToken(result.key)}});
+  const createPasswordResetToken = useCreatePasswordResetToken({createMutationCallOptions: {onSuccess: ({ result }) => {if(result) setPwResetToken(result?.key)}}});
 
+  const domain = window.location.origin
   const onCopyLink = () => {
-    navigator.clipboard.writeText("https://freeskaterfinder.jmkride.com/reset-password/" + pwResetToken)
+    navigator.clipboard.writeText(domain + "/reset-password/" + pwResetToken)
     flipCopied();
   }
   return <>
