@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { invalidateJFHCache, useGetUserInfo } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo } from '@jeffdude/frontend-helpers';
 
 import useMakeLoadingButton from '../../hooks/loading-button';
 import PageCard from '../page-card';
@@ -74,7 +74,6 @@ const LocationPickerCard = ({onSuccess = () => null}) => {
     isFormButton: false,
     buttonText: "Save",
     thenFn: (result) => {if(result){
-      invalidateJFHCache();
       onSuccess(result);
     }}
   });

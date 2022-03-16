@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { invalidateJFHCache, useGetUserInfo, usePatchUser } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo, usePatchUser } from '@jeffdude/frontend-helpers';
 import { Button } from '@mui/material';
 
 import useMakeForm from '../../hooks/form'
@@ -15,7 +15,7 @@ function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, 
   const patchUser = usePatchUser();
   const renderForm = useMakeForm({
     actionFn: patchUser,
-    onSuccess: (result) => onSuccess(result),
+    onSuccess: (result) => {if(result) onSuccess(result)},
     stateList: [
       ["firstName" , "First Name"],
       ["lastName", "Last Name"],
