@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Circle } from '@react-google-maps/api';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { invalidateJFHCache, useGetUserInfo } from '@jeffdude/frontend-helpers';
+import { useGetUserInfo } from '@jeffdude/frontend-helpers';
 
 import useMakeLoadingButton from '../../hooks/loading-button';
 import PageCard from '../page-card';
@@ -33,7 +33,7 @@ const ResultCircle = ({location}) => {
   return (<Circle center={location} options={options}/>)
 }
 
-const LocationPickerCard = ({onSuccess}) => {
+const LocationPickerCard = ({onSuccess = () => null}) => {
   const userInfo = useGetUserInfo();
 
   const [location, setLocation] = useState(userInfo?.location ? userInfo.location : undefined);
@@ -73,8 +73,7 @@ const LocationPickerCard = ({onSuccess}) => {
     preProcessData: () => location,
     isFormButton: false,
     buttonText: "Save",
-    thenFn: (result) => { console.log({lpr: result}); if(result){
-      invalidateJFHCache();
+    thenFn: (result) => {if(result){
       onSuccess(result);
     }}
   });

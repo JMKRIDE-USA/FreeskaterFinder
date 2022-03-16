@@ -20,7 +20,7 @@ const SocialLink = ({socialType, register, errors}) => {
   )
 }
 
-const SocialsPickerCard = ({socialLinkData, onSuccess}) => {
+const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
   const socialLinkObject = {}
   if(socialLinkData) {
     socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
