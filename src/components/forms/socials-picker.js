@@ -45,7 +45,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       link.length ? {type, link} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
-    thenFn: (result) => onSuccess(result),
+    thenFn: (result) => {if(result) onSuccess()},
   });
   return (
     <>
