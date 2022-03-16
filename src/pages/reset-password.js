@@ -23,7 +23,7 @@ function ResetPasswordPage(){
     () => {
       if(successMessageVisible){
         const timer = setTimeout(() => navigate('/'), 10000);
-        return () => clearTimer(timer);
+        return () => clearTimout(timer);
       }
     }, [successMessageVisible]
   )
