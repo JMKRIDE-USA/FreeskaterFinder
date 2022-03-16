@@ -35,7 +35,7 @@ const MyOutlet = () => {
   const accountStatus = useGetAccountStatus();
 
   React.useEffect(() =>{
-    if(accountStatus === 'incomplete' && !(unauthLocations.includes(location.pathname))){
+    if(accountStatus === 'incomplete' && !(unauthLocations.some(page => location.pathname.includes(page)))){
       navigate("/setup-account", {replace: true})
     }
   }, [accountStatus, location, navigate])
@@ -43,7 +43,7 @@ const MyOutlet = () => {
   if(accountStatus === 'logged out') return (
     <>
       <Outlet/>
-      {accountStatus === 'logged out' && !(unauthLocations.includes(location.pathname)) && <SignInDialog open={true}/>}
+      {accountStatus === 'logged out' && !(unauthLocations.some(page => location.pathname.includes(page))) && <SignInDialog open={true}/>}
     </>
   )
   return <>

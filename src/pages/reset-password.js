@@ -1,15 +1,19 @@
 import React from 'react';
 
+import { usePasswordResetWithToken } from '@jeffdude/frontend-helpers';
+import { useParams } from 'react-router-dom';
+
 import Page from '../components/page';
 import TitleCard from '../components/title-card';
 import PageCard from '../components/page-card';
 
 import useMakeForm from '../hooks/form';
-import { usePasswordResetWithToken } from '../hooks/auth';
+import { makeTextField } from '../components/forms/fields';
 
 function ResetPasswordPage(){
 
-  const postPasswordResetWithToken = usePasswordResetWithToken()
+  const { key } = useParams();
+  const postPasswordResetWithToken = usePasswordResetWithToken(key)
 
   const makePasswordInput = ({key, label}) => ({
     key, label, formatFn: i => i, initialState: '',
@@ -17,8 +21,8 @@ function ResetPasswordPage(){
       key, label, validation: {
         required: 'This field is required.',
         validate: value => value.length > 7 || "Password must be 8 characters long or more.",
-      }, fieldProps: {secureTextEntry: true},
-    })
+      }, password: true,
+    }),
   })
 
   const renderForm = useMakeForm({

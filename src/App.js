@@ -22,6 +22,7 @@ import TermsOfServicePage from './pages/terms-of-service';
 import FaqPage from './pages/faq';
 import SafetyPage from './pages/safety';
 import RulesPage from './pages/rules';
+import ResetPasswordPage from './pages/reset-password';
 
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -61,6 +62,7 @@ function App() {
             <Route path="terms-of-service" element={<TermsOfServicePage/>}/>
             <Route path="safety" element={<SafetyPage/>}/>
             <Route path="rules" element={<RulesPage/>}/>
+            <Route path="reset-password/:key" element={<ResetPasswordPage/>}/>
             <Route path="*" element={<PageNotFound/>}/>
           </Route>
         </Routes>
