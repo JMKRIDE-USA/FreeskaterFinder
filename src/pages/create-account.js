@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useReducer, useState, useRef, useEffect } from 'react';
 import { 
   Box, Grid, Paper, TextField, Typography, LinearProgress,
   Checkbox, FormControlLabel, IconButton,
@@ -21,24 +21,23 @@ import EditProfileCard from '../components/forms/edit-profile';
 import ProfileIconPickerCard from '../components/forms/profileicon-picker';
 
 
-const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}) => {
-  const [step, setStep] = stepState;
+const LinearProgressWithLabel = ({firstTimeSetup, actualStep, offsetDispatch, numSteps, ...props}) => {
   return (
     <PageCard sx={{mb: 2}}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%'}}>
-        {step > 2 && 
-          <IconButton aria-label="Go back" fontSize="small" sx={{mr:1}} onClick={() => setStep(step-1)}>
+        {actualStep > 2 && 
+          <IconButton aria-label="Go back" fontSize="small" sx={{mr:1}} onClick={() => offsetDispatch('decrement')}>
             <ArrowBackIosNewIcon color="primary" fontSize="small"/>
           </IconButton>
         }
         <Box sx={{ flexGrow: 1, mr: 1, mt: 2, mb: 2 }}>
-          <LinearProgress variant="determinate" value={Math.round(100 * (step/numSteps))} {...props} />
+          <LinearProgress variant="determinate" value={Math.round(100 * (actualStep/numSteps))} {...props} />
         </Box>
         <Box sx={{ minWidth: 85 }}>
-          <Typography variant="body2" color="text.secondary">Step {step} of {numSteps}</Typography>
+          <Typography variant="body2" color="text.secondary">Step {actualStep} of {numSteps}</Typography>
         </Box>
-        {(step > 1 && step < numSteps) && 
-          <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => setStep(step+1)}>
+        {(actualStep > 1 && actualStep < numSteps) && 
+          <IconButton aria-label="Go forward" fontSize="small" sx={{mr:1}} onClick={() => offsetDispatch('increment')}>
             <ArrowForwardIosIcon color="primary" fontSize="small"/>
           </IconButton>
         }
@@ -47,7 +46,7 @@ const LinearProgressWithLabel = ({firstTimeSetup, stepState, numSteps, ...props}
   )
 }
 
-const CreateAccountCard = ({incrementStep}) => {
+const CreateAccountCard = () => {
   const { register, handleSubmit, formState: {errors}, watch}  = useForm();
   const createAccount = useCreateAccount();
   const [ captchaClicked, setCaptchaClicked ] = useState(false);
@@ -55,7 +54,6 @@ const CreateAccountCard = ({incrementStep}) => {
     doAction: createAccount,
     buttonText: "Submit",
     preProcessData: ({password2, tos, ...rest}) => rest,
-    thenFn: (result) => {if(!!result) incrementStep()},
   });
   const tos = useRef({})
   tos.current = watch("tos", "")
@@ -118,32 +116,40 @@ function Redirector() {
 function CreateAccountPage({firstTimeSetup}) {
   const authState = useGetAuthState();
   const userInfo = useGetUserInfo();
-  const [step, setStep] = useState(1);
-  const incrementStep = () => setStep(step + 1);
-  const navigate = useNavigate();
 
-  useEffect(() => setStep((() => {
+  const step = (() => {
     if(!authState) return 1;
     if(!userInfo?.socialLinks.length) return 2;
     if(!userInfo?.bio) return 3;
     if(!userInfo?.profileIconName) return 4;
     if(!userInfo?.location) return 5;
     return 6;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  })()), []);
-  
+  })()
+
+  const [stepOffset, offsetDispatch] = useReducer((state, action) => {
+    switch(action) {
+      case 'increment': return state + 1;
+      case 'decrement': return state - 1;
+      case 'submit':
+      default: {
+        if(state >= 0) return 0;
+        return state + 1;
+      }
+    }}, 0);
+  const actualStep = step + stepOffset;
+
   const createComponent = (() => {
-    switch(step) {
+    switch(actualStep) {
       case 1:
-        return <CreateAccountCard incrementStep={incrementStep}/>
+        return <CreateAccountCard/>
       case 2:
-        return <SocialsPickerCard socialLinkData={userInfo.socialLinks} onSuccess={incrementStep}/>
+        return <SocialsPickerCard socialLinkData={userInfo.socialLinks} onSuccess={() => offsetDispatch('submit')}/>
       case 3:
-        return <EditProfileCard onSuccess={incrementStep} noProfileIcon title="Confirm your Profile Info"/>
+        return <EditProfileCard noProfileIcon title="Confirm your Profile Info" onSuccess={() => offsetDispatch('submit')}/>
       case 4:
-        return <ProfileIconPickerCard onSuccess={incrementStep} title="Choose a Profile Icon"/>
+        return <ProfileIconPickerCard title="Choose a Profile Icon" onSuccess={() => offsetDispatch('submit')}/>
       case 5:
-        return <LocationPickerCard onSuccess={incrementStep}/>
+        return <LocationPickerCard onSuccess={() => offsetDispatch('submit')}/>
       default:
         return <Redirector/>
     }
@@ -165,7 +171,7 @@ function CreateAccountPage({firstTimeSetup}) {
           <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
         </Typography>
       </TitleCard>
-      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} stepState={[step, setStep]} numSteps={5}/>}
+      {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} actualStep={actualStep} offsetDispatch={offsetDispatch} numSteps={5}/>}
       { createComponent }
     </Page>
   )

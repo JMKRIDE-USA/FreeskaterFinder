@@ -30,10 +30,9 @@ function useMakeForm({
 
   const { onClick , render: renderButton } = useMakeLoadingButton({
     doAction: (data) => {
-      console.log({ data })
       const vErrors = validateData(JSON.parse(JSON.stringify(data)))
       if(vErrors.length) {
-        setErrors(errors)
+        setErrors(vErrors)
         setShowError(true)
         return {result: false}
       }
