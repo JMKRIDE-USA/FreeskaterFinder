@@ -33,7 +33,7 @@ function useMakeForm({
       console.log({ data })
       const vErrors = validateData(JSON.parse(JSON.stringify(data)))
       if(vErrors.length) {
-        setErrors(errors)
+        setErrors(vErrors)
         setShowError(true)
         return {result: false}
       }

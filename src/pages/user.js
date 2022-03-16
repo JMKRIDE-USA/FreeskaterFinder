@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useParams, Link } from 'react-router-dom';
-import { QueryLoader, ISOToReadableString, permissionLevelToAuthState, invalidateJFHCache } from '@jeffdude/frontend-helpers';
+import { QueryLoader, ISOToReadableString, permissionLevelToAuthState, invalidateJFHCache, useCreatePasswordResetToken } from '@jeffdude/frontend-helpers';
 import { Button, Grid, Link as MuiLink, Typography } from '@mui/material';
 import { Marker } from '@react-google-maps/api';
 
@@ -20,7 +20,7 @@ import { makeTextField } from '../components/forms/fields';
 import { useGetUserTransactions } from '../hooks/transactions';
 import { useCreateReferralCode } from '../hooks/referral-codes';
 import { AmbassadorDetailCard } from '../components/ambassador-card';
-import { useCreatePasswordResetToken } from '../hooks/auth';
+
 
 function UserDetailCard({user}){
   const {
@@ -69,16 +69,23 @@ function SingleUserCards({user}){
   user.authState = permissionLevelToAuthState(user.permissionLevel)
   const useTransactionsQuery = () => useGetUserTransactions(user._id)
   const [pwResetToken, setPwResetToken] = useState('')
+
+  const [copied, flipCopied] = React.useReducer(state => !state, false)
+  React.useEffect(() => setTimeout(() => {if(copied) flipCopied()}, 1000), [copied, flipCopied]);
+
   const createPasswordResetToken = useCreatePasswordResetToken({createMutationCallOptions: {onSuccess: ({ result }) => setPwResetToken(result.key)}});
+
+  const onCopyLink = () => {
+    navigator.clipboard.writeText("https://freeskaterfinder.jmkride.com/reset-password/" + pwResetToken)
+    flipCopied();
+  }
   return <>
     <Grid container direction="row" sx={{m: 1, justifyContent: 'center', "& > *": {m: 1}, maxWidth: 'min(100vw, 2000px)'}}>
       <Grid item container direction="column" xs='auto' sx={{alignItems: 'stretch', '& > *': {m: 1}}}>
         <PageCard headerRow title={"User: " + user.fullName} xs="auto">
           <UserItem user={{isFriend: true, ...user}}/>
           {pwResetToken 
-            ? <Button variant="contained" color="neutral" onClick={() => navigator.clipboard.writeText(
-              "https://freeskaterfinder.jmkride.com/reset-password/" + pwResetToken,
-            )}>Copy PW Reset Link</Button>
+            ? <Button variant="contained" color="neutral" onClick={onCopyLink}>{copied ? "Copied!" : "Copy PW Reset Link"}</Button>
             : <Button variant="contained" color="neutral" onClick={() => createPasswordResetToken({userId: user._id})}>Generate PW Reset Token</Button>
           }
         </PageCard>

@@ -19,6 +19,7 @@ export const unauthLocations = [
   '/safety',
   '/rules',
   '/faq',
+  '/reset-password/'
 ]
 
 export const socialLinkTypes = [
