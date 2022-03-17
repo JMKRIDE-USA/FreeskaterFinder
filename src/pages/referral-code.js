@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useParams, Link } from 'react-router-dom';
-import { Grid, Typography, Link as MuiLink } from '@mui/material';
+import { Grid, Typography, Link as MuiLink, Button } from '@mui/material';
 import { QueryLoader, useGetAuthState, ISOToReadableString } from '@jeffdude/frontend-helpers';
 
 import Page from '../components/page';
@@ -18,6 +18,13 @@ function SingleReferralCodeCard({referralCode, isAdmin}){
   if(referralCode.length) referralCode = referralCode[0]
   const useGetTransactions = () => useGetReferralCodeTransactions(referralCode._id)
   const userUrl = isAdmin ? "/user/" + referralCode.owner._id : "/my-account"
+
+  const [copied, flipCopied] = React.useReducer(state => !state, false)
+  React.useEffect(() => setTimeout(() => {if(copied) flipCopied()}, 1000), [copied, flipCopied]);
+  const copyDiscountLink = () => {
+    navigator.clipboard.writeText("https://usa.jmkride.com/discount/" + referralCode?.code)
+    flipCopied()
+  }
   return <>
     <PageCard title={"Referral Code: '" + referralCode.code + "'"} small sx={{mb: 2}}>
       <Grid container direction="column">
@@ -31,6 +38,7 @@ function SingleReferralCodeCard({referralCode, isAdmin}){
           "Created": ISOToReadableString(referralCode.createdAt),
         }}/>
       </Grid>
+      <Button color="neutral" variant="contained" onClick={copyDiscountLink}>{copied ? "Copied!" : "Copy Discount URL"}</Button>
     </PageCard>
     <QueryLoader query={useGetTransactions} propName="transactions" generateQuery loading={() => <ListCardSkeleton/>}>
       <TransactionsTable noSubject/>
