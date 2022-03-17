@@ -93,7 +93,7 @@ const IncomingPendingFriend = () => {
 }
 
 const UserBio = ({bio}) => {
-  const maxLength = 70;
+  const maxLength = 80;
   const [expanded, setExpanded] = useState(!(bio && bio.length > maxLength))
   const bioText = bio
     ? bio.length > maxLength 
@@ -105,7 +105,7 @@ const UserBio = ({bio}) => {
 
   return (
     <>
-      <Typography variant="body2" sx={{maxWidth: 'min(70vw, 300px)'}}>{bioText}</Typography>
+      <Typography variant="body2" sx={{maxWidth: 'min(70vw, 350px)'}}>{bioText}</Typography>
       {!expanded && <MuiLink variant="body2" onClick={() => setExpanded(true)}>See more</MuiLink>}
     </>
   )
@@ -137,7 +137,15 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
           <StarIcon fontSize='medium' stroke="#000" stroke-width={1} sx={{color: "#fbb03b"}}/>
         }>{children}</Badge>
     : ({children}) => children
-
+  
+  const skaterSinceToString = (dateString) => {
+    const date = new Date(dateString);
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+      "July", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    return monthNames[date.getMonth()] + " " + date.getFullYear();
+  }
+            // {user?.skaterSince && <Typography variant="caption" sx={{ml: 2}} xs='auto'>Freeskater since {skaterSinceToString(user.skaterSince)}</Typography>}
   return (
     <ListItem sx={{padding: 'min(10px, 2vh) min(5px, 2vw)', minWidth: 'min(80vw, 400px)', ...sx}} divider={divider}>
       <ListItemAvatar sx={{pl: 0}}>
@@ -147,7 +155,13 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
       </ListItemAvatar>
       <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
         <Grid item container direction="column" xs='auto'>
-          <Typography variant="body1">{<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}</Typography>
+          <Typography variant="body1" xs='auto'>{
+            <>
+              {isAmbassador && <><b>Ambassador</b> {" - "}</>}
+              {user.firstName + " " + user.lastName}
+              {user?.skaterSince && <Typography variant="caption">{" - Skater Since " + skaterSinceToString(user.skaterSince)}</Typography>}
+            </>
+          }</Typography>
           <UserBio bio={user?.bio} key={user._id}/>
         </Grid>
         {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
