@@ -2,10 +2,11 @@ import React from 'react';
 
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
 
 import TextField from '@mui/material/TextField';
-import { DesktopDatePicker, MobileDatePicker } from '@mui/lab' ;
 import { Grid, Typography, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import "react-datepicker/dist/react-datepicker.css";
 
 
 export const makeTextField = ({key, label, validation, sx={}, password=false}) => ({register, errors}) => (
@@ -15,22 +16,18 @@ export const makeTextField = ({key, label, validation, sx={}, password=false}) =
   />
 )
 
-// todo error display (datepicker uses 'onError', not error prop)
-export const makeDateField = ({key, label, validation, sx={}}) => ({register, errors}) => (
-  <>
-    <DesktopDatePicker
-      sx={{xs: {display: 'none'}, md: {display: 'flex'}, ...sx}}
-      inputFormat="MM/dd/yyyy" 
-      renderInput={(params) => <TextField {...params} />}
-      {...{...register(key, validation), label}}
-    />
-    <MobileDatePicker
-      sx={{xs: {display: 'flex'}, md: {display: 'none'}, ...sx}}
-      inputFormat="MM/dd/yyyy" 
-      renderInput={(params) => <TextField {...params} />}
-      {...{...register(key, validation), label}}
-    />
-  </>
+export const makeMonthPickerField = ({key, label, validation, sx={}}) => ({control, errors}) => (
+  <Controller name={key} control={control} rules={validation}
+    render={(props) => (
+      <Grid container direction="row" sx={{alignItems: 'center', justifyContent: "space-around"}}>
+        <Typography variant="body1" sx={{color: errors[key] ? "#f00" : "#666666"}}>{label}</Typography>
+        <Grid item container direction="column" sx={{alignItems: 'center', justifyContent: 'center', ...sx}}>
+          <DatePicker selected={props.field.value} dateFormat="MM/yyyy" showMonthYearPicker onChange={props.field.onChange}/>
+          {errors[key]?.message && <Typography variant="body2" color="error">{errors[key].message}</Typography>}
+        </Grid>
+      </Grid>
+    )}
+  />
 )
 
 /* NOTE: must supply formatFn: i => i === 'yes' for useMakeForm */
