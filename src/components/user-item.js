@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useTheme, Badge, Grid, ListItem, ListItemAvatar, Button, TextField, IconButton, ButtonGroup, Typography, Link as MuiLink } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -92,15 +92,30 @@ const IncomingPendingFriend = () => {
   return <Button startIcon={<PersonAddIcon/>} component={Link} to="/friends">Review Request</Button>
 }
 
+const UserBio = ({bio}) => {
+  const maxLength = 70;
+  const [expanded, setExpanded] = useState(!(bio && bio.length > maxLength))
+  const bioText = bio
+    ? bio.length > maxLength 
+    ? expanded
+    ? bio
+    : bio.substring(0, maxLength) + "..."
+    : bio
+    : ''
+
+  return (
+    <>
+      <Typography variant="body2" sx={{maxWidth: 'min(70vw, 300px)'}}>{bioText}</Typography>
+      {!expanded && <MuiLink variant="body2" onClick={() => setExpanded(true)}>See more</MuiLink>}
+    </>
+  )
+}
+
 const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
   const adminView = useGetAuthState() === 500;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
 
-  let blurb = user.bio ? user.bio.substring(0, maxBlurbLength) : ''
-  if(blurb.length > maxBlurbLength) {
-    blurb += "..."
-  }
   const isAmbassador = user.permissionLevel === "ambassador" || user?.isAmbassador
   const userInfo = useGetUserInfo();
   const secondaryAction = (() => {
@@ -133,7 +148,7 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
       <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
         <Grid item container direction="column" xs='auto'>
           <Typography variant="body1">{<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}</Typography>
-          <Typography variant="body2">{blurb}</Typography>
+          <UserBio bio={user?.bio}/>
         </Grid>
         {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
         <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>

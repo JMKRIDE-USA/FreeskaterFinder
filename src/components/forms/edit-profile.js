@@ -13,16 +13,25 @@ import UserAvatar from '../user-avatar';
 function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, backButton = true}){
   const userInfo = useGetUserInfo();
   const patchUser = usePatchUser();
+
+  const maxBioLength = 200;
+
   const renderForm = useMakeForm({
     actionFn: patchUser,
     onSuccess: (result) => {if(result) onSuccess(result)},
     stateList: [
       ["firstName" , "First Name"],
       ["lastName", "Last Name"],
-      ["bio", "User Bio"],
+      ["bio", "User Bio (" + maxBioLength + " characters max)"],
     ].map(([key, label]) => ({
       key, label, initialState: userInfo[key],
-      component: makeTextField({key, label, validation: {required: 'This field is required.'}}),
+      component: makeTextField({key, label, validation: {
+        required: 'This field is required.',
+        ...(key === "bio" 
+          ? {validate: value => value.length < maxBioLength || 'Max Bio Length Exceeded (' + value.length + ')'} 
+          : {}
+        ),
+      }}),
       formatFn: i => i,
     })),
     backButton: (backButton 
