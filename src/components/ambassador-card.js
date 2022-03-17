@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useNavigate, Link } from 'react-router-dom';
-import { Button, Alert } from '@mui/material'
+import { Button, Alert, ButtonGroup } from '@mui/material'
 import { QueryLoader, useGetAuthState, useGetUserInfo, ISOToReadableString } from '@jeffdude/frontend-helpers';
 
 import { ChallengeSubmissionList } from './submission-list';
@@ -20,8 +20,19 @@ export function AmbassadorDetailCard({user, noReferralCodeElement}){
       "Num Uses": user.referralCode.usageCount,
       "Created": ISOToReadableString(user.referralCode.createdAt),
     }
+
+  const [copied, flipCopied] = React.useReducer(state => !state, false)
+  React.useEffect(() => setTimeout(() => {if(copied) flipCopied()}, 1000), [copied, flipCopied]);
+  const copyDiscountLink = () => {
+    navigator.clipboard.writeText("https://usa.jmkride.com/discount/" + user?.referralCode?.code)
+    flipCopied()
+  }
+
   return <PageCard headerRow title={"Ambassador Details"} header={
-    user.referralCode && <Button color="neutral" variant="contained" component={Link} to={"/referral-code/" + user.referralCode._id}>View Referral Code</Button>
+    user.referralCode && <ButtonGroup sx={{maxWidth: 'min(90vw, 500px)'}}>
+      <Button color="neutral" variant="contained" onClick={copyDiscountLink}>{copied ? "Copied!" : "Copy Discount URL"}</Button>
+      <Button color="neutral" variant="contained" component={Link} to={"/referral-code/" + user.referralCode._id}>View Referral Code</Button>
+    </ButtonGroup>
   }>
     <InfoList object={ambassadorInfo} sx={{width: '100%'}}/>
     {!user.referralCode && noReferralCodeElement}

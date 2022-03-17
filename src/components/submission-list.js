@@ -73,7 +73,7 @@ function SubmissionItem({submission, expandable = true, onClick = () => null}){
               {confirmed && <Typography variant="button">?</Typography>}
             </IconButton>
           </ListItemSecondaryAction>
-        : <Link>See More</Link>
+        : <Link>View</Link>
       }
     </ListItemButton>
     {expandable && <Collapse in={expanded}><SubmissionDetailsList submission={submission}/></Collapse>}
