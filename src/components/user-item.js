@@ -148,7 +148,7 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
       <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
         <Grid item container direction="column" xs='auto'>
           <Typography variant="body1">{<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}</Typography>
-          <UserBio bio={user?.bio}/>
+          <UserBio bio={user?.bio} key={user._id}/>
         </Grid>
         {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
         <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
