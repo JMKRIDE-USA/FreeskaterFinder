@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 import TextField from '@mui/material/TextField';
 import { Grid, Typography, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import "react-datepicker/dist/react-datepicker.css";
+import "./react-datepicker-overrides.css";
 
 
 export const makeTextField = ({key, label, validation, sx={}, password=false}) => ({register, errors}) => (
@@ -19,9 +20,9 @@ export const makeTextField = ({key, label, validation, sx={}, password=false}) =
 export const makeMonthPickerField = ({key, label, validation, sx={}}) => ({control, errors}) => (
   <Controller name={key} control={control} rules={validation}
     render={(props) => (
-      <Grid container direction="row" sx={{alignItems: 'center', justifyContent: "space-around"}}>
-        <Typography variant="body1" sx={{color: errors[key] ? "#f00" : "#666666"}}>{label}</Typography>
-        <Grid item container direction="column" sx={{alignItems: 'center', justifyContent: 'center', ...sx}}>
+      <Grid container direction="row" sx={{alignItems: 'center', justifyContent: "space-around", ...sx}}>
+        <Typography variant="body1" sx={{color: errors[key] ? "#f00" : "#666666"}} xs='auto'>{label}</Typography>
+        <Grid item container direction="column" sx={{alignItems: 'center', justifyContent: 'center'}} xs='auto'>
           <DatePicker selected={props.field.value} dateFormat="MM/yyyy" showMonthYearPicker onChange={props.field.onChange}/>
           {errors[key]?.message && <Typography variant="body2" color="error">{errors[key].message}</Typography>}
         </Grid>
