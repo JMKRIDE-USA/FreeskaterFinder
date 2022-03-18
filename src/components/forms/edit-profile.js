@@ -39,7 +39,6 @@ function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, 
       {
         key: "skaterSince", label: "When did you first start freeskating?", initialState: userInfo?.skaterSince ? new Date(userInfo.skaterSince) : null,
         formatFn: i => i.toISOString(),
-        sx: {mb: 3},
         component: makeMonthPickerField({
           key: "skaterSince", label: "When did you first start freeskating?",
           validation: {validate: (value => value < today || "Invalid Date.")},
