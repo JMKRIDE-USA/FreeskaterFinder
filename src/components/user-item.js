@@ -105,13 +105,13 @@ const UserBio = ({bio}) => {
 
   return (
     <>
-      <Typography variant="body2" sx={{maxWidth: 'min(70vw, 350px)'}}>{bioText}</Typography>
+      <Typography variant="body2" sx={{maxWidth: 'min(50vw, 350px)'}}>{bioText}</Typography>
       {!expanded && <MuiLink variant="body2" onClick={() => setExpanded(true)}>See more</MuiLink>}
     </>
   )
 }
 
-const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
+const UserItem = ({user, showLocation = false, action, showAction = true, editableAvatar = false, sx={}, divider = false, children}) => {
   const adminView = useGetAuthState() === 500;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
@@ -119,6 +119,7 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
   const isAmbassador = user.permissionLevel === "ambassador" || user?.isAmbassador
   const userInfo = useGetUserInfo();
   const secondaryAction = (() => {
+    if(action) return action
     if(!showAction) return <></>
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
@@ -153,22 +154,25 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
           <UserAvatar user={user} editable={editableAvatar}/>
         </AmbassadorBadge>
       </ListItemAvatar>
-      <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
-        <Grid item container direction="column" xs='auto'>
-          <Typography variant="body1" xs='auto'>{
-            <>
-              {isAmbassador && <><b>Ambassador</b> {" - "}</>}
-              {user.firstName + " " + user.lastName}
-              {user?.skaterSince && <Typography variant="caption">{" - Skater Since " + skaterSinceToString(user.skaterSince)}</Typography>}
-            </>
-          }</Typography>
-          <UserBio bio={user?.bio} key={user._id}/>
+      <Grid container direction="column" sx={{width: '100%'}}>
+        <Grid item container direction="row" sx={{width: '100%', justifyContent: 'space-between', alignItems: 'center', '&>*': {xs: 'auto'} }}>
+          <Grid item container direction="column" xs='auto'>
+            <Typography variant="body1" xs='auto'>{
+              <>
+                <b>{user.firstName + " " + user.lastName}</b>
+                {isAmbassador && <>{" - "} Ambassador</>}
+                {user?.skaterSince && <Typography variant="caption">{" - Skater Since " + skaterSinceToString(user.skaterSince)}</Typography>}
+              </>
+            }</Typography>
+            <UserBio bio={user?.bio} key={user._id}/>
+          </Grid>
+          {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
+          <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
+            {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
+            {secondaryAction}
+          </Grid>
         </Grid>
-        {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
-        <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
-          {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
-          {secondaryAction}
-        </Grid>
+        {children}
       </Grid>
     </ListItem>
   )
