@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Badge, IconButton, Menu, List, ListItemButton, ListItemText, ListItemAvatar, ListItem, Divider, ListItemSecondaryAction } from '@mui/material';
-import { useGetAuthState, QueryLoader } from '@jeffdude/frontend-helpers';
+import { Link as MuiLink, Badge, IconButton, Menu, List, ListItemButton, ListItemText, ListItemAvatar, ListItem, Grid } from '@mui/material';
+import { useGetAccessToken, QueryLoader } from '@jeffdude/frontend-helpers';
 import { Link } from 'react-router-dom';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import CancelIcon from '@mui/icons-material/Cancel';
 
-import { useGetUserNotifications, useReadNotification } from '../hooks/notifications';
+import { useGetUserNotifications, useReadNotification, useReadAllNotifications } from '../hooks/notifications';
 import { notificationReasons } from '../constants';
 import UserAvatar from './user-avatar';
 
@@ -34,11 +33,6 @@ function NotificationItem({notification, closeMenu, divider}){
           secondary={"Click to " + seeMore}
           sx={{maxWidth: '80%'}}
         />
-        <ListItemSecondaryAction>
-          <IconButton onClick={() => markRead()}>
-            <CancelIcon/> 
-          </IconButton>
-        </ListItemSecondaryAction>
       </ListItemButton>
     )
   }
@@ -59,26 +53,20 @@ function NotificationItem({notification, closeMenu, divider}){
   }
 }
 
-function LoadedNotificationsMenu({notifications, refetch}) {
+function LoadedNotificationsMenu({notifications}) {
   const [ anchorEl, setAnchorEl ] = useState(null);
-  const [refreshSwitch, setRefreshSwitch] = useState(true);
-  const refreshSelf = () => setRefreshSwitch(!refreshSwitch);
+  const clearAllNotifications = useReadAllNotifications() 
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   }
   const handleClose = () => {
     setAnchorEl(null)
-    refetch();
-    refreshSelf();
   }
-  const [ unread, setUnread ] = useState([])
-  useEffect(() => setUnread(notifications.filter(notification => !notification.seen)), [notifications, refreshSwitch])
-
   return (
     <>
       <IconButton onClick={handleOpen} sx={{mr: 2}}>
-        <Badge badgeContent={unread.length} invisible={!unread.length} color="error">
+        <Badge badgeContent={notifications.length} invisible={!notifications.length} color="error">
           <NotificationsIcon color="neutral"/>
         </Badge>
       </IconButton>
@@ -91,13 +79,13 @@ function LoadedNotificationsMenu({notifications, refetch}) {
         PaperProps={{style: {width: 'min(80vw, 400px)'}}}
       >
         <List>
-          {unread.length
-            ? unread.map((notification, index) => (
+          {notifications.length
+            ? notifications.map((notification, index) => (
               <NotificationItem
                 key={index}
                 notification={notification}
                 closeMenu={handleClose}
-                divider={index + 1 !== unread.length}
+                divider={index + 1 !== notifications.length}
               />
             ))
             : <ListItem>
@@ -111,21 +99,26 @@ function LoadedNotificationsMenu({notifications, refetch}) {
             </ListItem>
           }
         </List>
+        {notifications.length
+          ? <Grid container direction="row" sx={{justifyContent: "center"}}>
+            <MuiLink onClick={() => clearAllNotifications()} variant="button">Clear All</MuiLink>
+          </Grid>
+          : <div/>
+        }
       </Menu>
     </>
   )
 }
 
-function NotificationsMenuLoader(){
-  const notificationsQuery = useGetUserNotifications()
-  return <QueryLoader query={notificationsQuery} propName="notifications">
-    <LoadedNotificationsMenu refetch={notificationsQuery.refetch}/>
-  </QueryLoader>
-}
-
 function NotificationsMenu(){
-  const authState = useGetAuthState();
-  if(authState) return <NotificationsMenuLoader/>
+  const accessToken = useGetAccessToken();
+  if(accessToken) {
+    return (
+      <QueryLoader query={useGetUserNotifications} propName="notifications" generateQuery>
+        <LoadedNotificationsMenu/>
+      </QueryLoader>
+    )
+  }
   return <div/>
 }
 
