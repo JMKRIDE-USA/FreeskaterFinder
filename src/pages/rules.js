@@ -29,7 +29,7 @@ function RulesPage() {
     <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)'}} title="By using this Site, you agree to abide by the following rules:">
       <InfoList sx={{width: '100%'}} noStringify object={rules}/>
       <Divider sx={{width: '100%'}}/>
-      <Grid direction='row' sx={{mt: 2}}>
+      <Grid sx={{mt: 2}}>
         <MuiLink component={Link} to={"/terms-of-service"} sx={{mr: 4}}>Terms of Service</MuiLink>
         <MuiLink component={Link} to={"/privacy-policy"}>User Privacy Policy</MuiLink>
       </Grid>
