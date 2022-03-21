@@ -37,10 +37,10 @@ function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, 
       makeTextFieldState(["lastName", "Last Name"]),
       makeTextFieldState(["bio", "User Bio (" + maxBioLength + " characters max)"]),
       {
-        key: "skaterSince", label: "When did you first start freeskating?", initialState: userInfo?.skaterSince ? new Date(userInfo.skaterSince) : null,
-        formatFn: i => i.toISOString(),
+        key: "skaterSince", label: "When did you first start freeskating? (optional)", initialState: userInfo?.skaterSince ? new Date(userInfo.skaterSince) : null,
+        formatFn: i => i ? i.toISOString() : null,
         component: makeMonthPickerField({
-          key: "skaterSince", label: "When did you first start freeskating?",
+          key: "skaterSince", label: "When did you first start freeskating? (optional)",
           validation: {validate: (value => value < today || "Invalid Date.")},
         })
       },
