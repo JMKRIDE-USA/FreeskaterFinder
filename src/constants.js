@@ -9,7 +9,8 @@ import TikTokSVG from './assets/tiktok_icon.svg';
 
 export const headerHeight = {xs: '55px', md: '70px'}
 
-export const maxBlurbLength = 55;
+export const maxBlurbLength = 80;
+export const maxBioLength = 200;
 
 export const unauthLocations = [
   '/create-account',
