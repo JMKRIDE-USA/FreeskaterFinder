@@ -50,7 +50,7 @@ const FriendRequestForm = ({user, setClicked}) => {
   return (
     <form onSubmit={handleSubmit(onClick)}>
       <Grid container direction="row" sx={{flexGrow: 1, alignItems: "center", justifyContent: "flex-end", "& > *": {m:1}}}>
-        <TextField label="Add a note" inputProps={register('memo')}/>
+        <TextField label="Add a note" inputProps={{autocomplete: "off", ...register('memo')}}/>
         <ButtonGroup>
           { renderSubmit() }
           <IconButton aria-label="cancel" onClick={onCancel} color="primary"><CancelIcon/></IconButton>
