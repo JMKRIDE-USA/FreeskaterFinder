@@ -9,7 +9,7 @@ import { invalidateJFHCache } from '@jeffdude/frontend-helpers';
 import UserAvatar from '../components/user-avatar';
 import { useAcceptFriendRequest, useIgnoreFriendRequest } from '../hooks/friends';
 import useMakeLoadingButton from '../hooks/loading-button';
-import { default as UserItem, UserBio } from './user-item';
+import UserItem from './user-item';
 
 
 function RequestItem({request, divider}){

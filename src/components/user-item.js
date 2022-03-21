@@ -93,13 +93,12 @@ const IncomingPendingFriend = () => {
 }
 
 const UserBio = ({bio}) => {
-  const maxLength = 80;
-  const [expanded, setExpanded] = useState(!(bio && bio.length > maxLength))
+  const [expanded, setExpanded] = useState(!(bio && bio.length > maxBlurbLength))
   const bioText = bio
-    ? bio.length > maxLength 
+    ? bio.length > maxBlurbLength 
     ? expanded
     ? bio
-    : bio.substring(0, maxLength) + "..."
+    : bio.substring(0, maxBlurbLength) + "..."
     : bio
     : ''
 

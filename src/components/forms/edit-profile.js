@@ -8,13 +8,13 @@ import useMakeForm from '../../hooks/form'
 import { makeTextField, makeMonthPickerField } from './fields'
 import PageCard from '../page-card';
 import UserAvatar from '../user-avatar';
+import { maxBioLength } from '../../constants';
 
 
 function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, backButton = true}){
   const userInfo = useGetUserInfo();
   const patchUser = usePatchUser();
 
-  const maxBioLength = 200;
   const today = new Date();
 
   const makeTextFieldState = ([key, label]) => ({
