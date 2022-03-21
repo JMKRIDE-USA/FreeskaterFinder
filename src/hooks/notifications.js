@@ -13,7 +13,9 @@ export const useReadNotification = (notificationId) =>
     endpoint: "notifications/read/id/" + notificationId,
     method: "POST",
     verb: "marking notification as read",
-    onSuccess: () => invalidateJFHCache(),
+    createMutationCallOptions: {
+      onSuccess: invalidateJFHCache,
+    }
   })
 
 export const useReadAllNotifications = () => 
@@ -21,4 +23,7 @@ export const useReadAllNotifications = () =>
     endpoint: "notifications/read/all",
     method: "POST",
     verb: "marking all notifications as read",
+    createMutationCallOptions: {
+      onSuccess: invalidateJFHCache,
+    }
   })
