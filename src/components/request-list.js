@@ -46,7 +46,10 @@ function RequestItem({request, divider}){
         </Grid> 
       </>}
     >
-      <Typography variant="body1" sx={{mt: 2}}>- <i>"{request.memo}"</i></Typography>
+      {request.memo 
+        ? <Typography variant="body1" sx={{mt: 2}}>- <i>"{request.memo}"</i></Typography>
+        : <div/>
+      }
     </UserItem>
   )
 }

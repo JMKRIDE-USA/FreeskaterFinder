@@ -50,9 +50,9 @@ const FriendRequestForm = ({user, setClicked}) => {
   return (
     <form onSubmit={handleSubmit(onClick)}>
       <Grid container direction="row" sx={{flexGrow: 1, alignItems: "center", justifyContent: "flex-end", "& > *": {m:1}}}>
-        <TextField label="Add a note" inputProps={{autocomplete: "off", ...register('memo')}}/>
+        <TextField label="Add a note" inputProps={{autoComplete: "off", ...register('memo')}}/>
         <ButtonGroup>
-          { renderSubmit() }
+          { renderSubmit({key: user._id}) }
           <IconButton aria-label="cancel" onClick={onCancel} color="primary"><CancelIcon/></IconButton>
         </ButtonGroup>
       </Grid>
@@ -69,6 +69,7 @@ const ConfirmAddFriend = ({user, setClicked}) => {
     thenFn: () => {invalidateJFHCache(); setClicked(false)},
   })
   return render({
+    key: user._id,
     variant: "text", 
     endIcon: <PersonAddIcon/>,
   })

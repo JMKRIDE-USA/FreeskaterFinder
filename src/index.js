@@ -32,7 +32,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline/>
-      <JFHApp config={{backendURL: process.env.REACT_APP_BACKEND_URL}}>
+      <JFHApp config={{backendURL: process.env.REACT_APP_BACKEND_URL, debug: process.env?.REACT_APP_DEBUG || false}}>
         <GMapsAPIKeyProvider>
           <WindowSizeProvider>
             <App />
