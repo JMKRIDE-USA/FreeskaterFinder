@@ -93,25 +93,24 @@ const IncomingPendingFriend = () => {
 }
 
 const UserBio = ({bio}) => {
-  const maxLength = 70;
-  const [expanded, setExpanded] = useState(!(bio && bio.length > maxLength))
+  const [expanded, setExpanded] = useState(!(bio && bio.length > maxBlurbLength))
   const bioText = bio
-    ? bio.length > maxLength 
+    ? bio.length > maxBlurbLength 
     ? expanded
     ? bio
-    : bio.substring(0, maxLength) + "..."
+    : bio.substring(0, maxBlurbLength) + "..."
     : bio
     : ''
 
   return (
     <>
-      <Typography variant="body2" sx={{maxWidth: 'min(70vw, 300px)'}}>{bioText}</Typography>
+      <Typography variant="body2" sx={{maxWidth: 'min(50vw, 350px)'}}>{bioText}</Typography>
       {!expanded && <MuiLink variant="body2" onClick={() => setExpanded(true)}>See more</MuiLink>}
     </>
   )
 }
 
-const UserItem = ({user, showLocation = false, showAction = true, editableAvatar = false, sx={}, divider = false}) => {
+const UserItem = ({user, showLocation = false, action, showAction = true, editableAvatar = false, sx={}, divider = false, children}) => {
   const adminView = useGetAuthState() === 500;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
@@ -119,6 +118,7 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
   const isAmbassador = user.permissionLevel === "ambassador" || user?.isAmbassador
   const userInfo = useGetUserInfo();
   const secondaryAction = (() => {
+    if(action) return action
     if(!showAction) return <></>
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
@@ -137,7 +137,15 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
           <StarIcon fontSize='medium' stroke="#000" stroke-width={1} sx={{color: "#fbb03b"}}/>
         }>{children}</Badge>
     : ({children}) => children
-
+  
+  const skaterSinceToString = (dateString) => {
+    const date = new Date(dateString);
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+      "July", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    return monthNames[date.getMonth()] + " " + date.getFullYear();
+  }
+            // {user?.skaterSince && <Typography variant="caption" sx={{ml: 2}} xs='auto'>Freeskater since {skaterSinceToString(user.skaterSince)}</Typography>}
   return (
     <ListItem sx={{padding: 'min(10px, 2vh) min(5px, 2vw)', minWidth: 'min(80vw, 400px)', ...sx}} divider={divider}>
       <ListItemAvatar sx={{pl: 0}}>
@@ -145,16 +153,25 @@ const UserItem = ({user, showLocation = false, showAction = true, editableAvatar
           <UserAvatar user={user} editable={editableAvatar}/>
         </AmbassadorBadge>
       </ListItemAvatar>
-      <Grid container direction={isMd ? "row" : "column"} sx={{width: '100%', justifyContent: 'space-between', alignItems: isMd ? 'center' : 'flex-start'}}>
-        <Grid item container direction="column" xs='auto'>
-          <Typography variant="body1">{<>{isAmbassador && <><b>Ambassador</b> {" - "}</>} {user.firstName + " " + user.lastName}</>}</Typography>
-          <UserBio bio={user?.bio} key={user._id}/>
+      <Grid container direction="column" sx={{width: '100%'}}>
+        <Grid item container direction="row" sx={{width: '100%', justifyContent: 'space-between', alignItems: 'center', '&>*': {xs: 'auto'} }}>
+          <Grid item container direction="column" xs='auto'>
+            <Typography variant="body1" xs='auto'>{
+              <>
+                <b>{user.firstName + " " + user.lastName}</b>
+                {isAmbassador && <>{" - "} Ambassador</>}
+                {user?.skaterSince && <Typography variant="caption">{" - Skater Since " + skaterSinceToString(user.skaterSince)}</Typography>}
+              </>
+            }</Typography>
+            <UserBio bio={user?.bio} key={user._id}/>
+          </Grid>
+          {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
+          <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
+            {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
+            {secondaryAction}
+          </Grid>
         </Grid>
-        {adminView && <MuiLink component={Link} to={"/user/" + user._id}>View</MuiLink>}
-        <Grid item container direction="column" xs='auto' sx={{alignItems: isMd ? 'flex-end' : 'flex-start'}}>
-          {showLocation && <MuiLink component={Link} to={"/location/" + user.location._id}>{user.location.zip}, {user.location.country}</MuiLink>}
-          {secondaryAction}
-        </Grid>
+        {children}
       </Grid>
     </ListItem>
   )

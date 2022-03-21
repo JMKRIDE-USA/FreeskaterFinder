@@ -44,10 +44,6 @@ const makeStateList = (fields) => fields.map(({_id : key, title : label, fieldTy
             ...required ? {required: 'This field is required.'} : {}}
           }),
         }
-      case 'DATE':
-        return {
-          component: makeDateField({key, label, validation: {}}),
-        }
       case 'YES_NO':
         return {
           component: makeYesNoField({key, label, validation: required ? {required: "This field is required"} : {}}),
