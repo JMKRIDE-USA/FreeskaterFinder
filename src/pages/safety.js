@@ -29,7 +29,7 @@ function SafetyPage() {
   ])
 
   return <Page>
-    <TitleCard><Typography variant="h5" sx={{mt: 2}}>Freeskater Finder Safety</Typography></TitleCard>
+    <TitleCard title="Freeskater Finder Safety"/>
     <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)', mt: 2}} title="Important Safety Advice">
       <InfoList sx={{width: '100%'}} noStringify object={safetyAdvice}/>
     </PageCard>
