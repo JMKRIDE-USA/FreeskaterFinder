@@ -16,7 +16,9 @@ function SignInDialog({open}) {
     >
       <DialogTitle>Sign In or Create An Account</DialogTitle>
       <DialogContent>
-        <DialogContentText sx={{pb: 2}}>You need to have an account to use the Freeskater Finder.</DialogContentText>
+        <DialogContentText sx={{pb: 2}}>
+          You need to have an account to use the Freeskater Finder.
+        </DialogContentText>
         <form onSubmit={handleSubmit(onClick)}>
           <Grid container direction="column">
             <TextField label="Email" margin="none" inputProps={

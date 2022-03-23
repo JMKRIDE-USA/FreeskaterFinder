@@ -84,7 +84,7 @@ function FaqPage() {
   ]
 
   return <Page>
-    <TitleCard><Typography variant="h5" sx={{mt: 2}}>Frequently Asked Questions</Typography></TitleCard>
+    <TitleCard title="Frequently Asked Questions"/>
     {FAQs.map(({question, answer, children}, index) => (
       <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)', mt: 2}} title={question} key={index}>
         <Typography variant="body">{answer}</Typography>

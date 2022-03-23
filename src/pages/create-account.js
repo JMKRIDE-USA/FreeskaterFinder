@@ -1,7 +1,7 @@
-import React, { useReducer, useState, useRef, useEffect } from 'react';
+import React, { useReducer, useState, useRef } from 'react';
 import { 
   Box, Grid, Paper, TextField, Typography, LinearProgress,
-  Checkbox, FormControlLabel, IconButton,
+  Checkbox, FormControlLabel, IconButton, Divider,
 } from '@mui/material'
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -145,7 +145,12 @@ function CreateAccountPage({firstTimeSetup}) {
       case 2:
         return <SocialsPickerCard socialLinkData={userInfo.socialLinks} onSuccess={() => offsetDispatch('submit')}/>
       case 3:
-        return <EditProfileCard noProfileIcon title="Confirm your Profile Info" onSuccess={() => offsetDispatch('submit')}/>
+        return (
+          <EditProfileCard
+            noProfileIcon title="Confirm your Profile Info" onSuccess={() => offsetDispatch('submit')}
+            header={<Typography variant="subtitle1">(This is editable later)</Typography>}
+          />
+        )
       case 4:
         return <ProfileIconPickerCard title="Choose a Profile Icon" onSuccess={() => offsetDispatch('submit')}/>
       case 5:
@@ -157,19 +162,31 @@ function CreateAccountPage({firstTimeSetup}) {
 
   return (
     <Page>
-      <TitleCard title={
-        firstTimeSetup ? "Create An Account" : "Finish Setting Up Your Account"
-      } sx={{mb: 2}}>
-        <Typography variant="subtitle1">
+      <TitleCard title sx={{mb: 2}}>
+        <Grid item container direction="column" sx={{"&>*": {maxWidth: '100%'}}}>
           {firstTimeSetup
-            ? "You need to create an account to access the Freeskater Finder."
-            : "Please finish setting up your Freeskater Finder account."
+            ? <Grid item container direction="column" sx={{mb: 2}}>
+                <Typography variant="h5">Welcome to the</Typography>
+                <Typography variant="h3">Freeskater Finder!</Typography>
+              </Grid>
+            : <Typography variant="h3">Finish Setting Up Your Account</Typography>
           }
-        </Typography>
-        <Typography variant="caption">
-          Note: You need at least one social media account to participate.
-          <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
-        </Typography>
+          <Typography variant="body1">
+            Whether you're a current or aspiring freeskater,
+            this is the place to find and connect with freeskaters near you!
+          </Typography>
+          <Divider sx={{width: '100%', mt: 3, mb: 1}}/>
+          <Typography variant="body1"><b>
+            {firstTimeSetup
+              ? "You need to create an account to access the Freeskater Finder."
+              : "Please finish setting up your Freeskater Finder account."
+            }
+          </b></Typography>
+          <Typography variant="caption">
+            Note: You need at least one social media account to participate.
+            <br/>This includes Facebook, Instagram, Twitter, Reddit, or TikTok.
+          </Typography>
+        </Grid>
       </TitleCard>
       {<LinearProgressWithLabel firstTimeSetup={firstTimeSetup} actualStep={actualStep} offsetDispatch={offsetDispatch} numSteps={5}/>}
       { createComponent }
