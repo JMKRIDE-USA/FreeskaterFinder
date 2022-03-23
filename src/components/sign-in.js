@@ -14,7 +14,7 @@ function SignInDialog({open}) {
     <Dialog open={open} onClose={() => null}
       disableEscapeKeyDown onBackdropClick={()=>null} 
     >
-      <DialogTitle>Please Sign In or Create An Account</DialogTitle>
+      <DialogTitle>Sign In or Create An Account</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{pb: 2}}>
           You need to have an account to use the Freeskater Finder.
