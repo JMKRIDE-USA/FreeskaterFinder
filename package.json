@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/css": "^11.7.1",
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
     "@jeffdude/frontend-helpers": "^1.0.2",
     "@mui/icons-material": "^5.2.5",
     "@mui/lab": "^5.0.0-alpha.63",
