@@ -25,7 +25,7 @@ function RulesPage() {
   ]);
 
   return <Page>
-    <TitleCard><Typography variant="h5" sx={{mt: 2}}>Freeskater Finder Rules</Typography></TitleCard>
+    <TitleCard title="Freeskater Finder Rules"/>
     <PageCard headerRow sx={{maxWidth: 'min(800px, 90vw)'}} title="By using this Site, you agree to abide by the following rules:">
       <InfoList sx={{width: '100%'}} noStringify object={rules}/>
       <Divider sx={{width: '100%'}}/>
