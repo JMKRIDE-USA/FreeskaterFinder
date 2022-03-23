@@ -58,8 +58,9 @@ const LocationPickerCard = ({onSuccess = () => null}) => {
     buttonText: "Lookup",
     thenFn: (result) => {
       console.log({result});
+      setError();
       if(result?.error) return setError(result.error);
-      if(result?.length) return setLocation(result[0]);
+      if(result) return setLocation(result);
     },
   });
   const { render: renderSaveButton } = useMakeLoadingButton({
@@ -83,23 +84,22 @@ const LocationPickerCard = ({onSuccess = () => null}) => {
   zip.current = watch("zip", "")
 
   return (
-    <PageCard header={
-    <>
-      <Typography variant="h6">Select your location.</Typography>
-      <Typography variant="subheader">For safety reasons, you can only go as specific as your zip code.</Typography>
-    </>}>
+    <PageCard title="Select your location." header={
+      <Typography variant="body1">For safety reasons, you can only go as specific as your zip code.</Typography>
+    }>
       {error &&
         <Grid container direction="row" sx={{mb: 1, justifyContent: "center"}}>
           <ErrorIcon sx={{color: "red", mr: 1}}/>
           <Typography variant="button" sx={{color: "red"}}>{error}</Typography>
         </Grid>
       }
-      {location && 
+      {location && <>
         <Grid container direction="row" sx={{justifyContent: "center", alignItems: "center"}}>
           <Typography variant="body1">Does this look correct?</Typography>
           {renderSaveButton({sx: {m: 1}})}
         </Grid>
-      }
+        <Typography variant="subtitle2">"{location?.formatted_address}"</Typography>
+      </>}
       <Map center={location ? location : undefined} zoom={location ? 9 : undefined}>
         {location && <ResultCircle location={location}/>}
       </Map>
@@ -109,7 +109,7 @@ const LocationPickerCard = ({onSuccess = () => null}) => {
             register("country", {required: 'This field is required.'})
           } error={!!errors.country} helperText={errors?.country?.message}/>
           <TextField label="Zip Code" margin="normal" sx={{mr:2}} inputProps={
-            register("zip", {valueAsNumber: true, required: 'This field is required.'})
+            register("zip", {required: 'This field is required.'})
           } error={!!errors.zip} helperText={errors?.zip?.message}/>
           {renderLookupButton({disabled: !(!!country.current && !!zip.current)})}
         </Grid>

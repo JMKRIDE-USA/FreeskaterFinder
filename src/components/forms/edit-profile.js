@@ -11,7 +11,7 @@ import UserAvatar from '../user-avatar';
 import { maxBioLength } from '../../constants';
 
 
-function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, backButton = true}){
+function EditProfileCard({onSuccess = () => null, noProfileIcon = false, backButton = true, ...props}){
   const userInfo = useGetUserInfo();
   const patchUser = usePatchUser();
 
@@ -51,7 +51,7 @@ function EditProfileCard({onSuccess = () => null, title, noProfileIcon = false, 
     ),
   })
 
-  return <PageCard small title={title}>
+  return <PageCard small {...props}>
     {!noProfileIcon && <UserAvatar user={userInfo} editable/>}
     {renderForm()}
   </PageCard>
