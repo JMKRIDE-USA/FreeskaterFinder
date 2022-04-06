@@ -43,7 +43,6 @@ const MapComponent = ({
           center={center}
           zoom={zoom}
           options={{...{
-            maxZoom: 10,
             minZoom: 3,
             streetViewControl: false,
             mapTypeControl: false,

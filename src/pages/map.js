@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { QueryLoader } from '@jeffdude/frontend-helpers';
+import { QueryLoader, useGetBackendURL } from '@jeffdude/frontend-helpers';
 import { Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Marker } from '@react-google-maps/api';
+import { Marker, MarkerClusterer } from '@react-google-maps/api';
 import { useParams } from 'react-router-dom';
 
 import UserList from '../components/user-list';
@@ -70,21 +70,36 @@ const LoadedMap = ({locations, selected, setSelected, unsetSelected}) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, mapInstance, initialized])
 
+  const backendURL = useGetBackendURL();
+
   return (
     <Map fullscreen
       onLoad={mapInst => setMapInstance(mapInst)}
       onProjectionChanged={() => setInitialized(true)}
       onClick={unsetSelected}
     >
-      {mapInstance && locations.map(({users, location}, index) => 
-        <Marker
-          position={location} key={index} onClick={() => setSelected({users, location})}
-          icon={getMarkerIcon({users})} draggable={false} shape={{
-            coords: [15, 10, 50, 80],
-            type: "rect",
-          }} options={{shape: {coords: [15, 10, 50, 80], type: "rect"}}}
-        />
-      )}
+      {mapInstance && 
+        <MarkerClusterer options={{
+          maxZoom: 6,
+          minimumClusterSize: 4,
+          imagePath: backendURL.backendURL + '/clusters/m',
+          imageExtension: 'png',
+        }}>
+          {(clusterer) => {
+            clusterer.setStyles(clusterer.getStyles().map(style => {style.textColor = "#fff"; return style}))
+            return locations.map(({users, location}, index) => 
+              <Marker
+                position={location} key={index} onClick={() => setSelected({users, location})}
+                clusterer={clusterer}
+                icon={getMarkerIcon({users})} draggable={false} shape={{
+                  coords: [15, 10, 50, 80],
+                  type: "rect",
+                }} options={{shape: {coords: [15, 10, 50, 80], type: "rect"}}}
+              />
+            )
+          }}
+        </MarkerClusterer>
+      }
     </Map>
   )
 }
