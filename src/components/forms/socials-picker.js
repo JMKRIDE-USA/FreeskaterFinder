@@ -7,13 +7,16 @@ import { usePatchUser } from '@jeffdude/frontend-helpers';
 import PageCard from '../page-card';
 import useMakeLoadingButton from '../../hooks/loading-button';
 import { socialLinkTypes } from '../../constants';
+import { allLinkTypes } from '../modules/links';
 
 
 const SocialLink = ({socialType, register, errors}) => {
   return (
     <TextField label={socialType.label} margin="normal" inputProps={
         register(socialType.name, {
-          pattern: {value: socialType.validationRegex, message: 'Invalid URL.'}
+          validate: value => (
+            !value || (value && value.toLowerCase().match(socialType.validationRegex).length) > 1
+          ) || 'Invalid URL'
         })
       } error={!!errors[socialType.name]} helperText={errors[socialType.name]?.message}
     />
@@ -23,10 +26,10 @@ const SocialLink = ({socialType, register, errors}) => {
 const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
   const socialLinkObject = {}
   if(socialLinkData) {
-    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = link) // populate existing data
+    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = allLinkTypes[type](link)) // populate existing data
   }
-  socialLinkTypes.forEach(({name}) => { // fill in the rest
-    if(!socialLinkObject[name]) socialLinkObject[name] = '';
+  Object.keys(socialLinkTypes).forEach((type) => { // fill in the rest
+    if(!socialLinkObject[type]) socialLinkObject[name] = allLinkTypes[type]("");
   });
 
   const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: socialLinkObject });
@@ -42,7 +45,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       return {result: true}
     },
     preProcessData: (data) => Object.entries(data).map(([type, link]) => (
-      link.length ? {type, link} : undefined
+      link.length ? {type, link: link.toLowerCase()} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
     thenFn: (result) => {if(result) onSuccess()},
