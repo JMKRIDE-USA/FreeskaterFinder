@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link as MuiLink, Badge, IconButton, Menu, List, ListItemButton, ListItemText, ListItemAvatar, ListItem, Grid } from '@mui/material';
-import { useGetAccessToken, QueryLoader } from '@jeffdude/frontend-helpers';
+import { useGetAccessToken, QueryLoader, useGetUserInfo } from '@jeffdude/frontend-helpers';
 import { Link } from 'react-router-dom';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 
@@ -16,10 +16,9 @@ function NotificationItem({notification, closeMenu, divider}){
   //TODO
   challengeStatusChanged: 'CHALLENGE_STATUS_CHANGED',
   referralCodeUsed: 'REFERRAL_CODE_USED'
-          import { Link as MuiLink } from '@mui/material';
-          <MuiLink variant="caption" onClick={markRead}>Mark As Read</MuiLink>
   */
-  const { actor } = notification;
+  const userInfo = useGetUserInfo();
+  const { actor, payload } = notification;
   const markRead = useReadNotification(notification._id)
 
   const makeFriendNotificationItem = ({action, seeMore}) => {
@@ -48,6 +47,40 @@ function NotificationItem({notification, closeMenu, divider}){
         action: "is now your friend!",
         seeMore: "see more."
       });
+    case (notificationReasons.challengeStatusChanged):
+      return (
+        <ListItemButton
+          component={Link}
+          to={"/submission/" + payload}
+          onClick={() => {closeMenu(); markRead();}}
+          divider={divider}
+        >
+          <ListItemAvatar>
+            <UserAvatar user={userInfo}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Your submission's status has changed."
+            secondary="Click to see more."
+          />
+        </ListItemButton>
+      )
+    case (notificationReasons.referralCodeUsed):
+      return (
+        <ListItemButton
+          component={Link}
+          to={"/referral-code/" + payload}
+          onClick={() => {closeMenu(); markRead();}}
+          divider={divider}
+        >
+          <ListItemAvatar>
+            <UserAvatar user={userInfo}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary="You have a new referral code usage!"
+            secondary="Click to view details."
+          />
+        </ListItemButton>
+      )
     default:
       throw new Error("Unkown Notification Type Detected")
   }
