@@ -28,31 +28,35 @@ export const socialLinkTypes = [
     name: "facebook",
     label: "Facebook",
     icon: FacebookIcon,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9-]+.*/,
+    validationRegex: /(http[s]?:\/\/)?(www\.)?facebook\.com\/([a-zA-Z0-9-]{1,})/,
   },
   {
     name: "instagram",
     label: "Instagram",
     icon: InstagramIcon,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9-]+.*/,
+    validationRegex: /(http[s]?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9-]{1,})/,
   },
   {
     name: "reddit",
     label: "Reddit",
     icon: RedditIcon,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?reddit\.com\/user\/[a-zA-Z0-9-]+.*/
+    validationRegex: /(http[s]?:\/\/)?(www\.)?reddit\.com\/user\/([a-zA-Z0-9-]{1,})/
   },
   {
     name: "twitter",
     label: "Twitter",
     icon: TwitterIcon,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?twitter\.com\/[a-zA-Z0-9-]+.*/,
+    validationRegex: /(http[s]?:\/\/)?(www\.)?twitter\.com\/([a-zA-Z0-9-]{1,})/,
   },
   {
     name: "tiktok",
     label: "TikTok",
     icon: () => <img src={TikTokSVG} height={20} alt="TikTok Logo"/>,
-    validationRegex: /(http[s]?:\/\/)?(www\.)?tiktok\.com\/@[a-zA-Z0-9-]+.*/,
+    validationRegex: /(http[s]?:\/\/)?(www\.)?tiktok\.com\/@([a-zA-Z0-9-]{1,})/,
+    genLink: value => {
+      return "https://tiktok.com/"
+
+    }
   },
 ]
 
