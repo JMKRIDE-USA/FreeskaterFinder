@@ -6,37 +6,24 @@ import { usePatchUser } from '@jeffdude/frontend-helpers';
 
 import PageCard from '../page-card';
 import useMakeLoadingButton from '../../hooks/loading-button';
-import { socialLinkTypes } from '../../constants';
-import { allLinkTypes } from '../modules/links';
+import { allLinkTypes } from '../../modules/links';
 
-
-const SocialLink = ({socialType, register, errors}) => {
-  return (
-    <TextField label={socialType.label} margin="normal" inputProps={
-        register(socialType.name, {
-          validate: value => (
-            !value || (value && value.toLowerCase().match(socialType.validationRegex).length) > 1
-          ) || 'Invalid URL'
-        })
-      } error={!!errors[socialType.name]} helperText={errors[socialType.name]?.message}
-    />
-  )
-}
 
 const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
   const socialLinkObject = {}
   if(socialLinkData) {
-    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = allLinkTypes[type](link)) // populate existing data
+    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = new allLinkTypes[type](link)) // populate existing data
   }
-  Object.keys(socialLinkTypes).forEach((type) => { // fill in the rest
-    if(!socialLinkObject[type]) socialLinkObject[name] = allLinkTypes[type]("");
+  Object.entries(allLinkTypes).forEach(([type, obj]) => { // fill in the rest
+    if(!socialLinkObject[type]) socialLinkObject[type] = new obj("");
   });
 
-  const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: socialLinkObject });
+  const { handleSubmit, formState: {isDirty, errors}, register } = useForm({ defaultValues: Object.assign({}, ...Object.entries(socialLinkObject).map(([key, obj]) => ({[key]: obj.value}))) });
   const patchUser = usePatchUser();
   const [showError, setShowError] = useState(false);
   const { onClick , render: renderButton } = useMakeLoadingButton({
     doAction: (data) => {
+      console.log({data})
       if(!data.length) {
         setShowError(true);
         return {result: false};
@@ -61,7 +48,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       }>
         <form onSubmit={handleSubmit(onClick)}>
           <Grid container direction="column" sx={{minWidth: 'min(600px, 90vw)', p: 1}}>
-            {socialLinkTypes.map((socialType, key) => <SocialLink {...{key, socialType, register, errors}}/>)}
+            {Object.entries(socialLinkObject).map(([type, obj], key) => obj.getTextField({register, errors, key}))}
           </Grid>
           {renderButton()}
         </form>
