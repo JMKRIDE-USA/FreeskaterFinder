@@ -19,7 +19,6 @@ class GenericLink {
     this.icon = null;
     this.prefix = null;
     this.regex = null;
-    console.log({t: this})
   }
 
   getName(){
@@ -101,4 +100,17 @@ export const allLinkTypes = {
   "reddit": RedditLink,
   "twitter": TwitterLink,
   "tiktok": TikTokLink,
+}
+
+export const getSocialLinkObject = (socialLinkData, {includeBlank = false} = {}) => {
+  const socialLinkObject = {}
+  if(socialLinkData) {
+    socialLinkData.forEach(({type, link}) => socialLinkObject[type] = new allLinkTypes[type](link)) // populate existing data
+  }
+  if(includeBlank){
+    Object.entries(allLinkTypes).forEach(([type, obj]) => { // fill in the rest
+      if(!socialLinkObject[type]) socialLinkObject[type] = new obj("");
+    });
+  }
+  return socialLinkObject;
 }
