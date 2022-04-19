@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TextField } from '@mui/material';
+import { TextField, IconButton } from '@mui/material';
 
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -25,9 +25,10 @@ class GenericLink {
     return this.label.toLowerCase();
   }
 
-  getLink(){
+  getIconLink({key}){
     const match = this.value.match(this.regex)
-    return this.prefix + match[match.length - 1];
+    const link = this.prefix + match[match.length - 1];
+    return <IconButton key={key} href={link} target="_blank" color="primary">{this.icon}</IconButton>
   }
 
   getTextField({register, errors, key}){
@@ -48,7 +49,7 @@ export class FacebookLink extends GenericLink {
   constructor(value){
     super(value);
     this.label = "Facebook";
-    this.icon = FacebookIcon;
+    this.icon = <FacebookIcon/>;
     this.prefix = "https://facebook.com/";
     this.regex = /(http[s]?:\/\/)?(www\.)?facebook\.com\/([a-zA-Z0-9-]{1,})/;
   }
@@ -58,7 +59,7 @@ export class InstagramLink extends GenericLink {
   constructor(value){
     super(value);
     this.label = "Instagram";
-    this.icon = InstagramIcon;
+    this.icon = <InstagramIcon/>;
     this.prefix = "https://instagram.com/";
     this.regex = /(http[s]?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9-]{1,})/
   }
@@ -68,7 +69,7 @@ export class RedditLink extends GenericLink {
   constructor(value){
     super(value);
     this.label = "Reddit";
-    this.icon = RedditIcon;
+    this.icon = <RedditIcon/>;
     this.prefix = "https://reddit.com/user/";
     this.regex = /(http[s]?:\/\/)?(www\.)?reddit\.com\/user\/([a-zA-Z0-9-]{1,})/
   }
@@ -78,7 +79,7 @@ export class TwitterLink extends GenericLink {
   constructor(value){
     super(value);
     this.label = "Twitter";
-    this.icon = TwitterIcon;
+    this.icon = <TwitterIcon/>;
     this.prefix = "https://twitter.com/";
     this.regex = /(http[s]?:\/\/)?(www\.)?twitter\.com\/([a-zA-Z0-9-]{1,})/;
   }
