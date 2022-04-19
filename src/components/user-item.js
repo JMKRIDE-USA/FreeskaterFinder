@@ -18,14 +18,13 @@ import { getSocialLinkTypeByName, maxBlurbLength } from '../constants';
 import useMakeLoadingButton from '../hooks/loading-button';
 import { useCreateFriendRequest } from '../hooks/friends';
 import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
+import { getSocialLinkObject } from '../modules/links';
 
 
 const SocialLinkIcons = ({socialLinkData}) => {
+  const socialLinkObject = getSocialLinkObject(socialLinkData);
   return <Grid item container direction="row" xs='auto' sx={{alignItems: 'center', justifyContent: {xs: 'flex-start', sm: 'flex-end'}}}>
-    {socialLinkData.map(({link, type}, index) => {
-      const Icon = getSocialLinkTypeByName(type)?.icon;
-      return <IconButton key={index} href={link} target="_blank" color="primary"><Icon/></IconButton>
-    })}
+    {Object.values(socialLinkObject).map((link, key) => link.getIconLink({key}))}
   </Grid>
 }
 
