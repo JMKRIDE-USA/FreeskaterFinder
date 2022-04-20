@@ -29,8 +29,7 @@ class GenericLink {
   }
 
   getIconLink({key}){
-    const link = this.getLink();
-    return <IconButton key={key} href={link} target="_blank" color="primary">{this.icon}</IconButton>
+    return <IconButton key={key} href={this.getLink()} target="_blank" color="primary">{this.icon}</IconButton>
   }
 
   getLink(){
