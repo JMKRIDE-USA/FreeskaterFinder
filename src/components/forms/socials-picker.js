@@ -25,7 +25,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       return {result: true}
     },
     preProcessData: (data) => Object.entries(data).map(([type, link]) => (
-      link.length ? {type, link: link.toLowerCase()} : undefined
+      (link && type) ? {type, link: new allLinkTypes[type](link).getLink()} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
     thenFn: (result) => {if(result) onSuccess()},
