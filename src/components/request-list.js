@@ -34,7 +34,7 @@ function RequestItem({request, divider}){
   })
 
   return (
-    <UserItem user={user} showLocation showAction={false} divider={divider}
+    <UserItem user={user} showLocation divider={divider}
       action={<>
         <ButtonGroup variant="outline" sx={{ml: 2, display: {xs: 'none', md: 'flex'}}}> 
           {renderAcceptButton({onClick: onClickAccept, sx: {minWidth: undefined, maxWidth: undefined}, variant: "outlined"})}

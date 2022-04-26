@@ -25,7 +25,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       return {result: true}
     },
     preProcessData: (data) => Object.entries(data).map(([type, link]) => (
-      (link && type) ? {type, link: new allLinkTypes[type](link).getLink()} : undefined
+      (link && type) ? {type, link: new allLinkTypes[type](link).link} : undefined
     )).filter(o => o !== undefined),
     buttonText: "Save",
     thenFn: (result) => {if(result) onSuccess()},
@@ -41,7 +41,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
       }>
         <form onSubmit={handleSubmit(onClick)}>
           <Grid container direction="column" sx={{minWidth: 'min(600px, 90vw)', p: 1}}>
-            {Object.entries(allLinkTypes).map(([type, _], key) => socialLinkObject[type].getTextField({register, errors, key}))}
+            {Object.keys(allLinkTypes).map((type, key) => socialLinkObject[type].getTextField({register, errors, key}))}
           </Grid>
           {renderButton()}
         </form>
