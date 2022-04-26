@@ -13,7 +13,7 @@ function TitleCard({title, children}) {
     }}>
       <Grid container direction="column" sx={{width: '100%', alignItems: "center", justifyContent: 'center'}}>
         <img src={title ? titleLogoNoText : titleLogo} alt="Freeskater Finder Logo" style={{margin: '10px', width: '80%'}}/>
-        {title ? <Typography variant="h3">{title}</Typography> : <div/>}
+        {title && title?.length ? <Typography variant="h3">{title}</Typography> : <div/>}
         {children}
       </Grid>
     </Paper>
