@@ -14,7 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import PendingIcon from '@mui/icons-material/Pending';
 
 import UserAvatar from './user-avatar';
-import { getSocialLinkTypeByName, maxBlurbLength } from '../constants';
+import { maxBlurbLength } from '../constants';
 import useMakeLoadingButton from '../hooks/loading-button';
 import { useCreateFriendRequest } from '../hooks/friends';
 import { useGetAuthState } from '@jeffdude/frontend-helpers/dist/hooks/auth';
@@ -24,7 +24,7 @@ import { getSocialLinkObject } from '../modules/links';
 const SocialLinkIcons = ({socialLinkData}) => {
   const socialLinkObject = getSocialLinkObject(socialLinkData);
   return <Grid item container direction="row" xs='auto' sx={{alignItems: 'center', justifyContent: {xs: 'flex-start', sm: 'flex-end'}}}>
-    {Object.values(socialLinkObject).map((link, key) => link.getIconLink({key}))}
+    {Object.values(socialLinkObject).map((socialLink, key) => socialLink.getIcon({key}))}
   </Grid>
 }
 
@@ -110,7 +110,7 @@ const UserBio = ({bio}) => {
   )
 }
 
-const UserItem = ({user, showLocation = false, action, showAction = true, editableAvatar = false, sx={}, divider = false, children}) => {
+const UserItem = ({user, showLocation = false, action, showSocials = false, editableAvatar = false, sx={}, divider = false, children}) => {
   const adminView = useGetAuthState() === 500;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.up('sm'));
@@ -119,11 +119,10 @@ const UserItem = ({user, showLocation = false, action, showAction = true, editab
   const userInfo = useGetUserInfo();
   const secondaryAction = (() => {
     if(action) return action
-    if(!showAction) return <></>
+    if(user.isFriend || showSocials)
+      return <SocialLinkIcons socialLinkData={user.socialLinks}/>;
     if(userInfo.id === user.id) 
       return <ThisIsYou/>;
-    if(user.isFriend)
-      return <SocialLinkIcons socialLinkData={user.socialLinks}/>;
     if(user.incomingPendingFriend)
       return <IncomingPendingFriend/>
     if(user.outgoingPendingFriend)
