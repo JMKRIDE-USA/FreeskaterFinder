@@ -32,7 +32,7 @@ function MyAccountCard() {
       </ButtonGroup>
     }>
       <Grid container direction="row" sx={{alignItems: "center", justifyContent: "space-between"}}>
-        <UserItem user={userInfo} showAction={false} editableAvatar/>
+        <UserItem user={userInfo} showSocials editableAvatar/>
       </Grid>
     </PageCard>
   )
