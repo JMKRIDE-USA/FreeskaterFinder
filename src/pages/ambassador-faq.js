@@ -10,7 +10,8 @@ const QAs = {
   "How do I earn ambassador points?": (
     "When you meet people and/or teach them how to skate, give them your ambassador code. " +
     "They will save 5% on their order, and 5% of the purchase price will be converted to ambassador points " +
-    "and credited to you!"
+    "and credited to you! Note: since ambassador codes are intended as credit for introducing people to the sport, " +
+    "the code is limited to 1-use-per-customer (aka email address)."
   ),
   "How do I trade in my ambassador points for a JMKRIDE store gift card?": (
     "For now, this is a manual process, so just send me an email, and I'll " +
