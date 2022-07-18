@@ -17,7 +17,7 @@ const SocialsPickerCard = ({socialLinkData, onSuccess = () => null}) => {
   const [showError, setShowError] = useState(false);
   const { onClick , render: renderButton } = useMakeLoadingButton({
     doAction: (data) => {
-      if(!data.length) {
+      if(!data.length || data.some(({link}) => !link)) {
         setShowError(true);
         return {result: false};
       }
