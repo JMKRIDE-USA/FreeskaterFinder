@@ -17,7 +17,8 @@ class GenericLink {
     this.label = label;
     this.icon = icon;
     this.name = label.toLowerCase();
-    this.regex = new RegExp("(http[s]?:\/\/)?(www\.)?" + prefixRegex + "(?<handle>[^\/\?&%\'\"]{1,})"); 
+    this.catchAllRegex = new RegExp("(http[s]?:\/\/)?(www\.)?" + prefixRegex + "(?<handle>[^\/\?&]{1,})"); 
+    this.regex = new RegExp("(http[s]?:\/\/)?(www\.)?" + prefixRegex + "(?<handle>[^\\s\/\?&%\'\"]{1,})"); 
     this.exampleValue = "https://" + prefix + "your_username";
 
     this.link = (() => {
@@ -35,9 +36,15 @@ class GenericLink {
     if(!value) return true; //optional
 
     const match = value.toLowerCase().match(this.regex)
+    const catchAllMatch = value.toLowerCase().match(this.catchAllRegex)
+
     if(!match) return false;
     if(!match.length) return false;
     if(!match.groups?.handle) return false;
+    if(!catchAllMatch.groups?.handle) return false;
+    if(catchAllMatch.groups?.handle.length !== match.groups?.handle.length) {
+      return false;
+    }
 
     return true;
   }
