@@ -48,9 +48,9 @@ const UserSettingsCard = () => {
         <ListItemText
           primary="Profile Privacy"
           secondary={
-            "By default, your account is private, " +
-            "which means you must approve friends for them to see your social media links. " +
-            "Set to 'Public' to allow people to see your social media links without friend requests."
+            "By default, your account is public, " +
+            "which means everyone can see your social media links. " +
+            "Change this setting to private to make it so that you must approve friends for them to see your social media links. "
           } sx={{maxWidth: 'min(80vw, 500px)', mr: 4}}
         />
       </ListItem>

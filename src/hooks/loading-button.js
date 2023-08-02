@@ -5,6 +5,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
+import { Alert, Box } from '@mui/material';
 
 const LoadingButtonResult = ({sx, resultIcon, buttonText, ...props}) => (
   <LoadingButton
@@ -29,6 +30,7 @@ function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, c
 
   const [submitted, setSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(undefined);
+  const [errorText, setErrorText] = useState("");
 
   const loading = submitted && submissionResult === undefined;
 
@@ -36,6 +38,7 @@ function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, c
     if(submissionResult !== undefined){
       setTimeout(() => {
         setSubmissionResult(undefined);
+        setErrorText("")
         setSubmitted(false);
       }, submissionResult ? 1000 : 5000)
     }
@@ -48,25 +51,29 @@ function useMakeLoadingButton({doAction, buttonText, iconButton = false, icon, c
     const queryResponse = await doAction(newData)
     console.log("Received:", queryResponse)
     setSubmissionResult(!!queryResponse?.result);
+    setErrorText(queryResponse?.error);
     thenFn(queryResponse?.result);
   }
 
   const ButtonComponent = iconButton ? IconButtonResult : LoadingButtonResult;
-  const [resultButtonText, resultIcon, resultColor] = submissionResult === undefined
-    ? [buttonText, icon, color ? color : "primary"]
+  const [resultButtonText, resultIcon, resultColor, resultErrorText] = submissionResult === undefined
+    ? [buttonText, icon, color ? color : "primary", ""]
     : submissionResult
-      ? ["Success", <CheckCircleIcon fontSize="medium"/>, "success"]
-      : ["Error", <ErrorIcon fontSize="medium"/>, "error"]
+      ? ["Success", <CheckCircleIcon fontSize="medium"/>, "success", ""]
+      : ["Error", <ErrorIcon fontSize="medium"/>, "error", errorText]
 
   return {
     onClick,
     loading,
     submissionResult,
     render: (props) => (
-      <ButtonComponent
-        loading={loading} color={resultColor} resultIcon={resultIcon} buttonText={resultButtonText}
-        {...isFormButton ? {type: "submit"} : {onClick}} {...props}
-      />
+      <Box flexDirection="column" justifyContent="center">
+        <ButtonComponent
+          loading={loading} color={resultColor} resultIcon={resultIcon} buttonText={resultButtonText}
+          {...isFormButton ? {type: "submit"} : {onClick}} {...props}
+        />
+        { resultErrorText && <Alert severity='error'>{resultErrorText}</Alert> }
+      </Box>
     )
   }
 }
